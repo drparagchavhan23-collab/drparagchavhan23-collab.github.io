@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parag Chavhan — Architect & Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<!-- Preload all project images so overlay img tags hit cache instantly -->
+<link rel="preload" as="image" href="projects/p05-aykyata.jpg">
+<link rel="preload" as="image" href="projects/p07-nrityamrit.jpg">
+<link rel="preload" as="image" href="projects/p08-abode.jpg">
+<link rel="preload" as="image" href="projects/p09-abode2.jpg">
+<link rel="preload" as="image" href="projects/p06-mosafiro.jpg">
+<link rel="preload" as="image" href="projects/p11-winkit.jpg">
+<link rel="preload" as="image" href="projects/p10-dhakor.jpg">
+<link rel="preload" as="image" href="projects/ai-aykyata.webp">
+<link rel="preload" as="image" href="projects/ai-nrityamrit.webp">
+<link rel="preload" as="image" href="projects/ai-abode.webp">
+<link rel="preload" as="image" href="projects/ai-mosafiro.webp">
+<link rel="preload" as="image" href="projects/ai-winkit.webp">
+<link rel="preload" as="image" href="projects/ai-dhakor.webp">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #050505;
+    --white: #f4f0e8;
+    --red: #ff2d00;
+    --green: #00ff88;
+    --purple: #a855f7;
+    --muted: rgba(244,240,232,0.35);
+    --border: rgba(244,240,232,0.08);
+  }
+
+  html { scroll-behavior: auto; overflow-x: hidden; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CURSOR ── */
+  #cursor {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    pointer-events: none; mix-blend-mode: difference;
+  }
+  #cursor-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--white);
+    position: absolute; transform: translate(-50%,-50%);
+    transition: width .2s, height .2s;
+  }
+  #cursor-ring {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--white);
+    position: absolute; transform: translate(-50%,-50%);
+    transition: width .3s, height .3s, border-color .3s;
+  }
+  body.cursor-hover #cursor-dot { width: 0; height: 0; }
+  body.cursor-hover #cursor-ring { width: 72px; height: 72px; }
+
+  /* ── LOADER ── */
+  #loader {
+    position: fixed; inset: 0; z-index: 9998;
+    background: var(--black);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #loader-count {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(80px, 15vw, 160px);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--white);
+  }
+  #loader-bar-wrap {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--border);
+  }
+  #loader-bar {
+    height: 100%; width: 0%; background: var(--white);
+    transition: none;
+  }
+  #loader-label {
+    position: absolute; bottom: 24px; left: 32px;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); font-family: 'DM Mono', monospace;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 40px;
+    mix-blend-mode: difference;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-size: 12px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--white); text-decoration: none; font-family: 'DM Mono', monospace;
+    position: relative; padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px; background: var(--white);
+    transition: width .35s cubic-bezier(.76,0,.24,1);
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* hamburger button */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column; justify-content: center; gap: 5px;
+    width: 40px; height: 40px; background: none; border: none;
+    cursor: pointer; padding: 6px; z-index: 10001;
+  }
+  .nav-hamburger span {
+    display: block; height: 1.5px; background: var(--white);
+    transition: transform .35s cubic-bezier(.76,0,.24,1), opacity .2s;
+    transform-origin: center;
+  }
+  .nav-hamburger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* fullscreen mobile menu */
+  #mobile-menu {
+    display: none;
+    position: fixed; inset: 0; z-index: 10000;
+    background: var(--black);
+    flex-direction: column; align-items: flex-start; justify-content: center;
+    padding: 60px 32px;
+    opacity: 0; transition: opacity .3s ease;
+  }
+  #mobile-menu.is-open { opacity: 1; }
+  #mobile-menu a {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 12vw, 72px); font-weight: 800;
+    color: var(--white); text-decoration: none;
+    letter-spacing: -.03em; line-height: 1.1;
+    display: block; margin-bottom: 12px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .35s ease, transform .35s ease;
+  }
+  #mobile-menu.is-open a { opacity: 1; transform: translateY(0); }
+  #mobile-menu.is-open a:nth-child(1) { transition-delay: .05s; }
+  #mobile-menu.is-open a:nth-child(2) { transition-delay: .10s; }
+  #mobile-menu.is-open a:nth-child(3) { transition-delay: .15s; }
+  #mobile-menu .menu-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 40px;
+  }
+
+  /* ── SECTIONS ── */
+  section { position: relative; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100dvh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-bottom: 80px; overflow: hidden;
+    position: relative; background: var(--black);
+  }
+
+  /* noise via CSS SVG filter — GPU only, zero JS */
+  #hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: .045; pointer-events: none; z-index: 1;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .hero-eyebrow span { display: block; transform: translateY(120%); }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(64px, 10.5vw, 180px);
+    font-weight: 800;
+    line-height: .92;
+    letter-spacing: -.04em;
+    margin-bottom: 0;
+    overflow: visible;
+    padding: 60px 0 60px 0;
+    margin-top: -60px;
+  }
+  .hero-name .line { overflow: visible; display: block; }
+  .hero-name .word { display: inline-block; transform: translateY(115%); }
+
+  .hero-sub-row {
+    display: flex; align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 48px; flex-wrap: wrap; gap: 24px;
+  }
+  .hero-tagline {
+    font-size: clamp(14px, 1.5vw, 20px);
+    color: var(--muted); max-width: 380px; line-height: 1.6;
+  }
+  .hero-scroll-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 12px;
+  }
+  .scroll-line {
+    width: 60px; height: 1px; background: var(--muted);
+    transform-origin: left; animation: scrollLineAnim 2s ease-in-out infinite;
+  }
+  @keyframes scrollLineAnim {
+    0%,100% { transform: scaleX(1); opacity: 1; }
+    50% { transform: scaleX(.3); opacity: .4; }
+  }
+
+  .hero-counter {
+    position: absolute; right: 40px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .15em;
+    color: var(--muted); writing-mode: vertical-rl;
+  }
+
+  /* glitch utility */
+  .glitch { position: relative; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    font: inherit;
+  }
+  .glitch::before {
+    color: var(--red);
+    animation: glitch1 8s infinite steps(1);
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    will-change: transform, opacity;
+  }
+  .glitch::after {
+    color: var(--green);
+    animation: glitch2 8s infinite steps(1);
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    will-change: transform, opacity;
+  }
+  @keyframes glitch1 {
+    0%,97%,100% { transform: none; opacity: 0; }
+    97.5% { transform: translate(-4px, 2px); opacity: .7; }
+    98.5% { transform: translate(4px, -2px); opacity: .7; }
+    99%   { transform: none; opacity: 0; }
+  }
+  @keyframes glitch2 {
+    0%,97%,100% { transform: none; opacity: 0; }
+    97.5% { transform: translate(4px, -1px); opacity: .7; }
+    98.5% { transform: translate(-3px, 2px); opacity: .7; }
+    99%   { transform: none; opacity: 0; }
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden; padding: 18px 0;
+    background: var(--black);
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marqueeScroll 18s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 0 48px; color: var(--muted);
+    display: flex; align-items: center; gap: 32px;
+  }
+  .marquee-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+  @keyframes marqueeScroll { to { transform: translateX(-50%); } }
+
+  /* ── WORK ── */
+  #work { padding: 120px 0; }
+  .section-header {
+    display: flex; align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 64px; flex-wrap: wrap; gap: 16px;
+  }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--muted);
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 6vw, 96px);
+    font-weight: 800; line-height: .95;
+    letter-spacing: -.03em;
+  }
+
+  /* ── PROJECT CARDS – editorial layout ── */
+  .projects-list { display: flex; flex-direction: column; }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: 38% 62%;
+    min-height: 56vh;
+    border-top: 1px solid var(--border);
+    cursor: none; overflow: hidden;
+    position: relative;
+    transition: border-color .4s;
+  }
+  .project-card:last-child { border-bottom: 1px solid var(--border); }
+  .project-card:hover { border-color: rgba(244,240,232,.22); }
+
+  /* left meta panel */
+  .pc-left {
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(28px,4vw,56px) clamp(24px,3.5vw,52px);
+    border-right: 1px solid var(--border);
+    position: relative; z-index: 2;
+    background: var(--black);
+    transition: background .5s;
+  }
+  .project-card:hover .pc-left { background: #0a0a0a; }
+
+  .pc-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .pc-num {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(64px, 8vw, 120px); font-weight: 800;
+    letter-spacing: -.05em; line-height: 1;
+    color: rgba(244,240,232,.07);
+    transition: color .4s;
+  }
+  .project-card:hover .pc-num { color: rgba(244,240,232,.13); }
+  .pc-corner {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); line-height: 1.7;
+    text-align: right;
+  }
+
+  .pc-body { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-top: 24px; }
+  .pc-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .pc-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 100px;
+    transition: color .3s, border-color .3s;
+  }
+  .project-card:hover .pc-tag { color: rgba(244,240,232,.6); border-color: rgba(244,240,232,.2); }
+
+  .pc-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 2.6vw, 38px); font-weight: 800;
+    letter-spacing: -.025em; line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .pc-sub {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+    max-width: 320px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  .pc-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 40px;
+  }
+  .pc-meta-row {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .pc-meta-row span { margin-right: 20px; }
+  .pc-cta {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted);
+    transition: color .3s;
+  }
+  .project-card:hover .pc-cta { color: var(--white); }
+  .pc-arrow {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transform: rotate(-45deg);
+    transition: transform .4s cubic-bezier(.76,0,.24,1), border-color .3s, background .3s;
+  }
+  .project-card:hover .pc-arrow {
+    transform: rotate(0deg);
+    border-color: var(--white); background: var(--white); color: var(--black);
+  }
+
+  /* right image panel */
+  .pc-right {
+    position: relative; overflow: hidden;
+    background: #0d0d0d;
+    min-height: 320px;
+  }
+  .pc-right img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .9s cubic-bezier(.25,.46,.45,.94), opacity .5s;
+    opacity: .88;
+    will-change: transform;
+  }
+  .project-card:hover .pc-right img {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  /* subtle dark vignette edge */
+  .pc-right::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(5,5,5,.35) 0%, transparent 30%);
+    pointer-events: none; z-index: 1;
+  }
+
+  /* page-number badge top-right of image */
+  .pc-badge {
+    position: absolute; top: 20px; right: 20px; z-index: 2;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(244,240,232,.5);
+    background: rgba(5,5,5,.5);
+    backdrop-filter: blur(4px);
+    padding: 5px 10px; border-radius: 100px;
+    border: 1px solid rgba(244,240,232,.1);
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+  }
+  .about-left { }
+  .about-big-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 800; line-height: 1.1;
+    letter-spacing: -.02em; margin-bottom: 40px;
+  }
+  .about-big-text em { font-style: normal; color: var(--muted); }
+  .about-body {
+    font-size: 16px; line-height: 1.7; color: var(--muted);
+    margin-bottom: 40px; max-width: 480px;
+  }
+  .skills-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-top: 48px;
+  }
+  .skill-item {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    position: relative; overflow: hidden;
+  }
+  .skill-item::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--white); transform: translateX(-101%);
+    transition: transform .4s cubic-bezier(.76,0,.24,1);
+    z-index: 0;
+  }
+  .skill-item:hover::before { transform: translateX(0); }
+  .skill-item:hover { color: var(--black); }
+  .skill-item > * { position: relative; z-index: 1; }
+  .skill-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 700; margin-bottom: 4px;
+  }
+  .skill-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    transition: color .3s;
+  }
+  .skill-item:hover .skill-desc { color: rgba(5,5,5,.5); }
+
+  .about-right { position: sticky; top: 120px; }
+  .about-portrait {
+    width: 100%; aspect-ratio: 3/4;
+    background: #111;
+    border-radius: 4px; overflow: hidden;
+    position: relative;
+  }
+  .portrait-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    background: linear-gradient(160deg, #111 0%, #1a0a2e 100%);
+  }
+  .portrait-initials {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(80px, 10vw, 140px);
+    font-weight: 800; letter-spacing: -.05em;
+    background: linear-gradient(135deg, var(--red) 0%, var(--purple) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .portrait-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; margin-top: 1px; background: var(--border);
+  }
+  .stat-box {
+    background: var(--black); padding: 24px 20px;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 40px; font-weight: 800; letter-spacing: -.03em;
+    color: var(--white);
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted); margin-top: 4px;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 120px 0 80px;
+    border-top: 1px solid var(--border);
+  }
+  .contact-big {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 9vw, 150px);
+    font-weight: 800; line-height: .9;
+    letter-spacing: -.04em;
+    margin-bottom: 64px;
+  }
+  .contact-big .line { overflow: hidden; display: block; }
+  .contact-big .word-wrap { display: inline-block; overflow: hidden; }
+  .contact-big .word { display: inline-block; }
+
+  .contact-row {
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 32px;
+    padding-top: 48px; border-top: 1px solid var(--border);
+  }
+  .contact-email {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 36px);
+    font-weight: 700; text-decoration: none;
+    color: var(--white);
+    display: inline-flex; align-items: center; gap: 16px;
+    position: relative;
+  }
+  .contact-email::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 100%; height: 1px; background: var(--white);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform .5s cubic-bezier(.76,0,.24,1);
+  }
+  .contact-email:hover::after { transform: scaleX(1); transform-origin: left; }
+
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 18px 36px;
+    border: 1px solid var(--white); border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 500; letter-spacing: .05em;
+    color: var(--white); text-decoration: none; cursor: none;
+    position: relative; overflow: hidden;
+  }
+  .cta-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--white); border-radius: 100px;
+    transform: translateY(101%);
+    transition: transform .45s cubic-bezier(.76,0,.24,1);
+  }
+  .cta-btn:hover::before { transform: translateY(0); }
+  .cta-btn:hover { color: var(--black); }
+  .cta-btn > * { position: relative; z-index: 1; }
+
+  .socials { display: flex; gap: 24px; align-items: center; }
+  .social-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color .3s;
+  }
+  .social-link:hover { color: var(--white); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 40px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .1em; color: var(--muted);
+  }
+
+  /* ── PROJECT OVERLAY ── */
+  #project-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: var(--black);
+    overflow-y: auto; overflow-x: hidden;
+    transform: translateY(100%);
+    will-change: transform;
+    contain: layout style;
+  }
+  #project-overlay.is-open { pointer-events: all; }
+
+  .po-close {
+    position: fixed; top: 32px; right: 40px; z-index: 600;
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid var(--border);
+    background: rgba(5,5,5,.7); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: none; color: var(--white);
+    font-size: 22px; line-height: 1;
+    opacity: 0; pointer-events: none;
+    transition: border-color .3s, background .3s;
+  }
+  .po-close.visible { pointer-events: all; }
+  .po-close:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+
+  .po-inner { min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* hero strip */
+  .po-hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 80px 40px;
+    position: relative; overflow: hidden;
+  }
+  .po-bg-num {
+    position: absolute; right: -0.05em; bottom: -0.15em;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(200px, 30vw, 400px);
+    font-weight: 800; line-height: 1;
+    color: rgba(244,240,232,.03);
+    pointer-events: none; user-select: none;
+  }
+  .po-bg-art {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .po-tag-row {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
+    transform: translateY(40px); opacity: 0;
+  }
+  .po-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    border: 1px solid var(--border); padding: 6px 14px; border-radius: 100px;
+    color: var(--muted);
+  }
+  .po-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 8vw, 130px);
+    font-weight: 800; line-height: .92; letter-spacing: -.04em;
+    transform: translateY(60px); opacity: 0;
+  }
+  .po-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-top: 24px;
+    transform: translateY(40px); opacity: 0;
+  }
+
+  /* body content */
+  .po-body { padding: 80px 40px; max-width: 1400px; margin: 0 auto; width: 100%; }
+  .po-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start; margin-bottom: 80px;
+  }
+  .po-brief-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+  }
+  .po-brief {
+    font-size: clamp(16px, 1.5vw, 20px); line-height: 1.7;
+    color: rgba(244,240,232,.8);
+  }
+  .po-meta { display: flex; flex-direction: column; gap: 24px; }
+  .po-meta-item { padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .po-meta-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .po-meta-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 700;
+  }
+
+
+  /* next project */
+  .po-next {
+    border-top: 1px solid var(--border);
+    padding: 60px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: none; gap: 24px;
+    transition: background .4s;
+    max-width: 1400px; margin: 0 auto; width: 100%;
+  }
+  .po-next:hover { background: rgba(244,240,232,.04); }
+  .po-next-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  .po-next-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(24px, 3vw, 48px);
+    font-weight: 800; letter-spacing: -.02em;
+  }
+  .po-next-arrow { font-size: 48px; flex-shrink: 0; }
+
+  /* ── REVEAL UTILS ── */
+  .reveal-text .char { display: inline-block; }
+  .split-reveal { overflow: hidden; }
+  .split-reveal .inner { transform: translateY(110%); display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    /* nav */
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .container { padding: 0 24px; }
+
+    /* hero */
+    #hero { padding-bottom: 60px; }
+    .hero-counter { display: none; }
+    .hero-name { padding: 16px 0; margin-top: 0; }
+
+    /* sections */
+    #work, #about { padding: 72px 0; }
+    #contact { padding: 72px 0 48px; }
+
+    /* about */
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .about-right { position: static; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .skill-desc { word-break: break-word; overflow-wrap: break-word; }
+
+    /* projects */
+    .project-card { grid-template-columns: 1fr; min-height: auto; }
+    .pc-left { border-right: none; border-bottom: 1px solid var(--border); }
+    .pc-right { height: 52vw; min-height: 200px; }
+    .pc-num { font-size: 48px; }
+    .pc-bottom { flex-direction: column; gap: 16px; }
+
+    /* project overlay */
+    .po-hero { padding: 60px 24px; }
+    .po-body { padding: 48px 24px; }
+    .po-grid { grid-template-columns: 1fr; gap: 40px; }
+    .po-close { top: 20px; right: 20px; }
+    .po-next { padding: 40px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+
+    /* contact */
+    .contact-email { word-break: break-all; overflow-wrap: anywhere; }
+    .contact-row { flex-direction: column; align-items: flex-start; gap: 24px; }
+
+    /* footer */
+    .footer-copy { word-break: break-word; overflow-wrap: break-word; }
+    footer { padding: 24px; }
+  }
+
+  /* touch devices — disable custom cursor */
+  @media (hover: none) {
+    body { cursor: auto; }
+    #cursor { display: none !important; }
+    .project-card, .cta-btn, .po-next, .po-close { cursor: pointer; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor">
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+</div>
+
+
+<!-- LOADER -->
+<div id="loader">
+  <div id="loader-count">0</div>
+  <div id="loader-label">Loading portfolio</div>
+  <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">PC</a>
+  <ul class="nav-links">
+    <li><a href="#work" data-magnetic>Work</a></li>
+    <li><a href="#about" data-magnetic>About</a></li>
+    <li><a href="#contact" data-magnetic>Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" role="dialog" aria-modal="true">
+  <div class="menu-eyebrow">Navigation</div>
+  <a href="#work">Work</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container" style="position:relative;z-index:2;">
+    <div class="hero-eyebrow"><span>Architect · Designer · Visualizer</span></div>
+    <h1 class="hero-name glitch" data-text="Parag Chavhan">
+      <span class="line"><span class="word">Parag</span></span>
+      <span class="line"><span class="word">Chavhan</span></span>
+    </h1>
+    <div class="hero-sub-row">
+      <p class="hero-tagline split-reveal">
+        <span class="inner">Architecture, design, and everything<br>that lives in between.</span>
+      </p>
+    </div>
+  </div>
+  <div class="hero-counter">2026 · Portfolio</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item">Architecture <span class="dot"></span></div>
+    <div class="marquee-item">Branding <span class="dot"></span></div>
+    <div class="marquee-item">3D Visualization <span class="dot"></span></div>
+    <div class="marquee-item">Urban Design <span class="dot"></span></div>
+    <div class="marquee-item">Visual Identity <span class="dot"></span></div>
+    <div class="marquee-item">Graphic Design <span class="dot"></span></div>
+    <div class="marquee-item">Spatial Design <span class="dot"></span></div>
+    <div class="marquee-item">Exhibition Design <span class="dot"></span></div>
+    <div class="marquee-item">Architecture <span class="dot"></span></div>
+    <div class="marquee-item">Branding <span class="dot"></span></div>
+    <div class="marquee-item">3D Visualization <span class="dot"></span></div>
+    <div class="marquee-item">Urban Design <span class="dot"></span></div>
+    <div class="marquee-item">Visual Identity <span class="dot"></span></div>
+    <div class="marquee-item">Graphic Design <span class="dot"></span></div>
+    <div class="marquee-item">Spatial Design <span class="dot"></span></div>
+    <div class="marquee-item">Exhibition Design <span class="dot"></span></div>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-tag">Selected Work</div>
+        <h2 class="section-title split-reveal"><span class="inner">Projects</span></h2>
+      </div>
+      <span class="section-num">2022 – 2024</span>
+    </div>
+
+    <div class="projects-list">
+
+      <div class="project-card" data-project="01">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">01</div>
+            <div class="pc-corner">Brand Identity<br>2023</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">Brand Identity</span>
+              <span class="pc-tag">Packaging</span>
+              <span class="pc-tag">Web Design</span>
+            </div>
+            <div class="pc-title">ABODE — One Stop For Your Home</div>
+            <div class="pc-sub">A home décor brand identity spanning packaging, print collateral, social media, and digital presence.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>Personal Project</span><span>Identity</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right">
+          <video src="projects/abode-logo.mp4" autoplay loop muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92;"></video>
+          <span class="pc-badge">008 → 010</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="02">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">02</div>
+            <div class="pc-corner">Architecture<br>2026</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">Architecture</span>
+              <span class="pc-tag">Thesis</span>
+              <span class="pc-tag">Sacred Space</span>
+            </div>
+            <div class="pc-title">Gateway to the Sacred — Pilgrimage Ropeway Terminal, Govind Ghat</div>
+            <div class="pc-sub">B.Arch Thesis 2026 — A ropeway terminal at Govind Ghat, Hemkund Sahib, balancing pilgrimage, landscape, and sacred thresholds.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>B.Arch Thesis</span><span>Govind Ghat, Uttarakhand</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right" style="background:#0a0d12;">
+          <img src="projects/thesis-thumb.jpg" alt="Thesis" loading="lazy" decoding="async" style="opacity:.75;">
+          <span class="pc-badge">Thesis 2026</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="03">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">03</div>
+            <div class="pc-corner">Digital Art<br>2025</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">Product Design</span>
+              <span class="pc-tag">Prototyping</span>
+              <span class="pc-tag">AI Marketing</span>
+            </div>
+            <div class="pc-title">Retro Futurism — Self-Made Working Model</div>
+            <div class="pc-sub">A fully functional hand-painted Bluetooth speaker — designed, built, and painted from scratch. Taken to AI marketing with a Kling-generated product film.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>Digital Arts</span><span>SPA Vijayawada</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right" style="background:#0d0d0d;">
+          <img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism Calendar" loading="lazy" decoding="async" style="object-position:center center;">
+          <span class="pc-badge">Digital Arts 2025</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="04">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">04</div>
+            <div class="pc-corner">Branding<br>2023</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">Branding</span>
+              <span class="pc-tag">Logo Design</span>
+              <span class="pc-tag">Visual Identity</span>
+            </div>
+            <div class="pc-title">NRITYAMRIT — Lavani Dance Studio</div>
+            <div class="pc-sub">Full visual identity for a classical Lavani dance school rooted in Maharashtra's folk tradition.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>Personal Project</span><span>Branding</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right">
+          <img src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT" loading="lazy" decoding="async">
+          <span class="pc-badge">007 → 008</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="05">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">05</div>
+            <div class="pc-corner">Architecture<br>2023</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">Architecture</span>
+              <span class="pc-tag">Spatial Design</span>
+              <span class="pc-tag">Blender</span>
+            </div>
+            <div class="pc-title">MOSAFIRO ka KARAVANA</div>
+            <div class="pc-sub">A 9×3m nomadic truck-home — compact off-grid dwelling with kitchen, sleeping loft, terrace and solar systems.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>Studio Project</span><span>Compact Living</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right">
+          <img src="projects/ai-mosafiro.webp" alt="MOSAFIRO" loading="lazy" decoding="async">
+          <span class="pc-badge">006 → 007</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="06">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">06</div>
+            <div class="pc-corner">UI / UX<br>2024</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">UI/UX</span>
+              <span class="pc-tag">Critical Design</span>
+              <span class="pc-tag">Graphic Design</span>
+            </div>
+            <div class="pc-title">Winkit — Everyday Convenience, Reframed</div>
+            <div class="pc-sub">A critical design project questioning quick-commerce apps — revealing hidden costs behind instant delivery culture.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>Personal Project</span><span>Critical Design</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right">
+          <img src="projects/ai-winkit.webp" alt="Winkit" loading="lazy" decoding="async">
+          <span class="pc-badge">011 → 012</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="07">
+        <div class="pc-left">
+          <div class="pc-top">
+            <div class="pc-num">07</div>
+            <div class="pc-corner">Exhibition<br>2023</div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-tags">
+              <span class="pc-tag">Graphic Design</span>
+              <span class="pc-tag">Exhibition Design</span>
+              <span class="pc-tag">Govt. Project</span>
+            </div>
+            <div class="pc-title">Dhakor Industrial Museum — Visual Identity</div>
+            <div class="pc-sub">Complete visual identity for a government industrial heritage museum — signage, wayfinding, and brand system.</div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta-row"><span>Government Commission</span><span>Gujarat</span></div>
+            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="pc-right">
+          <img src="projects/ai-dhakor.webp" alt="Dhakor Museum" loading="lazy" decoding="async">
+          <span class="pc-badge">010 → 011</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-tag" style="margin-bottom:48px;">About Me</div>
+    <div class="about-grid">
+      <div class="about-left">
+        <h2 class="about-big-text">
+          Where space<br>meets <em>story</em> —<br>built to last.
+        </h2>
+        <p class="about-body">
+          I'm Parag, currently in my fifth year pursuing Architecture at the
+          School of Planning and Architecture, Vijayawada. My journey has
+          exposed me to diverse architectural typologies, supplemented by
+          independent exploration through competitions and real-world projects.
+        </p>
+        <p class="about-body" style="margin-bottom:0;">
+          I have a keen interest in architectural visualization, visual design,
+          and branding. I stay on the cutting edge of AI tools — using them
+          actively for generative design, AI-assisted marketing, motion graphics,
+          and campaign production — bringing the speed of technology to
+          design-driven storytelling.
+        </p>
+        <div class="skills-grid">
+          <div class="skill-item">
+            <div class="skill-name">Architecture</div>
+            <div class="skill-desc">AutoCAD · Revit · SketchUp</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">3D & Rendering</div>
+            <div class="skill-desc">Blender · ZBrush · Enscape · V-ray</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Visual Design</div>
+            <div class="skill-desc">Photoshop · Illustrator · InDesign</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Branding & Identity</div>
+            <div class="skill-desc">Logo · Packaging · Exhibition</div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">AI Marketing</div>
+            <div class="skill-desc">Higgsfield · Kling · Veo · Midjourney · Runway</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-right">
+        <div class="about-portrait">
+          <img src="photo.jpg" alt="Parag Chavhan" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
+        </div>
+        <div class="about-stats">
+          <div class="stat-box">
+            <div class="stat-num" data-count="40">0</div>
+            <div class="stat-label">Projects Shipped</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-count="5">0</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-count="20">0</div>
+            <div class="stat-label">Happy Clients</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-count="3">0</div>
+            <div class="stat-label">Awards Won</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-tag" style="margin-bottom:48px;">Get In Touch</div>
+    <div class="contact-big">
+      <span class="line"><span class="word-wrap"><span class="word">Let's</span></span></span>
+      <span class="line"><span class="word-wrap"><span class="word">Build</span></span></span>
+      <span class="line" style="color:var(--muted)"><span class="word-wrap"><span class="word">Something.</span></span></span>
+    </div>
+    <div class="contact-row">
+      <a href="mailto:drparagchavhan23@gmail.com" class="contact-email">
+        drparagchavhan23@gmail.com ↗
+      </a>
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div class="socials">
+          <a href="#" class="social-link">LinkedIn</a>
+          <a href="#" class="social-link">Dribbble</a>
+          <a href="#" class="social-link">GitHub</a>
+        </div>
+        <a href="mailto:drparagchavhan23@gmail.com" class="cta-btn">
+          <span>Start a project</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 Parag Chavhan. All rights reserved.</div>
+  <div class="footer-copy">SPA Vijayawada · B.Arch 5th Year · drparagchavhan23@gmail.com</div>
+</footer>
+
+<!-- PROJECT OVERLAY -->
+<div id="project-overlay" role="dialog" aria-modal="true" aria-label="Project detail">
+  <button class="po-close" id="po-close-btn" aria-label="Close project">✕</button>
+  <div class="po-inner" id="po-inner"></div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+<script>
+(function () {
+  gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+  /* ── NOISE: static SVG filter, zero JS cost ── */
+  /* canvas removed — handled by CSS SVG filter in hero::after */
+
+  /* ── CURSOR — pure RAF, no GSAP ticker overhead ── */
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  (function rafCursor() {
+    rx += (mx - rx) * .13;
+    ry += (my - ry) * .13;
+    dot.style.transform  = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(rafCursor);
+  })();
+  document.querySelectorAll('a, button, .project-card, .skill-item, .cta-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+
+
+  /* ── MOBILE HAMBURGER MENU ── */
+  (function() {
+    const btn = document.querySelector('.nav-hamburger');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    const links = menu.querySelectorAll('a');
+
+    function openMenu() {
+      menu.style.display = 'flex';
+      requestAnimationFrame(() => menu.classList.add('is-open'));
+      btn.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      menu.classList.remove('is-open');
+      btn.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      setTimeout(() => { menu.style.display = 'none'; }, 300);
+    }
+
+    btn.addEventListener('click', () => btn.classList.contains('is-open') ? closeMenu() : openMenu());
+    links.forEach(a => a.addEventListener('click', closeMenu));
+  })();
+
+  /* ── HERO NAME LETTER REPULSION ── */
+  (function() {
+    if (window.matchMedia('(hover: none)').matches) return; // skip on touch
+    const words = document.querySelectorAll('.hero-name .word');
+    if (!words.length) return;
+
+    const REPEL_RADIUS = 80;
+    const REPEL_STRENGTH = 22;
+    const LERP_OUT = 0.08;
+    const LERP_BACK = 0.05;
+
+    // only switch to similar grotesque/sans fonts — subtle, not chaotic
+    const CHAOS_FONTS = [
+      'Arial, sans-serif',
+      '"Helvetica Neue", sans-serif',
+      'Verdana, sans-serif',
+      '"Trebuchet MS", sans-serif',
+    ];
+    const BASE_FONT = "'Syne', sans-serif";
+
+    const letters = [];
+    words.forEach(word => {
+      const chars = [...word.textContent];
+      word.textContent = '';
+      chars.forEach(ch => {
+        const s = document.createElement('span');
+        s.textContent = ch;
+        s.style.cssText = 'display:inline-block;position:relative;will-change:transform;';
+        word.appendChild(s);
+        // lock width after render so font swaps don't cause reflow
+        requestAnimationFrame(() => { s.style.width = s.getBoundingClientRect().width + 'px'; s.style.textAlign = 'center'; });
+        letters.push({ el: s, cx: 0, cy: 0, frame: 0, chaotic: false });
+      });
+    });
+
+    let mx = -9999, my = -9999;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+    (function repelLoop() {
+      letters.forEach(lt => {
+        const r = lt.el.getBoundingClientRect();
+        // derive resting position by undoing current displacement
+        const lcx = r.left + r.width / 2 - lt.cx;
+        const lcy = r.top  + r.height / 2 - lt.cy;
+        const dx = lcx - mx;
+        const dy = lcy - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        let tx = 0, ty = 0;
+        const inZone = dist < REPEL_RADIUS && dist > 0.5;
+        if (inZone) {
+          const force = Math.pow((REPEL_RADIUS - dist) / REPEL_RADIUS, 1.6);
+          tx = (dx / dist) * force * REPEL_STRENGTH;
+          ty = (dy / dist) * force * REPEL_STRENGTH;
+          ty = Math.max(ty, 0); // never move upward — keeps eyebrow untouched
+        }
+
+        const lerpF = inZone ? LERP_OUT : LERP_BACK;
+        lt.cx += (tx - lt.cx) * lerpF;
+        lt.cy += (ty - lt.cy) * lerpF;
+        lt.el.style.transform = `translate(${lt.cx.toFixed(2)}px,${lt.cy.toFixed(2)}px)`;
+
+        // font chaos — cycle every 3 frames while in zone, reset when out
+        const displaced = Math.abs(lt.cx) + Math.abs(lt.cy) > 4;
+        if (displaced) {
+          lt.frame++;
+          if (lt.frame % 18 === 0) {
+            lt.el.style.fontFamily = CHAOS_FONTS[Math.floor(Math.random() * CHAOS_FONTS.length)];
+          }
+        } else if (lt.chaotic !== false) {
+          lt.el.style.fontFamily = BASE_FONT;
+          lt.frame = 0;
+        }
+        lt.chaotic = displaced;
+      });
+      requestAnimationFrame(repelLoop);
+    })();
+  })();
+
+  /* ── LOADER ── */
+  const loaderCount = document.getElementById('loader-count');
+  const loaderBar = document.getElementById('loader-bar');
+  const loader = document.getElementById('loader');
+  let prog = 0;
+  const loaderTl = gsap.timeline({
+    onComplete: () => {
+      gsap.to(loader, {
+        yPercent: -100,
+        duration: .9,
+        ease: 'expo.inOut',
+        onComplete: () => {
+          loader.style.display = 'none';
+          /* preload all project images so overlay can use them from cache */
+          Object.values(IMG).flat().forEach(src => { const i = new Image(); i.src = src; });
+          initAnimations();
+        }
+      });
+    }
+  });
+  loaderTl.to({ val: 0 }, {
+    val: 100, duration: 2.2, ease: 'power2.inOut',
+    onUpdate: function () {
+      const v = Math.round(this.targets()[0].val);
+      loaderCount.textContent = v;
+      loaderBar.style.width = v + '%';
+    }
+  });
+
+  /* ── MAIN ANIMATIONS ── */
+  function initAnimations() {
+    /* Hero eyebrow */
+    gsap.to('.hero-eyebrow span', {
+      y: '0%', duration: 1, ease: 'expo.out', delay: .1
+    });
+    /* Hero name words */
+    gsap.to('.hero-name .word', {
+      y: '0%', duration: 1.2, ease: 'expo.out',
+      stagger: .1, delay: .2
+    });
+    /* Hero tagline */
+    gsap.to('.hero-tagline .inner', {
+      y: '0%', duration: 1, ease: 'expo.out', delay: .5
+    });
+
+    /* Scroll-triggered section titles */
+    document.querySelectorAll('.split-reveal .inner').forEach(el => {
+      gsap.fromTo(el,
+        { y: '110%' },
+        {
+          y: '0%', duration: 1, ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' }
+        }
+      );
+    });
+
+    /* About big text char split */
+    const aboutBig = document.querySelector('.about-big-text');
+    if (aboutBig) {
+      const html = aboutBig.innerHTML;
+      const words = html.split(/(<[^>]+>|\s+)/g).filter(Boolean);
+      aboutBig.innerHTML = words.map(w =>
+        /^</.test(w) ? w : `<span class="ab-word" style="display:inline-block;overflow:hidden;"><span style="display:inline-block;">${w}</span></span>`
+      ).join('');
+      gsap.from('.ab-word span', {
+        y: '110%', duration: .8, ease: 'expo.out', stagger: .04,
+        scrollTrigger: { trigger: aboutBig, start: 'top 85%' }
+      });
+    }
+
+    /* Stats count-up */
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = +el.dataset.count;
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          gsap.to({ val: 0 }, {
+            val: target, duration: 1.6, ease: 'power2.out',
+            onUpdate: function () {
+              el.textContent = Math.round(this.targets()[0].val) + (target >= 20 ? '+' : '');
+            }
+          });
+        }
+      });
+    });
+
+    /* Project cards stagger */
+    gsap.from('.project-card', {
+      y: 60, opacity: 0, duration: .9, ease: 'power3.out', stagger: .12,
+      scrollTrigger: { trigger: '.projects-list', start: 'top 75%' }
+    });
+
+    /* Skill items */
+    gsap.from('.skill-item', {
+      y: 30, opacity: 0, duration: .7, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: '.skills-grid', start: 'top 85%' }
+    });
+
+    /* Contact big text */
+    gsap.from('.contact-big .word', {
+      y: '110%', duration: 1, ease: 'expo.out', stagger: .1,
+      scrollTrigger: { trigger: '.contact-big', start: 'top 85%' }
+    });
+
+    /* Parallax on hero name */
+    gsap.to('.hero-name', {
+      y: '-20%', ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true
+      }
+    });
+  }
+
+
+  /* ── MAGNETIC BUTTONS ── */
+  document.querySelectorAll('[data-magnetic], .cta-btn').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      gsap.to(btn, { x: x * .35, y: y * .35, duration: .4, ease: 'power2.out' });
+    });
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1,.5)' });
+    });
+  });
+
+  /* ── PROJECT DATA ── */
+  /* project images live in ./projects/ folder */
+  const IMG = {
+    aykyata:    ['projects/p05-aykyata.jpg',  'projects/ai-aykyata.webp'],
+    nrityamrit: ['projects/p07-nrityamrit.jpg','projects/ai-nrityamrit.webp'],
+    abode:      ['projects/p08-abode.jpg','projects/p09-abode2.jpg','projects/ai-abode.webp'],
+    mosafiro:   ['projects/p06-mosafiro.jpg',  'projects/ai-mosafiro.webp'],
+    winkit:     ['projects/p11-winkit.jpg',    'projects/ai-winkit.webp'],
+    dhakor:     ['projects/p10-dhakor.jpg',    'projects/ai-dhakor.webp'],
+    thesis:     ['projects/thesis-thumb.jpg'],
+  };
+
+  const PROJECTS = [
+    {
+      id: '01',
+      num: '01',
+      title: 'ABODE',
+      subtitle: 'One Stop For Your Home',
+      tags: ['Brand Identity', 'Packaging', 'Web Design'],
+      type: 'Brand Identity + Web',
+      year: '2025',
+      tools: 'Illustrator · Photoshop · Figma · InDesign',
+      imgKey: 'abode',
+      location: 'urabode.in',
+      brief: `ABODE is a contemporary home décor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website — creating a cohesive brand experience that feels personal and timeless.`,
+      highlights: ['Logo System', 'Packaging Design', 'Instagram Presence', 'E-Commerce Website'],
+      logoVideo: 'projects/abode-logo.mp4',
+      sections: [
+        { type: 'video', src: 'projects/abode-logo.mp4', label: '01 — Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch — a universal symbol of home — into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
+        { type: 'image', src: 'projects/p08-abode.jpg', label: '02 — Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint — from stationery to signage — follows a unified system built around warmth, trust, and domesticity.' },
+        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 — Packaging · Social · Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem — a cohesive end-to-end brand experience.' },
+        { type: 'image', src: 'projects/ai-abode.webp', label: '04 — Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth — terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
+      ],
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 12 L64 38 L64 68 L16 68 L16 38 Z" stroke="#b55418" stroke-width="2.5" fill="none"/>
+        <path d="M16 38 Q40 14 64 38" stroke="#b55418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <rect x="32" y="50" width="16" height="18" stroke="#b55418" stroke-width="2" fill="none"/>
+        <circle cx="40" cy="8" r="3" fill="#b55418"/>
+      </svg>`,
+      panelBg: ['linear-gradient(160deg,#1e1206 0%,#3d2410 100%)'],
+      accentColor: '#b55418',
+    },
+    {
+      id: '02',
+      num: '02',
+      title: 'GATEWAY TO THE SACRED',
+      subtitle: 'Pilgrimage Ropeway Terminal, Govind Ghat',
+      tags: ['Architecture', 'Thesis', 'Sacred Space'],
+      type: 'B.Arch Thesis',
+      year: '2026',
+      tools: 'AutoCAD · Revit · Rhino · Enscape · Photoshop · InDesign',
+      imgKey: 'thesis',
+      location: 'Govind Ghat, Uttarakhand',
+      brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat — the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage — creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
+      highlights: ['Ropeway Terminal Design', 'Sacred Threshold Architecture', 'Landscape Integration', '8-Sheet Documentation'],
+      bigImage: 'projects/thesis-big4.webp',
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 10 L52 30 L52 58" stroke="#4a9eca" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M40 10 L28 30 L28 58" stroke="#4a9eca" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <line x1="10" y1="60" x2="70" y2="60" stroke="#4a9eca" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="40" cy="10" r="4" fill="#4a9eca"/>
+        <circle cx="28" cy="30" r="3" fill="none" stroke="#4a9eca" stroke-width="2"/>
+        <circle cx="52" cy="30" r="3" fill="none" stroke="#4a9eca" stroke-width="2"/>
+        <line x1="10" y1="60" x2="28" y2="30" stroke="#4a9eca" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
+        <line x1="70" y1="60" x2="52" y2="30" stroke="#4a9eca" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
+        <path d="M20 68 Q40 56 60 68" stroke="#4a9eca" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+      </svg>`,
+      panelBg: ['linear-gradient(160deg,#050e1a 0%,#0d2238 100%)'],
+      accentColor: '#4a9eca',
+    },
+    {
+      id: '03',
+      num: '03',
+      title: 'RETRO FUTURISM',
+      subtitle: 'Self-Made Working Model · Product Design · AI Marketing',
+      tags: ['Product Design', 'Prototyping', 'AI Marketing', 'Digital Art'],
+      type: 'Self-Made Working Model · Digital Arts',
+      year: '2025',
+      tools: 'Acrylic Paint · Hand Lettering · Mixed Media · Kling AI · Higgsfield · Veo',
+      location: 'SPA Vijayawada',
+      brief: `A fully self-made product design project — not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing — a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
+      highlights: ['Fully functional working model — it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille · Graffiti lettering · Sticker collage'],
+      sections: [
+        { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 — AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker — it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
+        { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 — Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate — from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
+        { type: 'video', src: 'projects/retro-op3.mp4', muted: false, label: '04 — All Four Faces', heading: 'Four Faces, Four Visual Languages', body: 'A 360 showcase: folk art mandala grille, street graffiti side, sticker collage back, and embossed nameplate. Each face is a separate visual world, unified by the retro-futurist concept.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png', label: '05 — Front Face', heading: 'The Speaker as Canvas', body: 'DM-30 hardware reframed by a blue-painted window border, butterfly stickers, and folk art leaf motifs — turning functional controls into compositional elements.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/e5faec23-47d0-49bc-8bc0-ee49ae082838.png', label: '06 — Graffiti Side', heading: 'Street Language Meets Folk Memory', body: '"Retro Futurism" in graffiti-style freehand lettering with a lightning bolt burst. Pop art energy meets Indian street signage.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/1af2e1ec-c4e6-49fd-936f-b84bb23d3d3f.png', label: '07 — Mandala Grille', heading: 'Folk Art Frequency', body: 'A concentric mandala in purple and pink painted over the speaker grille — a folk art pattern that mirrors sound waves. The glowing cut-out rings are the visual heartbeat of the object.' },
+      ],
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="40,8 44,30 66,30 49,44 55,66 40,53 25,66 31,44 14,30 36,30" stroke="#e8355a" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <polygon points="40,20 42,32 54,32 44,39 48,51 40,44 32,51 36,39 26,32 38,32" fill="#e8355a" opacity="0.15"/>
+      </svg>`,
+      panelBg: ['linear-gradient(160deg,#0d0506 0%,#1a0808 100%)'],
+      accentColor: '#e8355a',
+    },
+    {
+      id: '04',
+      num: '04',
+      title: 'NRITYAMRIT',
+      subtitle: 'Lavani Dance Studio — Brand Identity',
+      tags: ['Branding', 'Logo Design', 'Visual Identity'],
+      type: 'Brand Identity',
+      year: '2025',
+      tools: 'Illustrator · Photoshop · InDesign',
+      imgKey: 'nrityamrit',
+      location: 'Maharashtra',
+      brief: `NRITYAMRIT is a Lavani dance studio rooted in the energy, grace, and cultural richness of Maharashtra's traditional performance art. The identity captures the expressive movement of Lavani through a contemporary visual language, creating a balance between heritage and modernity.\n\nThe logo abstracts the form of a Lavani dancer into a minimal symbolic figure using flowing curves and rhythmic geometry. Warm tones of saffron, red, black, and earthy brown evoke celebration, passion, strength, and cultural identity.`,
+      highlights: ['Logo Construction', 'Signage System', 'Brand Applications', 'Colour System'],
+      panelBg: ['linear-gradient(160deg,#2e0a08 0%,#5a1a10 100%)'],
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="28" r="10" stroke="#c0392b" stroke-width="2.5" fill="none"/>
+        <path d="M30 38 Q24 52 28 65" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M50 38 Q58 48 54 62" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M28 65 Q40 72 54 62" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M36 38 Q40 46 44 38" stroke="#c0392b" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <circle cx="40" cy="18" r="2.5" fill="#c0392b"/>
+        <path d="M34 12 Q40 8 46 12" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>`,
+      accentColor: '#c0392b',
+    },
+    {
+      id: '05',
+      num: '05',
+      title: 'MOSAFIRO',
+      subtitle: 'ka KARAVANA — Nomadic Dwelling',
+      tags: ['Architecture', 'Spatial Design', 'Blender'],
+      type: 'Architectural Design',
+      year: '2024 — Semester V',
+      tools: 'AutoCAD · Blender · Photoshop · Illustrator',
+      imgKey: 'mosafiro',
+      location: 'Mobile / Off-Grid',
+      brief: `MOVANA is a compact 9m × 3m portable dwelling designed for modern nomadic living — combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
+      highlights: ['9m × 3m Footprint', 'Off-Grid Systems', 'Loft Sleeping Space', 'Terrace Garden'],
+      panelBg: ['linear-gradient(160deg,#1a1a08 0%,#3a3010 100%)'],
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="10" stroke="#d48300" stroke-width="2.5" fill="none"/>
+        <line x1="40" y1="8" x2="40" y2="20" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="40" y1="60" x2="40" y2="72" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="8" y1="40" x2="20" y2="40" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="60" y1="40" x2="72" y2="40" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="17" y1="17" x2="25" y2="25" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="55" y1="55" x2="63" y2="63" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="63" y1="17" x2="55" y2="25" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <line x1="25" y1="55" x2="17" y2="63" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="40" cy="40" r="4" fill="#d48300" opacity="0.6"/>
+        <path d="M30 34 L40 24 L50 34" stroke="#d48300" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+      </svg>`,
+      accentColor: '#d48300',
+    },
+    {
+      id: '06',
+      num: '06',
+      title: 'WINKIT',
+      subtitle: 'Everyday Convenience, Reframed Through Design',
+      tags: ['UI/UX', 'Critical Design', 'Graphic Design'],
+      type: 'Critical Design / UI',
+      year: '2025',
+      tools: 'Figma · Illustrator · Photoshop',
+      imgKey: 'winkit',
+      location: 'Digital — Conceptual',
+      brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it — exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
+      highlights: ['Parody Commerce UI', 'Product Storytelling', 'Critical Awareness', 'Interactive Experience'],
+      panelBg: ['linear-gradient(160deg,#0a1a10 0%,#0d3020 100%)'],
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="28" width="56" height="36" rx="4" stroke="#00a86b" stroke-width="2.5" fill="none"/>
+        <path d="M28 28 L28 22 Q28 14 40 14 Q52 14 52 22 L52 28" stroke="#00a86b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="40" cy="46" r="6" stroke="#00a86b" stroke-width="2.5" fill="none"/>
+        <line x1="40" y1="52" x2="40" y2="58" stroke="#00a86b" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="40" cy="46" r="2" fill="#00a86b"/>
+      </svg>`,
+      accentColor: '#00a86b',
+    },
+    {
+      id: '07',
+      num: '07',
+      title: 'DHAKOR',
+      subtitle: 'Industrial Museum — Visual Identity',
+      tags: ['Graphic Design', 'Exhibition Design', 'Government Project'],
+      type: 'Graphic Design — Work Experience',
+      year: '2024 — Ongoing',
+      tools: 'Illustrator · Photoshop · InDesign',
+      imgKey: 'dhakor',
+      location: 'Dhakor, Gujarat',
+      brief: `An ongoing government project — conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
+      highlights: ['Visual Identity System', 'Exhibition Graphics', 'Wayfinding', 'Brand Strategy'],
+      panelBg: ['linear-gradient(160deg,#2a0808 0%,#4a1010 100%)'],
+      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="14" y="36" width="52" height="30" rx="2" stroke="#7b1f1f" stroke-width="2.5" fill="none"/>
+        <rect x="22" y="24" width="14" height="12" rx="1" stroke="#7b1f1f" stroke-width="2" fill="none"/>
+        <rect x="44" y="18" width="14" height="18" rx="1" stroke="#7b1f1f" stroke-width="2" fill="none"/>
+        <line x1="14" y1="52" x2="66" y2="52" stroke="#7b1f1f" stroke-width="1.5" opacity="0.4"/>
+        <rect x="34" y="52" width="12" height="14" rx="1" stroke="#7b1f1f" stroke-width="2" fill="none"/>
+        <circle cx="24" cy="62" r="3" stroke="#7b1f1f" stroke-width="1.5" fill="none"/>
+        <circle cx="56" cy="62" r="3" stroke="#7b1f1f" stroke-width="1.5" fill="none"/>
+      </svg>`,
+      accentColor: '#7b1f1f',
+    },
+  ];
+
+  function buildOverlay(idx) {
+    const p = PROJECTS[idx];
+    const next = PROJECTS[(idx + 1) % PROJECTS.length];
+    const imgs = IMG[p.imgKey] || [];
+
+    /* image gallery using background-image to avoid file:// img loading quirks */
+    const galleryHTML = imgs.length ? imgs.map((src, i) => `
+      <div style="
+        width:100%;
+        height:${i===0?'75vh':'55vh'};
+        min-height:${i===0?'400px':'280px'};
+        background:url('${src}') center/cover no-repeat #111;
+        border-radius:2px;
+        ${i>0?'margin-top:3px;':''}
+        transition:transform .6s cubic-bezier(.25,.46,.45,.94);
+        cursor:zoom-in;
+      " onmouseover="this.style.transform='scale(1.012)'"
+         onmouseout="this.style.transform='scale(1)'"></div>`).join('')
+    : `<div style="height:300px;background:#111;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;color:rgba(244,240,232,.3);">VISUALS COMING SOON</div>`;
+
+    const briefParas = p.brief.split('\n\n').map(para =>
+      `<p style="font-size:clamp(15px,1.4vw,18px);line-height:1.75;color:rgba(244,240,232,.8);margin-bottom:20px;">${para}</p>`
+    ).join('');
+
+    /* derive hero bg: first image-type section, fallback to imgs[0] */
+    const heroImg = (p.sections && p.sections.find(s => s.type === 'image'))?.src
+                 || imgs[0]
+                 || '';
+
+    return `
+      <div class="po-hero" style="background:${p.panelBg[0]};position:relative;overflow:hidden;">
+        ${heroImg ? `
+        <div style="position:absolute;inset:0;z-index:0;
+          background:url('${heroImg}') center/cover no-repeat;
+          filter:blur(12px) saturate(1.4);
+          transform:scale(1.08);
+          opacity:0.55;">
+        </div>
+        <div style="position:absolute;inset:0;z-index:1;background:${p.panelBg[0]};opacity:0.60;"></div>
+        ` : ''}
+        <div class="po-bg-num" style="z-index:2;">${p.num}</div>
+        <div style="position:relative;z-index:3;max-width:1320px;margin:0 auto;width:100%;">
+          ${p.logo ? `<div style="width:72px;height:72px;margin-bottom:28px;opacity:0.92;">${p.logo}</div>` : ''}
+          <div class="po-tag-row">${p.tags.map(t=>`<span class="po-tag">${t}</span>`).join('')}</div>
+          <div class="po-title">${p.title}</div>
+          <div class="po-subtitle">${p.subtitle}</div>
+        </div>
+      </div>
+
+      <div class="po-body">
+
+        <!-- Brief + Meta -->
+        <div class="po-grid" style="margin-bottom:64px;">
+          <div>${briefParas}</div>
+          <div class="po-meta">
+            <div class="po-meta-item">
+              <div class="po-meta-key">Type</div>
+              <div class="po-meta-val">${p.type}</div>
+            </div>
+            <div class="po-meta-item">
+              <div class="po-meta-key">Year</div>
+              <div class="po-meta-val">${p.year}</div>
+            </div>
+            <div class="po-meta-item">
+              <div class="po-meta-key">Tools</div>
+              <div class="po-meta-val" style="font-size:14px;line-height:1.8;">${p.tools}</div>
+            </div>
+            <div class="po-meta-item">
+              <div class="po-meta-key">Context</div>
+              <div class="po-meta-val">${p.location}</div>
+            </div>
+            <div class="po-meta-item" style="border-bottom:none;">
+              <div class="po-meta-key">Key Deliverables</div>
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+                ${p.highlights.map(h => `
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="width:4px;height:4px;border-radius:50%;background:${p.accentColor};flex-shrink:0;display:block;margin-top:1px;"></span>
+                    <span style="font-size:14px;color:var(--muted);">${h}</span>
+                  </div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:var(--border);margin-bottom:48px;"></div>
+
+        <!-- Real project images -->
+        <div style="margin-bottom:2px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:48px;">Project Visuals</div>
+
+          ${p.bigImage ? `
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(244,240,232,.35);margin-bottom:20px;">
+            8 A1 Sheets · Scroll to zoom · Drag to pan
+          </div>
+          <div id="pz-container" style="width:100%;height:92vh;overflow:hidden;cursor:grab;background:#050e1a;border-radius:3px;position:relative;touch-action:none;">
+            <div id="pz-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.3);z-index:2;">
+              Loading full resolution…
+            </div>
+            <img id="pz-img" src="${p.bigImage}" alt="Thesis sheets"
+              style="position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;user-select:none;pointer-events:none;opacity:0;transition:opacity .4s;"
+              draggable="false">
+            <div id="pz-zoom-badge" style="position:absolute;bottom:20px;right:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;color:rgba(244,240,232,.35);pointer-events:none;background:rgba(5,14,26,.7);padding:6px 12px;border-radius:40px;backdrop-filter:blur(4px);"></div>
+            <div id="pz-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.4);pointer-events:none;white-space:nowrap;background:rgba(5,14,26,.7);padding:6px 16px;border-radius:40px;backdrop-filter:blur(4px);transition:opacity 1.5s;">
+              ← Scroll to zoom · Drag to pan →
+            </div>
+          </div>` : ''}
+
+          ${p.sections ? p.sections.map((sec, i) => `
+            <div style="margin-bottom:120px;">
+
+              <!-- section label -->
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+                <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:${p.accentColor};">${sec.label}</span>
+                <div style="flex:1;height:1px;background:var(--border);"></div>
+              </div>
+
+              <!-- media -->
+              <div style="position:relative;border-radius:3px;overflow:hidden;background:#0d0d0d;margin-bottom:28px;">
+                ${sec.type === 'video'
+                  ? (sec.muted !== false
+                      ? `<video src="${sec.src}" autoplay loop muted playsinline style="width:100%;display:block;max-height:80vh;object-fit:contain;"></video>`
+                      : `<video src="${sec.src}" autoplay muted controls playsinline style="width:100%;display:block;max-height:80vh;object-fit:contain;"></video>`)
+                  : `<div style="width:100%;min-height:400px;background:url('${sec.src}') center/cover no-repeat #111;aspect-ratio:16/10;"></div>`
+                }
+              </div>
+
+              <!-- text block -->
+              <div style="display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:start;">
+                <div>
+                  <div style="font-family:'Syne',sans-serif;font-size:clamp(20px,2.2vw,32px);font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--white);">${sec.heading}</div>
+                </div>
+                <div style="font-size:clamp(14px,1.3vw,17px);line-height:1.8;color:rgba(244,240,232,.7);">${sec.body}</div>
+              </div>
+
+            </div>
+          `).join('') : galleryHTML}
+        </div>
+
+      </div>
+
+      <!-- Next project -->
+      <div class="po-next" id="po-next-btn" data-idx="${(idx+1)%PROJECTS.length}">
+        <div>
+          <div class="po-next-label">Next Project</div>
+          <div class="po-next-title">${next.title} — ${next.subtitle}</div>
+        </div>
+        <div class="po-next-arrow">→</div>
+      </div>`;
+  }
+
+  /* ── OVERLAY OPEN / CLOSE ── */
+  const overlay = document.getElementById('project-overlay');
+  const overlayInner = document.getElementById('po-inner');
+  const closeBtn = document.getElementById('po-close-btn');
+  let overlayOpen = false;
+
+  function openProject(idx) {
+    overlayInner.innerHTML = buildOverlay(idx);
+    overlay.scrollTop = 0;
+    overlayOpen = true;
+    document.body.style.overflow = 'hidden';
+
+    if (PROJECTS[idx].bigImage) initPanZoom();
+
+    gsap.to(overlay, {
+      y: '0%', duration: .9, ease: 'expo.inOut',
+      onStart: () => {
+        overlay.classList.add('is-open');
+        gsap.to(closeBtn, { opacity: 1, duration: .4, delay: .5 });
+        closeBtn.classList.add('visible');
+      }
+    });
+    gsap.to('.po-tag-row',  { y: 0, opacity: 1, duration: .8, ease: 'expo.out', delay: .6 });
+    gsap.to('.po-title',    { y: 0, opacity: 1, duration: .9, ease: 'expo.out', delay: .65 });
+    gsap.to('.po-subtitle', { y: 0, opacity: 1, duration: .7, ease: 'expo.out', delay: .75 });
+  }
+
+  /* ── PAN-ZOOM VIEWER for large thesis sheets ── */
+  function initPanZoom() {
+    const container = document.getElementById('pz-container');
+    const img = document.getElementById('pz-img');
+    const loading = document.getElementById('pz-loading');
+    const badge = document.getElementById('pz-zoom-badge');
+    const hint = document.getElementById('pz-hint');
+    if (!container || !img) return;
+
+    let scale = 1, tx = 0, ty = 0;
+    let isDragging = false, startX, startY, startTx, startTy;
+    let hintTimer;
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function applyTransform(animate) {
+      img.style.transition = animate ? 'transform .35s cubic-bezier(.25,.46,.45,.94)' : 'none';
+      img.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+      badge.textContent = Math.round(scale * 100) + '%';
+    }
+
+    function clampTx() {
+      const iw = img.naturalWidth * scale;
+      const ih = img.naturalHeight * scale;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      if (iw <= cw) { tx = (cw - iw) / 2; }
+      else { tx = clamp(tx, cw - iw, 0); }
+      if (ih <= ch) { ty = (ch - ih) / 2; }
+      else { ty = clamp(ty, ch - ih, 0); }
+    }
+
+    function setup() {
+      loading.style.display = 'none';
+      img.style.opacity = '1';
+
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+
+      /* start zoomed in: image fills 2× the viewport width */
+      scale = (cw * 2) / iw;
+      tx = -(iw * scale - cw) / 2;
+      ty = -(ih * scale - ch) / 2;
+      clampTx();
+      applyTransform(false);
+
+      /* fade hint out after 4s */
+      hintTimer = setTimeout(() => { hint.style.opacity = '0'; }, 4000);
+    }
+
+    function trySetup() {
+      if (container.clientWidth > 0 && img.naturalWidth > 0) { setup(); }
+      else { setTimeout(trySetup, 80); }
+    }
+    /* always poll — handles both cached and uncached image */
+    trySetup();
+
+    /* ── WHEEL ZOOM ── */
+    container.addEventListener('wheel', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = container.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      const factor = e.deltaY < 0 ? 1.09 : 0.915;
+      const minScale = container.clientWidth / img.naturalWidth * 0.5;
+      const maxScale = container.clientWidth * 5 / img.naturalWidth;
+      const newScale = clamp(scale * factor, minScale, maxScale);
+      tx = cx - (cx - tx) * (newScale / scale);
+      ty = cy - (cy - ty) * (newScale / scale);
+      scale = newScale;
+      clampTx();
+      applyTransform(false);
+      /* reset hint on interaction */
+      hint.style.opacity = '0';
+    }, { passive: false });
+
+    /* ── DRAG PAN ── */
+    container.addEventListener('mousedown', e => {
+      isDragging = true;
+      startX = e.clientX; startY = e.clientY;
+      startTx = tx; startTy = ty;
+      container.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      tx = startTx + (e.clientX - startX);
+      ty = startTy + (e.clientY - startY);
+      clampTx();
+      applyTransform(false);
+    });
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      container.style.cursor = 'grab';
+    });
+
+    /* ── DOUBLE-CLICK: toggle overview ↔ detail ── */
+    let isOverview = false;
+    container.addEventListener('dblclick', e => {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      if (isOverview) {
+        /* zoom back to 2× detail */
+        scale = (cw * 2) / img.naturalWidth;
+        tx = -(img.naturalWidth * scale - cw) / 2;
+        ty = -(img.naturalHeight * scale - ch) / 2;
+      } else {
+        /* fit entire image */
+        const fitScale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+        scale = fitScale;
+        tx = (cw - img.naturalWidth * scale) / 2;
+        ty = (ch - img.naturalHeight * scale) / 2;
+      }
+      isOverview = !isOverview;
+      clampTx();
+      applyTransform(true);
+    });
+  }
+
+  /* event delegation — handles next-project clicks inside the overlay */
+  overlay.addEventListener('click', e => {
+    const btn = e.target.closest('#po-next-btn');
+    if (btn) loadProject(+btn.dataset.idx);
+  });
+
+  /* cursor hover for dynamically generated overlay elements */
+  overlay.addEventListener('mouseenter', e => {
+    const el = e.target.closest('#po-next-btn, .po-close');
+    if (el) document.body.classList.add('cursor-hover');
+  }, true);
+  overlay.addEventListener('mouseleave', e => {
+    const el = e.target.closest('#po-next-btn, .po-close');
+    if (el) document.body.classList.remove('cursor-hover');
+  }, true);
+
+  function loadProject(idx) {
+    overlay.scrollTop = 0;
+    overlayInner.innerHTML = buildOverlay(idx);
+    gsap.fromTo('.po-tag-row',  {y:40,opacity:0},{y:0,opacity:1,duration:.7,ease:'expo.out'});
+    gsap.fromTo('.po-title',    {y:60,opacity:0},{y:0,opacity:1,duration:.8,ease:'expo.out',delay:.05});
+    gsap.fromTo('.po-subtitle', {y:40,opacity:0},{y:0,opacity:1,duration:.6,ease:'expo.out',delay:.1});
+  }
+
+  function closeProject() {
+    if (!overlayOpen) return;
+    gsap.to(closeBtn, { opacity: 0, duration: .2 });
+    gsap.to(overlay, {
+      y: '100%', duration: .7, ease: 'expo.inOut',
+      onComplete: () => {
+        overlay.classList.remove('is-open');
+        closeBtn.classList.remove('visible');
+        document.body.style.overflow = '';
+        overlayOpen = false;
+      }
+    });
+  }
+
+  closeBtn.addEventListener('click', closeProject);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProject(); });
+
+  /* wire project cards */
+  document.querySelectorAll('.project-card').forEach((item, idx) => {
+    item.style.cursor = 'none';
+    item.addEventListener('click', () => openProject(idx));
+  });
+
+  /* ── SMOOTH SCROLL (native + offset) ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  /* ── NAV HIDE/SHOW ON SCROLL ── */
+  const navEl = document.querySelector('nav');
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > lastY && y > 80) gsap.to(navEl, { y: '-100%', duration: .4, ease: 'power2.inOut' });
+    else gsap.to(navEl, { y: '0%', duration: .4, ease: 'power2.out' });
+    lastY = y;
+  }, { passive: true });
+
+})();
+</script>
+</body>
+</html>
