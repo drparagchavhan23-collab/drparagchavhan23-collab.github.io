@@ -1253,14 +1253,6 @@
     const LERP_OUT = 0.08;
     const LERP_BACK = 0.05;
 
-    // only switch to similar grotesque/sans fonts — subtle, not chaotic
-    const CHAOS_FONTS = [
-      'Arial, sans-serif',
-      '"Helvetica Neue", sans-serif',
-      'Verdana, sans-serif',
-      '"Trebuchet MS", sans-serif',
-    ];
-    const BASE_FONT = "'Syne', sans-serif";
 
     const letters = [];
     words.forEach(word => {
@@ -1304,18 +1296,6 @@
         lt.cy += (ty - lt.cy) * lerpF;
         lt.el.style.transform = `translate(${lt.cx.toFixed(2)}px,${lt.cy.toFixed(2)}px)`;
 
-        // font chaos — cycle every 3 frames while in zone, reset when out
-        const displaced = Math.abs(lt.cx) + Math.abs(lt.cy) > 4;
-        if (displaced) {
-          lt.frame++;
-          if (lt.frame % 18 === 0) {
-            lt.el.style.fontFamily = CHAOS_FONTS[Math.floor(Math.random() * CHAOS_FONTS.length)];
-          }
-        } else if (lt.chaotic !== false) {
-          lt.el.style.fontFamily = BASE_FONT;
-          lt.frame = 0;
-        }
-        lt.chaotic = displaced;
       });
       requestAnimationFrame(repelLoop);
     })();
