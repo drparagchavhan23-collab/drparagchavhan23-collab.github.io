@@ -315,136 +315,64 @@
     letter-spacing: -.03em;
   }
 
-  /* ── PROJECT CARDS – editorial layout ── */
-  .projects-list { display: flex; flex-direction: column; }
+  /* ── PROJECT BUBBLES ── */
+  .bubble-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0 80px;
+  }
 
   .project-card {
-    display: grid;
-    grid-template-columns: 38% 62%;
-    min-height: 56vh;
-    border-top: 1px solid var(--border);
-    cursor: none; overflow: hidden;
+    border-radius: 50%;
+    overflow: hidden;
     position: relative;
-    transition: border-color .4s;
+    cursor: none;
+    flex-shrink: 0;
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease;
+    box-shadow: 0 0 0 1px rgba(244,240,232,.08);
   }
-  .project-card:last-child { border-bottom: 1px solid var(--border); }
-  .project-card:hover { border-color: rgba(244,240,232,.22); }
-
-  /* left meta panel */
-  .pc-left {
-    display: flex; flex-direction: column;
-    justify-content: space-between;
-    padding: clamp(28px,4vw,56px) clamp(24px,3.5vw,52px);
-    border-right: 1px solid var(--border);
-    position: relative; z-index: 2;
-    background: var(--black);
-    transition: background .5s;
-  }
-  .project-card:hover .pc-left { background: #0a0a0a; }
-
-  .pc-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .pc-num {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(64px, 8vw, 120px); font-weight: 800;
-    letter-spacing: -.05em; line-height: 1;
-    color: rgba(244,240,232,.07);
-    transition: color .4s;
-  }
-  .project-card:hover .pc-num { color: rgba(244,240,232,.13); }
-  .pc-corner {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--muted); line-height: 1.7;
-    text-align: right;
+  .project-card:hover {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 1px rgba(244,240,232,.18), 0 20px 60px rgba(0,0,0,.5);
+    z-index: 2;
   }
 
-  .pc-body { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-top: 24px; }
-  .pc-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .pc-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--muted); border: 1px solid var(--border);
-    padding: 4px 10px; border-radius: 100px;
-    transition: color .3s, border-color .3s;
-  }
-  .project-card:hover .pc-tag { color: rgba(244,240,232,.6); border-color: rgba(244,240,232,.2); }
-
-  .pc-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(22px, 2.6vw, 38px); font-weight: 800;
-    letter-spacing: -.025em; line-height: 1.1;
-    margin-bottom: 12px;
-  }
-  .pc-sub {
-    font-size: 13px; color: var(--muted); line-height: 1.6;
-    max-width: 320px;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  }
-
-  .pc-bottom {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 40px;
-  }
-  .pc-meta-row {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-  }
-  .pc-meta-row span { margin-right: 20px; }
-  .pc-cta {
-    display: flex; align-items: center; gap: 10px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--muted);
-    transition: color .3s;
-  }
-  .project-card:hover .pc-cta { color: var(--white); }
-  .pc-arrow {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    transform: rotate(-45deg);
-    transition: transform .4s cubic-bezier(.76,0,.24,1), border-color .3s, background .3s;
-  }
-  .project-card:hover .pc-arrow {
-    transform: rotate(0deg);
-    border-color: var(--white); background: var(--white); color: var(--black);
-  }
-
-  /* right image panel */
-  .pc-right {
-    position: relative; overflow: hidden;
-    background: #0d0d0d;
-    min-height: 320px;
-  }
-  .pc-right img {
+  .bubble-media {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover;
-    transition: transform .9s cubic-bezier(.25,.46,.45,.94), opacity .5s;
-    opacity: .88;
-    will-change: transform;
+    opacity: .82;
+    transition: opacity .4s, transform .6s cubic-bezier(.25,.46,.45,.94);
   }
-  .project-card:hover .pc-right img {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-  /* subtle dark vignette edge */
-  .pc-right::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to right, rgba(5,5,5,.35) 0%, transparent 30%);
-    pointer-events: none; z-index: 1;
-  }
+  .project-card:hover .bubble-media { opacity: 1; transform: scale(1.08); }
 
-  /* page-number badge top-right of image */
-  .pc-badge {
-    position: absolute; top: 20px; right: 20px; z-index: 2;
+  .bubble-label {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 24px;
+    background: rgba(5,5,5,.52);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity .35s ease;
+    z-index: 2;
+  }
+  .project-card:hover .bubble-label { opacity: 1; }
+
+  .bubble-label-tag {
     font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
-    color: rgba(244,240,232,.5);
-    background: rgba(5,5,5,.5);
-    backdrop-filter: blur(4px);
-    padding: 5px 10px; border-radius: 100px;
-    border: 1px solid rgba(244,240,232,.1);
+    font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(244,240,232,.55);
+    margin-bottom: 8px;
+  }
+  .bubble-label-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(13px, 1.4vw, 17px); font-weight: 800;
+    letter-spacing: -.01em; line-height: 1.2;
+    color: var(--white);
   }
 
   /* ── ABOUT ── */
@@ -764,12 +692,9 @@
     .skills-grid { grid-template-columns: 1fr; }
     .skill-desc { word-break: break-word; overflow-wrap: break-word; }
 
-    /* projects */
-    .project-card { grid-template-columns: 1fr; min-height: auto; }
-    .pc-left { border-right: none; border-bottom: 1px solid var(--border); }
-    .pc-right { height: 52vw; min-height: 200px; }
-    .pc-num { font-size: 48px; }
-    .pc-bottom { flex-direction: column; gap: 16px; }
+    /* projects — bubble grid on mobile */
+    .bubble-grid { gap: 16px; padding: 40px 0 60px; }
+    .project-card { flex-shrink: 0; }
 
     /* project overlay */
     .po-hero { padding: 60px 24px; }
@@ -886,187 +811,68 @@
       <span class="section-num">2022 – 2024</span>
     </div>
 
-    <div class="projects-list">
+    <div class="bubble-grid">
 
-      <div class="project-card" data-project="01">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">01</div>
-            <div class="pc-corner">Brand Identity<br>2023</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">Brand Identity</span>
-              <span class="pc-tag">Packaging</span>
-              <span class="pc-tag">Web Design</span>
-            </div>
-            <div class="pc-title">ABODE — One Stop For Your Home</div>
-            <div class="pc-sub">A home décor brand identity spanning packaging, print collateral, social media, and digital presence.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>Personal Project</span><span>Identity</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right">
-          <video src="projects/abode-logo.mp4" autoplay loop muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92;"></video>
-          <span class="pc-badge">008 → 010</span>
+      <!-- 01 ABODE — large -->
+      <div class="project-card" data-project="01" style="width:280px;height:280px;">
+        <video class="bubble-media" src="projects/abode-logo.mp4" autoplay loop muted playsinline></video>
+        <div class="bubble-label">
+          <div class="bubble-label-tag">Brand Identity · 2023</div>
+          <div class="bubble-label-title">ABODE</div>
         </div>
       </div>
 
-      <div class="project-card" data-project="02">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">02</div>
-            <div class="pc-corner">Architecture<br>2026</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">Architecture</span>
-              <span class="pc-tag">Thesis</span>
-              <span class="pc-tag">Sacred Space</span>
-            </div>
-            <div class="pc-title">Gateway to the Sacred — Pilgrimage Ropeway Terminal, Govind Ghat</div>
-            <div class="pc-sub">B.Arch Thesis 2026 — A ropeway terminal at Govind Ghat, Hemkund Sahib, balancing pilgrimage, landscape, and sacred thresholds.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>B.Arch Thesis</span><span>Govind Ghat, Uttarakhand</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right" style="background:#0a0d12;">
-          <img src="projects/thesis-thumb.jpg" alt="Thesis" loading="lazy" decoding="async" style="opacity:.75;">
-          <span class="pc-badge">Thesis 2026</span>
+      <!-- 02 Thesis — xlarge -->
+      <div class="project-card" data-project="02" style="width:340px;height:340px;">
+        <img class="bubble-media" src="projects/thesis-thumb.jpg" alt="Thesis">
+        <div class="bubble-label">
+          <div class="bubble-label-tag">Architecture · 2026</div>
+          <div class="bubble-label-title">Gateway to the Sacred</div>
         </div>
       </div>
 
-      <div class="project-card" data-project="03">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">03</div>
-            <div class="pc-corner">Digital Art<br>2025</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">Product Design</span>
-              <span class="pc-tag">Prototyping</span>
-              <span class="pc-tag">AI Marketing</span>
-            </div>
-            <div class="pc-title">Retro Futurism — Self-Made Working Model</div>
-            <div class="pc-sub">A fully functional hand-painted Bluetooth speaker — designed, built, and painted from scratch. Taken to AI marketing with a Kling-generated product film.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>Digital Arts</span><span>SPA Vijayawada</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right" style="background:#0d0d0d;">
-          <img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism Calendar" loading="lazy" decoding="async" style="object-position:center center;">
-          <span class="pc-badge">Digital Arts 2025</span>
+      <!-- 03 Retro Futurism — medium -->
+      <div class="project-card" data-project="03" style="width:220px;height:220px;">
+        <img class="bubble-media" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism">
+        <div class="bubble-label">
+          <div class="bubble-label-tag">Digital Art · 2025</div>
+          <div class="bubble-label-title">Retro Futurism</div>
         </div>
       </div>
 
-      <div class="project-card" data-project="04">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">04</div>
-            <div class="pc-corner">Branding<br>2023</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">Branding</span>
-              <span class="pc-tag">Logo Design</span>
-              <span class="pc-tag">Visual Identity</span>
-            </div>
-            <div class="pc-title">NRITYAMRIT — Lavani Dance Studio</div>
-            <div class="pc-sub">Full visual identity for a classical Lavani dance school rooted in Maharashtra's folk tradition.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>Personal Project</span><span>Branding</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right">
-          <img src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT" loading="lazy" decoding="async">
-          <span class="pc-badge">007 → 008</span>
+      <!-- 04 NRITYAMRIT — medium -->
+      <div class="project-card" data-project="04" style="width:210px;height:210px;">
+        <img class="bubble-media" src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT">
+        <div class="bubble-label">
+          <div class="bubble-label-tag">Branding · 2023</div>
+          <div class="bubble-label-title">NRITYAMRIT</div>
         </div>
       </div>
 
-      <div class="project-card" data-project="05">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">05</div>
-            <div class="pc-corner">Architecture<br>2023</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">Architecture</span>
-              <span class="pc-tag">Spatial Design</span>
-              <span class="pc-tag">Blender</span>
-            </div>
-            <div class="pc-title">MOSAFIRO ka KARAVANA</div>
-            <div class="pc-sub">A 9×3m nomadic truck-home — compact off-grid dwelling with kitchen, sleeping loft, terrace and solar systems.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>Studio Project</span><span>Compact Living</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right">
-          <img src="projects/ai-mosafiro.webp" alt="MOSAFIRO" loading="lazy" decoding="async">
-          <span class="pc-badge">006 → 007</span>
+      <!-- 05 MOSAFIRO — large -->
+      <div class="project-card" data-project="05" style="width:270px;height:270px;">
+        <img class="bubble-media" src="projects/ai-mosafiro.webp" alt="MOSAFIRO">
+        <div class="bubble-label">
+          <div class="bubble-label-tag">Architecture · 2023</div>
+          <div class="bubble-label-title">MOSAFIRO ka KARAVANA</div>
         </div>
       </div>
 
-      <div class="project-card" data-project="06">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">06</div>
-            <div class="pc-corner">UI / UX<br>2024</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">UI/UX</span>
-              <span class="pc-tag">Critical Design</span>
-              <span class="pc-tag">Graphic Design</span>
-            </div>
-            <div class="pc-title">Winkit — Everyday Convenience, Reframed</div>
-            <div class="pc-sub">A critical design project questioning quick-commerce apps — revealing hidden costs behind instant delivery culture.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>Personal Project</span><span>Critical Design</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right">
-          <img src="projects/ai-winkit.webp" alt="Winkit" loading="lazy" decoding="async">
-          <span class="pc-badge">011 → 012</span>
+      <!-- 06 Winkit — medium -->
+      <div class="project-card" data-project="06" style="width:200px;height:200px;">
+        <img class="bubble-media" src="projects/ai-winkit.webp" alt="Winkit">
+        <div class="bubble-label">
+          <div class="bubble-label-tag">UI/UX · 2024</div>
+          <div class="bubble-label-title">Winkit</div>
         </div>
       </div>
 
-      <div class="project-card" data-project="07">
-        <div class="pc-left">
-          <div class="pc-top">
-            <div class="pc-num">07</div>
-            <div class="pc-corner">Exhibition<br>2023</div>
-          </div>
-          <div class="pc-body">
-            <div class="pc-tags">
-              <span class="pc-tag">Graphic Design</span>
-              <span class="pc-tag">Exhibition Design</span>
-              <span class="pc-tag">Govt. Project</span>
-            </div>
-            <div class="pc-title">Dhakor Industrial Museum — Visual Identity</div>
-            <div class="pc-sub">Complete visual identity for a government industrial heritage museum — signage, wayfinding, and brand system.</div>
-          </div>
-          <div class="pc-bottom">
-            <div class="pc-meta-row"><span>Government Commission</span><span>Gujarat</span></div>
-            <div class="pc-cta"><span>View Project</span><span class="pc-arrow">→</span></div>
-          </div>
-        </div>
-        <div class="pc-right">
-          <img src="projects/ai-dhakor.webp" alt="Dhakor Museum" loading="lazy" decoding="async">
-          <span class="pc-badge">010 → 011</span>
+      <!-- 07 Dhakor — large -->
+      <div class="project-card" data-project="07" style="width:260px;height:260px;">
+        <img class="bubble-media" src="projects/ai-dhakor.webp" alt="Dhakor Museum">
+        <div class="bubble-label">
+          <div class="bubble-label-tag">Exhibition · 2023</div>
+          <div class="bubble-label-title">Dhakor Industrial Museum</div>
         </div>
       </div>
 
