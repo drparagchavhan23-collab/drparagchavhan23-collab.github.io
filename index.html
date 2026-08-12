@@ -32,6 +32,9 @@
     --purple: #a855f7;
     --muted: rgba(244,240,232,0.35);
     --border: rgba(244,240,232,0.08);
+    --cyan:    #00eeff;
+    --magenta: #ff00cc;
+    --yellow:  #ffe600;
   }
 
   html { scroll-behavior: auto; overflow-x: hidden; }
@@ -739,39 +742,59 @@
   .ca-arm-b, .ca-arm-f, .ca-leg-b, .ca-leg-f {
     transform-box: fill-box;
     transform-origin: top center;
-    transition: transform .12s ease;
+    transition: transform .08s ease;
   }
 
-  /* Idle: gentle bob */
-  @keyframes char-bob { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-5px)} }
-  #parkour-char.state-idle .char-inner { animation: char-bob 2s ease-in-out infinite; }
+  /* ── IDLE: barely moves — breathe + occasional look ── */
+  @keyframes char-breathe {
+    0%,100% { transform: translateY(0)   scaleY(1);    }
+    45%     { transform: translateY(-2px) scaleY(1.01); }
+    50%     { transform: translateY(-2px) scaleY(1.01); }
+    95%     { transform: translateY(0)   scaleY(1);    }
+  }
+  @keyframes idle-look {
+    0%,30%,100% { transform: rotate(0deg);  }
+    40%,60%     { transform: rotate(8deg);  }
+    70%,90%     { transform: rotate(-4deg); }
+  }
+  #parkour-char.state-idle .char-inner     { animation: char-breathe 3.2s ease-in-out infinite; }
+  #parkour-char.state-idle .ca-arm-f       { transform: rotate(18deg);  transition: transform .4s ease; }
+  #parkour-char.state-idle .ca-arm-b       { transform: rotate(-10deg); transition: transform .4s ease; }
+  #parkour-char.state-idle .ca-leg-f       { transform: rotate(6deg);   transition: transform .4s ease; }
+  #parkour-char.state-idle .ca-leg-b       { transform: rotate(-4deg);  transition: transform .4s ease; }
 
-  /* Run cycle */
-  @keyframes arm-f { 0%,100%{transform:rotate(-42deg)} 50%{transform:rotate(42deg)} }
-  @keyframes arm-b { 0%,100%{transform:rotate(42deg)}  50%{transform:rotate(-42deg)} }
-  @keyframes leg-f { 0%,100%{transform:rotate(-48deg)} 50%{transform:rotate(48deg)} }
-  @keyframes leg-b { 0%,100%{transform:rotate(48deg)}  50%{transform:rotate(-48deg)} }
-  @keyframes body-lean { 0%,100%{transform:rotate(-4deg) scaleY(1)} 50%{transform:rotate(-4deg) scaleY(1.04)} }
+  /* ── RUN: full sprint with body lean ── */
+  @keyframes run-arm-f { 0%,100%{transform:rotate(-55deg)} 50%{transform:rotate(50deg)} }
+  @keyframes run-arm-b { 0%,100%{transform:rotate(55deg)}  50%{transform:rotate(-50deg)} }
+  @keyframes run-leg-f { 0%,100%{transform:rotate(-58deg)} 50%{transform:rotate(55deg)} }
+  @keyframes run-leg-b { 0%,100%{transform:rotate(58deg)}  50%{transform:rotate(-55deg)} }
+  @keyframes run-body  { 0%,100%{transform:rotate(-8deg) scaleY(1.02)} 50%{transform:rotate(-8deg) scaleY(0.97)} }
 
-  #parkour-char.state-run .ca-arm-f { animation: arm-f .36s linear infinite; }
-  #parkour-char.state-run .ca-arm-b { animation: arm-b .36s linear infinite; }
-  #parkour-char.state-run .ca-leg-f { animation: leg-f .36s linear infinite; }
-  #parkour-char.state-run .ca-leg-b { animation: leg-b .36s linear infinite; }
-  #parkour-char.state-run .char-inner { animation: body-lean .36s ease-in-out infinite; }
+  #parkour-char.state-run .ca-arm-f  { animation: run-arm-f .32s cubic-bezier(.4,0,.6,1) infinite; }
+  #parkour-char.state-run .ca-arm-b  { animation: run-arm-b .32s cubic-bezier(.4,0,.6,1) infinite; }
+  #parkour-char.state-run .ca-leg-f  { animation: run-leg-f .32s cubic-bezier(.4,0,.6,1) infinite; }
+  #parkour-char.state-run .ca-leg-b  { animation: run-leg-b .32s cubic-bezier(.4,0,.6,1) infinite; }
+  #parkour-char.state-run .char-inner { animation: run-body  .32s ease-in-out infinite; }
 
-  /* Jump pose */
-  #parkour-char.state-jump .ca-arm-f { transform: rotate(-85deg) !important; transition: transform .1s; }
-  #parkour-char.state-jump .ca-arm-b { transform: rotate(85deg)  !important; transition: transform .1s; }
-  #parkour-char.state-jump .ca-leg-f { transform: rotate(-22deg) !important; transition: transform .1s; }
-  #parkour-char.state-jump .ca-leg-b { transform: rotate(22deg)  !important; transition: transform .1s; }
+  /* ── JUMP: arms thrown back, knees tucked up ── */
+  #parkour-char.state-jump .ca-arm-f  { transform: rotate(-110deg) !important; transition: transform .08s ease; }
+  #parkour-char.state-jump .ca-arm-b  { transform: rotate(110deg)  !important; transition: transform .08s ease; }
+  #parkour-char.state-jump .ca-leg-f  { transform: rotate(-55deg)  !important; transition: transform .08s ease; }
+  #parkour-char.state-jump .ca-leg-b  { transform: rotate(-40deg)  !important; transition: transform .08s ease; }
+  #parkour-char.state-jump .char-inner { transform: rotate(-12deg); transition: transform .08s ease; }
 
-  /* Land squash */
+  /* ── LAND: hard squash → snap back ── */
   @keyframes char-land {
-    0%   { transform: scaleX(1.5) scaleY(0.5) translateY(10px); }
-    55%  { transform: scaleX(0.9) scaleY(1.1) translateY(-4px); }
-    100% { transform: scaleX(1)   scaleY(1)   translateY(0); }
+    0%   { transform: scaleX(1.7) scaleY(0.4) translateY(14px); }
+    40%  { transform: scaleX(0.88) scaleY(1.15) translateY(-6px); }
+    70%  { transform: scaleX(1.04) scaleY(0.97) translateY(0); }
+    100% { transform: scaleX(1) scaleY(1) translateY(0); }
   }
-  #parkour-char.state-land .char-inner { animation: char-land .38s cubic-bezier(.34,1.56,.64,1) forwards; }
+  #parkour-char.state-land .char-inner { animation: char-land .42s cubic-bezier(.34,1.56,.64,1) forwards; }
+  #parkour-char.state-land .ca-arm-f  { transform: rotate(60deg)  !important; transition: transform .06s; }
+  #parkour-char.state-land .ca-arm-b  { transform: rotate(-60deg) !important; transition: transform .06s; }
+  #parkour-char.state-land .ca-leg-f  { transform: rotate(30deg)  !important; transition: transform .06s; }
+  #parkour-char.state-land .ca-leg-b  { transform: rotate(-30deg) !important; transition: transform .06s; }
 
   @media (hover: none) { #parkour-char { display: none !important; } }
 
@@ -1910,76 +1933,105 @@
   const CHAR_H = 84;
   document.body.style.position = 'relative';
 
-  /* ── Platform SVG templates ── */
+  /* ── Platform SVG templates — CMYK accent, minimal, architectural ── */
+  const C = '#00eeff', M = '#ff00cc', Y = '#ffe600';
+
   const PLAT_SVG = {
-    shelf: {
-      w: 110, landY: 8,
-      svg: `<svg width="110" height="55" viewBox="0 0 110 55" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="110" height="9" rx="3" fill="#f4f0e8" opacity=".88"/>
-        <rect x="7"  y="9" width="5" height="38" rx="2" fill="#ddd9d1" opacity=".7"/>
-        <rect x="98" y="9" width="5" height="38" rx="2" fill="#ddd9d1" opacity=".7"/>
-        <line x1="7" y1="9" x2="110" y2="47" stroke="#c8c4bc" stroke-width="1" opacity=".4"/>
+    // Cyan beam — structural horizontal bar, left-anchored
+    beam_c: {
+      w: 120, landY: 6,
+      svg: `<svg width="120" height="48" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="120" height="6" fill="${C}" opacity=".9"/>
+        <rect x="0" y="6" width="120" height="2" fill="${C}" opacity=".25"/>
+        <rect x="0" y="8" width="6"   height="38" fill="${C}" opacity=".4"/>
+        <rect x="114" y="8" width="6" height="38" fill="${C}" opacity=".4"/>
+        <line x1="6" y1="8" x2="114" y2="46" stroke="${C}" stroke-width=".8" opacity=".2"/>
+        <circle cx="3"   cy="3" r="3" fill="${C}" opacity=".7"/>
+        <circle cx="117" cy="3" r="3" fill="${C}" opacity=".7"/>
       </svg>`
     },
-    lamp: {
-      w: 52, landY: 30,
-      svg: `<svg width="52" height="160" viewBox="0 0 52 160" xmlns="http://www.w3.org/2000/svg">
-        <rect x="24" y="45" width="4" height="115" fill="#ddd9d1" opacity=".85"/>
-        <rect x="24" y="154" width="4" height="6" rx="1" fill="#c8c4bc"/>
-        <rect x="13" y="153" width="26" height="5" rx="2" fill="#b8b4ac" opacity=".8"/>
-        <rect x="6"  y="28" width="38" height="4" rx="2" fill="#ddd9d1" opacity=".85"/>
-        <ellipse cx="8" cy="20" rx="14" ry="11" fill="#f4f0e8" opacity=".92"/>
-        <ellipse cx="8" cy="20" rx="7"  ry="6"  fill="#fffdf0" opacity=".7"/>
-        <line x1="8" y1="31" x2="24" y2="45" stroke="#ddd9d1" stroke-width="2" opacity=".6"/>
+    // Magenta lamp — pole right, light head left
+    lamp_m: {
+      w: 48, landY: 22,
+      svg: `<svg width="48" height="170" viewBox="0 0 48 170" xmlns="http://www.w3.org/2000/svg">
+        <rect x="22" y="38" width="4" height="132" fill="${M}" opacity=".55"/>
+        <rect x="14" y="163" width="20" height="5" rx="2" fill="${M}" opacity=".4"/>
+        <rect x="4"  y="26"  width="32" height="3" rx="1" fill="${M}" opacity=".7"/>
+        <rect x="4"  y="22"  width="3"  height="7" rx="1" fill="${M}" opacity=".5"/>
+        <ellipse cx="5" cy="14" rx="12" ry="9" fill="${M}" opacity=".15"/>
+        <ellipse cx="5" cy="14" rx="12" ry="9" fill="none" stroke="${M}" stroke-width="1.2" opacity=".7"/>
+        <circle  cx="5" cy="14" r="4" fill="${M}" opacity=".9"/>
+        <line x1="16" y1="29" x2="22" y2="38" stroke="${M}" stroke-width="1.5" opacity=".5"/>
       </svg>`
     },
-    scaffold: {
-      w: 140, landY: 7,
-      svg: `<svg width="140" height="70" viewBox="0 0 140 70" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="140" height="8" rx="2" fill="#f4f0e8" opacity=".9"/>
-        <rect x="4"  y="8" width="5" height="58" rx="1" fill="#ddd9d1" opacity=".72"/>
-        <rect x="67" y="8" width="5" height="58" rx="1" fill="#ddd9d1" opacity=".72"/>
-        <rect x="131" y="8" width="5" height="58" rx="1" fill="#ddd9d1" opacity=".72"/>
-        <line x1="4"  y1="8"  x2="72" y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
-        <line x1="72" y1="8"  x2="4"  y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
-        <line x1="72" y1="8"  x2="136" y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
-        <line x1="136" y1="8" x2="72" y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
+    // Yellow scaffold — construction frame
+    scaffold_y: {
+      w: 130, landY: 6,
+      svg: `<svg width="130" height="65" viewBox="0 0 130 65" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="130" height="6" fill="${Y}" opacity=".9"/>
+        <rect x="3"   y="6" width="5" height="58" fill="${Y}" opacity=".45"/>
+        <rect x="62"  y="6" width="5" height="58" fill="${Y}" opacity=".45"/>
+        <rect x="122" y="6" width="5" height="58" fill="${Y}" opacity=".45"/>
+        <line x1="3"   y1="6"  x2="67"  y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
+        <line x1="67"  y1="6"  x2="3"   y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
+        <line x1="67"  y1="6"  x2="127" y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
+        <line x1="127" y1="6"  x2="67"  y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
+        <circle cx="3"   cy="3" r="3.5" fill="${Y}" opacity=".8"/>
+        <circle cx="127" cy="3" r="3.5" fill="${Y}" opacity=".8"/>
       </svg>`
     },
-    sign: {
-      w: 68, landY: 8,
-      svg: `<svg width="68" height="130" viewBox="0 0 68 130" xmlns="http://www.w3.org/2000/svg">
-        <rect x="32" y="55" width="4" height="75" fill="#ddd9d1" opacity=".85"/>
-        <rect x="26" y="126" width="16" height="4" rx="1" fill="#b8b4ac"/>
-        <rect x="4" y="8" width="60" height="44" rx="5" fill="#0d0d0d" stroke="#f4f0e8" stroke-width="1.5" opacity=".92"/>
-        <text x="34" y="26" text-anchor="middle" font-family="monospace" font-size="7" fill="#f4f0e8" letter-spacing="2" opacity=".9">PARAG</text>
-        <text x="34" y="38" text-anchor="middle" font-family="monospace" font-size="6" fill="#f4f0e8" opacity=".55" letter-spacing="1">CHAVHAN</text>
-        <line x1="32" y1="52" x2="32" y2="55" stroke="#ddd9d1" stroke-width="2"/>
+    // Cyan pipe — horizontal conduit
+    pipe_c: {
+      w: 100, landY: 5,
+      svg: `<svg width="100" height="36" viewBox="0 0 100 36" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="2"  width="100" height="5" rx="2.5" fill="${C}" opacity=".8"/>
+        <rect x="0" y="7"  width="100" height="2" fill="${C}" opacity=".2"/>
+        <circle cx="6"  cy="4.5" r="5" fill="none" stroke="${C}" stroke-width="1.2" opacity=".6"/>
+        <circle cx="94" cy="4.5" r="5" fill="none" stroke="${C}" stroke-width="1.2" opacity=".6"/>
+        <circle cx="6"  cy="4.5" r="2" fill="${C}" opacity=".8"/>
+        <circle cx="94" cy="4.5" r="2" fill="${C}" opacity=".8"/>
+        <rect x="8"  y="9" width="4" height="27" rx="1" fill="${C}" opacity=".35"/>
+        <rect x="88" y="9" width="4" height="27" rx="1" fill="${C}" opacity=".35"/>
       </svg>`
     },
-    pipe: {
-      w: 90, landY: 6,
-      svg: `<svg width="90" height="40" viewBox="0 0 90 40" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0"  y="0"  width="90" height="7" rx="3" fill="#c8c4bc" opacity=".8"/>
-        <rect x="0"  y="7"  width="90" height="3" rx="1" fill="#a8a49c" opacity=".5"/>
-        <circle cx="5"  cy="3" r="4" fill="#ddd9d1" opacity=".8"/>
-        <circle cx="85" cy="3" r="4" fill="#ddd9d1" opacity=".8"/>
-        <rect x="10" y="10" width="5" height="30" rx="2" fill="#b8b4ac" opacity=".5"/>
-        <rect x="75" y="10" width="5" height="30" rx="2" fill="#b8b4ac" opacity=".5"/>
+    // Magenta sign — name plate on pole
+    sign_m: {
+      w: 64, landY: 6,
+      svg: `<svg width="64" height="120" viewBox="0 0 64 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="50" width="4" height="70" fill="${M}" opacity=".5"/>
+        <rect x="24" y="117" width="16" height="3" rx="1" fill="${M}" opacity=".4"/>
+        <rect x="2"  y="4"  width="60" height="42" rx="4" fill="#0d0d0d"/>
+        <rect x="2"  y="4"  width="60" height="42" rx="4" fill="none" stroke="${M}" stroke-width="1.5" opacity=".85"/>
+        <text x="32" y="22" text-anchor="middle" font-family="monospace" font-size="7.5" fill="${M}" letter-spacing="2" opacity=".95">PARAG</text>
+        <line x1="8" y1="28" x2="56" y2="28" stroke="${M}" stroke-width=".5" opacity=".3"/>
+        <text x="32" y="38" text-anchor="middle" font-family="monospace" font-size="5.5" fill="${M}" opacity=".6" letter-spacing="1.5">CHAVHAN.COM</text>
+        <line x1="30" y1="46" x2="30" y2="50" stroke="${M}" stroke-width="1.5" opacity=".6"/>
       </svg>`
-    }
+    },
+    // Yellow beam — right-anchored variant
+    beam_y: {
+      w: 110, landY: 6,
+      svg: `<svg width="110" height="48" viewBox="0 0 110 48" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="110" height="6" fill="${Y}" opacity=".88"/>
+        <rect x="0" y="6" width="110" height="2" fill="${Y}" opacity=".22"/>
+        <rect x="0"   y="8" width="6" height="38" fill="${Y}" opacity=".38"/>
+        <rect x="104" y="8" width="6" height="38" fill="${Y}" opacity=".38"/>
+        <line x1="6" y1="8" x2="104" y2="46" stroke="${Y}" stroke-width=".8" opacity=".18"/>
+        <circle cx="3"   cy="3" r="3" fill="${Y}" opacity=".75"/>
+        <circle cx="107" cy="3" r="3" fill="${Y}" opacity=".75"/>
+      </svg>`
+    },
   };
 
-  /* ── Platform layout definitions ── */
-  // Each: which section, how far down (yFrac of section height), x pos (vw fraction), type
+  /* ── Platform layout — hugs left/right margins, never overlaps content ── */
   const PLAT_DEFS = [
-    { sec: '#hero',    yFrac: 0.22, xFrac: 0.84, type: 'shelf'    },
-    { sec: '#hero',    yFrac: 0.48, xFrac: 0.07, type: 'lamp'     },
-    { sec: '#hero',    yFrac: 0.72, xFrac: 0.78, type: 'pipe'     },
-    { sec: '#work',    yFrac: 0.08, xFrac: 0.05, type: 'scaffold' },
-    { sec: '#about',   yFrac: 0.18, xFrac: 0.86, type: 'sign'     },
-    { sec: '#about',   yFrac: 0.55, xFrac: 0.06, type: 'shelf'    },
-    { sec: '#contact', yFrac: 0.22, xFrac: 0.82, type: 'lamp'     },
+    { sec: '#hero',    yFrac: 0.20, side: 'right', type: 'beam_c'     },
+    { sec: '#hero',    yFrac: 0.46, side: 'left',  type: 'lamp_m'     },
+    { sec: '#hero',    yFrac: 0.72, side: 'right', type: 'pipe_c'     },
+    { sec: '#work',    yFrac: 0.06, side: 'left',  type: 'scaffold_y' },
+    { sec: '#about',   yFrac: 0.16, side: 'right', type: 'sign_m'     },
+    { sec: '#about',   yFrac: 0.55, side: 'left',  type: 'beam_y'     },
+    { sec: '#contact', yFrac: 0.20, side: 'right', type: 'lamp_m'     },
   ];
 
   let platData = []; // { el, docY (landing surface), centerX }
@@ -1989,6 +2041,7 @@
     platData = [];
 
     const vw = window.innerWidth;
+    const MARGIN = 18; // px from screen edge
 
     PLAT_DEFS.forEach(def => {
       const sec = document.querySelector(def.sec);
@@ -1998,13 +2051,17 @@
       const sH   = sr.height;
       const tmpl = PLAT_SVG[def.type];
 
-      const docY   = sTop + sH * def.yFrac;           // doc Y of platform top
-      const centerX = vw * def.xFrac;
-      const left   = centerX - tmpl.w / 2;
+      const docY = sTop + sH * def.yFrac;
+
+      // Hug the margin edge
+      const left = def.side === 'left'
+        ? MARGIN
+        : vw - tmpl.w - MARGIN;
+      const centerX = left + tmpl.w / 2;
 
       const el = document.createElement('div');
       el.innerHTML = tmpl.svg;
-      el.style.cssText = `position:absolute;top:${docY}px;left:${left}px;pointer-events:none;z-index:800;opacity:.78;`;
+      el.style.cssText = `position:absolute;top:${docY}px;left:${left}px;pointer-events:none;z-index:800;`;
       document.body.appendChild(el);
 
       platData.push({ el, docY: docY + tmpl.landY, centerX });
