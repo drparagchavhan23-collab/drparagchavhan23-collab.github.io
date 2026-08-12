@@ -385,10 +385,10 @@
   .ring-text {
     font-family: 'DM Mono', monospace;
     font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
-    fill: rgba(244,240,232,.18);
+    fill: rgba(244,240,232,.48);
     transition: fill .35s ease;
   }
-  .bubble-wrap:hover .ring-text { fill: rgba(244,240,232,.72); }
+  .bubble-wrap:hover .ring-text { fill: rgba(244,240,232,.92); }
 
   .bubble-media {
     position: absolute; inset: 0;
@@ -776,7 +776,7 @@
 
   /* ── CMYK SCRATCH REVEAL ── */
   #cmyk-reveal-bg, #cmyk-reveal-scr {
-    position: fixed; inset: 0; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0;
     pointer-events: none;
   }
   #cmyk-reveal-bg  { z-index: 0; }
@@ -825,7 +825,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="container" style="position:relative;z-index:2;">
-    <div class="hero-eyebrow"><span>Architect Â· Designer Â· Visualizer</span></div>
+    <div class="hero-eyebrow"><span>Architect · Designer · Visualizer</span></div>
     <h1 class="hero-name" data-text="Parag Chavhan">
       <span class="line"><span class="word">Parag</span></span>
       <span class="line"><span class="word">Chavhan</span></span>
@@ -836,7 +836,7 @@
       </p>
     </div>
   </div>
-  <div class="hero-counter">2026 Â· Portfolio</div>
+  <div class="hero-counter">2026 · Portfolio</div>
 </section>
 
 <!-- MARQUEE -->
@@ -878,7 +878,7 @@
       <div class="project-card" data-project="01" style="width:155px;height:155px;">
         <video class="bubble-media" src="projects/abode-logo.mp4" autoplay loop muted playsinline></video>
         <div class="bubble-label">
-          <div class="bubble-label-tag">Brand Identity Â· 2023</div>
+          <div class="bubble-label-tag">Brand Identity · 2023</div>
           <div class="bubble-label-title">ABODE</div>
         </div>
       </div>
@@ -887,7 +887,7 @@
       <div class="project-card" data-project="02" style="width:225px;height:225px;">
         <img class="bubble-media" src="projects/thesis-thumb.jpg" alt="Thesis">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Architecture Â· 2026</div>
+          <div class="bubble-label-tag">Architecture · 2026</div>
           <div class="bubble-label-title">Gateway to the Sacred</div>
         </div>
       </div>
@@ -896,7 +896,7 @@
       <div class="project-card" data-project="03" style="width:118px;height:118px;">
         <img class="bubble-media" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Digital Art Â· 2025</div>
+          <div class="bubble-label-tag">Digital Art · 2025</div>
           <div class="bubble-label-title">Retro Futurism</div>
         </div>
       </div>
@@ -905,7 +905,7 @@
       <div class="project-card" data-project="04" style="width:190px;height:190px;">
         <img class="bubble-media" src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Branding Â· 2023</div>
+          <div class="bubble-label-tag">Branding · 2023</div>
           <div class="bubble-label-title">NRITYAMRIT</div>
         </div>
       </div>
@@ -914,7 +914,7 @@
       <div class="project-card" data-project="05" style="width:108px;height:108px;">
         <img class="bubble-media" src="projects/ai-mosafiro.webp" alt="MOSAFIRO">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Architecture Â· 2023</div>
+          <div class="bubble-label-tag">Architecture · 2023</div>
           <div class="bubble-label-title">MOSAFIRO</div>
         </div>
       </div>
@@ -923,7 +923,7 @@
       <div class="project-card" data-project="06" style="width:195px;height:195px;">
         <img class="bubble-media" src="projects/ai-winkit.webp" alt="Winkit">
         <div class="bubble-label">
-          <div class="bubble-label-tag">UI/UX Â· 2024</div>
+          <div class="bubble-label-tag">UI/UX · 2024</div>
           <div class="bubble-label-title">Winkit</div>
         </div>
       </div>
@@ -932,7 +932,7 @@
       <div class="project-card" data-project="07" style="width:138px;height:138px;">
         <img class="bubble-media" src="projects/ai-dhakor.webp" alt="Dhakor Museum">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Exhibition Â· 2023</div>
+          <div class="bubble-label-tag">Exhibition · 2023</div>
           <div class="bubble-label-title">Dhakor Museum</div>
         </div>
       </div>
@@ -966,23 +966,23 @@
         <div class="skills-grid">
           <div class="skill-item">
             <div class="skill-name">Architecture</div>
-            <div class="skill-desc">AutoCAD Â· Revit Â· SketchUp</div>
+            <div class="skill-desc">AutoCAD · Revit · SketchUp</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">3D & Rendering</div>
-            <div class="skill-desc">Blender Â· ZBrush Â· Enscape Â· V-ray</div>
+            <div class="skill-desc">Blender · ZBrush · Enscape · V-ray</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">Visual Design</div>
-            <div class="skill-desc">Photoshop Â· Illustrator Â· InDesign</div>
+            <div class="skill-desc">Photoshop · Illustrator · InDesign</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">Branding & Identity</div>
-            <div class="skill-desc">Logo Â· Packaging Â· Exhibition</div>
+            <div class="skill-desc">Logo · Packaging · Exhibition</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">AI Marketing</div>
-            <div class="skill-desc">Higgsfield Â· Kling Â· Veo Â· Midjourney Â· Runway</div>
+            <div class="skill-desc">Higgsfield · Kling · Veo · Midjourney · Runway</div>
           </div>
         </div>
       </div>
@@ -1044,8 +1044,8 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-copy">Â© 2026 Parag Chavhan. All rights reserved.</div>
-  <div class="footer-copy">SPA Vijayawada Â· B.Arch 5th Year Â· drparagchavhan23@gmail.com</div>
+  <div class="footer-copy">© 2026 Parag Chavhan. All rights reserved.</div>
+  <div class="footer-copy">SPA Vijayawada · B.Arch 5th Year · drparagchavhan23@gmail.com</div>
 </footer>
 
 <!-- PROJECT OVERLAY -->
@@ -1318,7 +1318,7 @@
       tags: ['Brand Identity', 'Packaging', 'Web Design'],
       type: 'Brand Identity + Web',
       year: '2025',
-      tools: 'Illustrator Â· Photoshop Â· Figma Â· InDesign',
+      tools: 'Illustrator · Photoshop · Figma · InDesign',
       imgKey: 'abode',
       location: 'urabode.in',
       brief: `ABODE is a contemporary home dÃ©cor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website â€” creating a cohesive brand experience that feels personal and timeless.`,
@@ -1327,7 +1327,7 @@
       sections: [
         { type: 'video', src: 'projects/abode-logo.mp4', label: '01 â€” Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch â€” a universal symbol of home â€” into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
         { type: 'image', src: 'projects/p08-abode.jpg', label: '02 â€” Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint â€” from stationery to signage â€” follows a unified system built around warmth, trust, and domesticity.' },
-        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 â€” Packaging Â· Social Â· Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem â€” a cohesive end-to-end brand experience.' },
+        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 â€” Packaging · Social · Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem â€” a cohesive end-to-end brand experience.' },
         { type: 'image', src: 'projects/ai-abode.webp', label: '04 â€” Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth â€” terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
       ],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1347,7 +1347,7 @@
       tags: ['Architecture', 'Thesis', 'Sacred Space'],
       type: 'B.Arch Thesis',
       year: '2026',
-      tools: 'AutoCAD Â· Revit Â· Rhino Â· Enscape Â· Photoshop Â· InDesign',
+      tools: 'AutoCAD · Revit · Rhino · Enscape · Photoshop · InDesign',
       imgKey: 'thesis',
       location: 'Govind Ghat, Uttarakhand',
       brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat â€” the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage â€” creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
@@ -1371,14 +1371,14 @@
       id: '03',
       num: '03',
       title: 'RETRO FUTURISM',
-      subtitle: 'Self-Made Working Model Â· Product Design Â· AI Marketing',
+      subtitle: 'Self-Made Working Model · Product Design · AI Marketing',
       tags: ['Product Design', 'Prototyping', 'AI Marketing', 'Digital Art'],
-      type: 'Self-Made Working Model Â· Digital Arts',
+      type: 'Self-Made Working Model · Digital Arts',
       year: '2025',
-      tools: 'Acrylic Paint Â· Hand Lettering Â· Mixed Media Â· Kling AI Â· Higgsfield Â· Veo',
+      tools: 'Acrylic Paint · Hand Lettering · Mixed Media · Kling AI · Higgsfield · Veo',
       location: 'SPA Vijayawada',
       brief: `A fully self-made product design project â€” not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing â€” a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
-      highlights: ['Fully functional working model â€” it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille Â· Graffiti lettering Â· Sticker collage'],
+      highlights: ['Fully functional working model â€” it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille · Graffiti lettering · Sticker collage'],
       sections: [
         { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 â€” AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker â€” it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
         { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 â€” Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate â€” from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
@@ -1402,7 +1402,7 @@
       tags: ['Branding', 'Logo Design', 'Visual Identity'],
       type: 'Brand Identity',
       year: '2025',
-      tools: 'Illustrator Â· Photoshop Â· InDesign',
+      tools: 'Illustrator · Photoshop · InDesign',
       imgKey: 'nrityamrit',
       location: 'Maharashtra',
       brief: `NRITYAMRIT is a Lavani dance studio rooted in the energy, grace, and cultural richness of Maharashtra's traditional performance art. The identity captures the expressive movement of Lavani through a contemporary visual language, creating a balance between heritage and modernity.\n\nThe logo abstracts the form of a Lavani dancer into a minimal symbolic figure using flowing curves and rhythmic geometry. Warm tones of saffron, red, black, and earthy brown evoke celebration, passion, strength, and cultural identity.`,
@@ -1427,7 +1427,7 @@
       tags: ['Architecture', 'Spatial Design', 'Blender'],
       type: 'Architectural Design',
       year: '2024 â€” Semester V',
-      tools: 'AutoCAD Â· Blender Â· Photoshop Â· Illustrator',
+      tools: 'AutoCAD · Blender · Photoshop · Illustrator',
       imgKey: 'mosafiro',
       location: 'Mobile / Off-Grid',
       brief: `MOVANA is a compact 9m Ã— 3m portable dwelling designed for modern nomadic living â€” combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
@@ -1456,7 +1456,7 @@
       tags: ['UI/UX', 'Critical Design', 'Graphic Design'],
       type: 'Critical Design / UI',
       year: '2025',
-      tools: 'Figma Â· Illustrator Â· Photoshop',
+      tools: 'Figma · Illustrator · Photoshop',
       imgKey: 'winkit',
       location: 'Digital â€” Conceptual',
       brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it â€” exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
@@ -1479,7 +1479,7 @@
       tags: ['Graphic Design', 'Exhibition Design', 'Government Project'],
       type: 'Graphic Design â€” Work Experience',
       year: '2024 â€” Ongoing',
-      tools: 'Illustrator Â· Photoshop Â· InDesign',
+      tools: 'Illustrator · Photoshop · InDesign',
       imgKey: 'dhakor',
       location: 'Dhakor, Gujarat',
       brief: `An ongoing government project â€” conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
@@ -1591,7 +1591,7 @@
 
           ${p.bigImage ? `
           <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(244,240,232,.35);margin-bottom:20px;">
-            8 A1 Sheets Â· Scroll to zoom Â· Drag to pan
+            8 A1 Sheets · Scroll to zoom · Drag to pan
           </div>
           <div id="pz-container" style="width:100%;height:92vh;overflow:hidden;cursor:grab;background:#050e1a;border-radius:3px;position:relative;touch-action:none;">
             <div id="pz-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.3);z-index:2;">
@@ -1602,7 +1602,7 @@
               draggable="false">
             <div id="pz-zoom-badge" style="position:absolute;bottom:20px;right:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;color:rgba(244,240,232,.35);pointer-events:none;background:rgba(5,14,26,.7);padding:6px 12px;border-radius:40px;backdrop-filter:blur(4px);"></div>
             <div id="pz-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.4);pointer-events:none;white-space:nowrap;background:rgba(5,14,26,.7);padding:6px 16px;border-radius:40px;backdrop-filter:blur(4px);transition:opacity 1.5s;">
-              â† Scroll to zoom Â· Drag to pan â†’
+              â† Scroll to zoom · Drag to pan â†’
             </div>
           </div>` : ''}
 
@@ -1936,44 +1936,66 @@
   if (window.matchMedia('(hover: none)').matches) return;
 
   const C = '#00eeff', M = '#ff00cc', Y = '#ffe600';
-
   const bgC  = document.getElementById('cmyk-reveal-bg');
   const scrC = document.getElementById('cmyk-reveal-scr');
   const bgX  = bgC.getContext('2d');
   const scrX = scrC.getContext('2d');
 
-  const BLOBS = [
-    { xf:.12, yf:.22, rf:.30, col:C },
-    { xf:.80, yf:.52, rf:.34, col:M },
-    { xf:.42, yf:.83, rf:.26, col:Y },
-    { xf:.91, yf:.10, rf:.22, col:C },
-    { xf:.22, yf:.65, rf:.28, col:M },
-    { xf:.62, yf:.06, rf:.20, col:Y },
-    { xf:.04, yf:.90, rf:.24, col:M },
-    { xf:.55, yf:.40, rf:.18, col:C },
-    { xf:.70, yf:.78, rf:.22, col:Y },
+  /* blob layout per viewport-height tile (repeated down the page) */
+  const TILE_BLOBS = [
+    { xf:.08,  yf:.10, rf:.38, col:C },
+    { xf:.55,  yf:.05, rf:.32, col:Y },
+    { xf:.90,  yf:.18, rf:.36, col:M },
+    { xf:.28,  yf:.35, rf:.40, col:M },
+    { xf:.75,  yf:.42, rf:.34, col:C },
+    { xf:.10,  yf:.58, rf:.38, col:Y },
+    { xf:.50,  yf:.62, rf:.36, col:C },
+    { xf:.85,  yf:.72, rf:.32, col:Y },
+    { xf:.30,  yf:.82, rf:.40, col:M },
+    { xf:.68,  yf:.90, rf:.34, col:C },
   ];
 
-  function resize() {
-    const w = window.innerWidth, h = window.innerHeight;
+  function docH() {
+    return Math.max(document.documentElement.scrollHeight, window.innerHeight);
+  }
+
+  function init() {
+    const w = window.innerWidth, h = docH();
     bgC.width  = scrC.width  = w;
     bgC.height = scrC.height = h;
+    bgC.style.width  = scrC.style.width  = w + 'px';
+    bgC.style.height = scrC.style.height = h + 'px';
     drawBg(w, h);
     fillBlack(w, h);
   }
 
   function drawBg(w, h) {
-    bgX.fillStyle = '#050505';
+    /* warm dark base — never pure black */
+    const base = bgX.createLinearGradient(0, 0, w, h);
+    base.addColorStop(0,    '#03060f');
+    base.addColorStop(0.33, '#0f0308');
+    base.addColorStop(0.66, '#0a0a02');
+    base.addColorStop(1,    '#03080f');
+    bgX.fillStyle = base;
     bgX.fillRect(0, 0, w, h);
-    BLOBS.forEach(b => {
-      const x = b.xf * w, y = b.yf * h, r = b.rf * Math.min(w, h);
-      const g = bgX.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0,   b.col + 'dd');
-      g.addColorStop(0.5, b.col + '66');
-      g.addColorStop(1,   b.col + '00');
-      bgX.fillStyle = g;
-      bgX.fillRect(0, 0, w, h);
-    });
+
+    /* tile blobs down the full page height */
+    const tileH = window.innerHeight;
+    const tiles  = Math.ceil(h / tileH) + 1;
+    for (let t = 0; t < tiles; t++) {
+      TILE_BLOBS.forEach(b => {
+        const x = b.xf * w;
+        const y = b.yf * tileH + t * tileH;
+        const r = b.rf * Math.min(w, tileH);
+        const g = bgX.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0,    b.col + 'cc');
+        g.addColorStop(0.45, b.col + '77');
+        g.addColorStop(0.8,  b.col + '22');
+        g.addColorStop(1,    b.col + '00');
+        bgX.fillStyle = g;
+        bgX.fillRect(0, 0, w, h);
+      });
+    }
   }
 
   function fillBlack(w, h) {
@@ -1982,26 +2004,30 @@
     scrX.fillRect(0, 0, w, h);
   }
 
-  resize();
-  window.addEventListener('resize', resize, { passive: true });
+  init();
+  window.addEventListener('resize', init, { passive: true });
 
-  const BRUSH = 88;
+  const BRUSH = 52;
   let lx = null, ly = null, raf = false;
   let mx = 0, my = 0;
 
   function scratch() {
     raf = false;
+    /* canvas coords include scroll offset — marks persist across scroll */
+    const sy = window.pageYOffset;
+    const cx = mx, cy = my + sy;
+
     scrX.globalCompositeOperation = 'destination-out';
     if (lx !== null) {
-      const dist  = Math.hypot(mx - lx, my - ly);
-      const steps = Math.max(1, Math.ceil(dist / 10));
+      const dist  = Math.hypot(cx - lx, cy - ly);
+      const steps = Math.max(1, Math.ceil(dist / 8));
       for (let i = 0; i <= steps; i++) {
-        const t = i / steps;
-        const ix = lx + (mx - lx) * t;
-        const iy = ly + (my - ly) * t;
-        const g = scrX.createRadialGradient(ix, iy, 0, ix, iy, BRUSH);
+        const t  = i / steps;
+        const ix = lx + (cx - lx) * t;
+        const iy = ly + (cy - ly) * t;
+        const g  = scrX.createRadialGradient(ix, iy, 0, ix, iy, BRUSH);
         g.addColorStop(0,    'rgba(0,0,0,1)');
-        g.addColorStop(0.55, 'rgba(0,0,0,0.85)');
+        g.addColorStop(0.5,  'rgba(0,0,0,0.9)');
         g.addColorStop(1,    'rgba(0,0,0,0)');
         scrX.fillStyle = g;
         scrX.beginPath();
@@ -2009,7 +2035,7 @@
         scrX.fill();
       }
     }
-    lx = mx; ly = my;
+    lx = cx; ly = cy;
   }
 
   document.addEventListener('mousemove', e => {
