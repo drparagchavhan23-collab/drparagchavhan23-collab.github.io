@@ -777,12 +777,14 @@
   }
 
   /* ── CMYK SCRATCH REVEAL ── */
-  #cmyk-reveal-bg, #cmyk-reveal-scr {
+  #cmyk-reveal-bg {
     position: fixed; inset: 0;
-    pointer-events: none;
+    pointer-events: none; z-index: 0;
   }
-  #cmyk-reveal-bg  { z-index: 0; }
-  #cmyk-reveal-scr { z-index: 1; }
+  #cmyk-reveal-scr {
+    position: absolute; top: 0; left: 0;
+    pointer-events: none; z-index: 1;
+  }
   nav, section, footer { position: relative; z-index: 2; }
   @media (hover: none) { #cmyk-reveal-scr, #doodle-hint, #brush-bar { display: none !important; } }
 
@@ -2071,13 +2073,17 @@
 
   let W = 0, H = 0;
 
+  function docH() { return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, H); }
+
   function resize() {
     W = window.innerWidth; H = window.innerHeight;
-    bgC.width  = scrC.width  = W;
-    bgC.height = scrC.height = H;
-    /* set CSS size to exact pixel size — prevents 100vw/scrollbar stretch */
-    bgC.style.width  = scrC.style.width  = W + 'px';
-    bgC.style.height = scrC.style.height = H + 'px';
+    /* bg canvas: fixed viewport size */
+    bgC.width = W; bgC.height = H;
+    bgC.style.width = W + 'px'; bgC.style.height = H + 'px';
+    /* scratch canvas: full document height so it scrolls with page — zero lag */
+    const dH = docH();
+    scrC.width = W; scrC.height = dH;
+    scrC.style.width = W + 'px'; scrC.style.height = dH + 'px';
     drawBg(window.pageYOffset);
     redrawScratch();
   }
@@ -2111,49 +2117,47 @@
     }
   }
 
-  /* Scratch marks stored in doc coordinates, redrawn each scroll frame */
+  /* Strokes in document coordinates — painted directly, no scroll conversion needed */
   let strokes = [[]];
 
-  function eraseAt(vx, vy) {
-    const g = scrX.createRadialGradient(vx, vy, 0, vx, vy, BRUSH);
+  function eraseAt(dx, dy) {
+    const g = scrX.createRadialGradient(dx, dy, 0, dx, dy, BRUSH);
     g.addColorStop(0,   'rgba(0,0,0,1)');
     g.addColorStop(0.5, 'rgba(0,0,0,0.88)');
     g.addColorStop(1,   'rgba(0,0,0,0)');
     scrX.globalCompositeOperation = 'destination-out';
     scrX.fillStyle = g;
     scrX.beginPath();
-    scrX.arc(vx, vy, BRUSH, 0, Math.PI * 2);
+    scrX.arc(dx, dy, BRUSH, 0, Math.PI * 2);
     scrX.fill();
   }
 
   function redrawScratch() {
-    const sy = window.pageYOffset;
+    const dH = scrC.height;
     scrX.globalCompositeOperation = 'source-over';
     scrX.fillStyle = '#050505';
-    scrX.fillRect(0, 0, W, H);
-    strokes.forEach(stroke => stroke.forEach(pt => eraseAt(pt.x, pt.y - sy)));
+    scrX.fillRect(0, 0, W, dH);
+    strokes.forEach(stroke => stroke.forEach(pt => eraseAt(pt.x, pt.y)));
   }
 
   function resetCanvas() {
     strokes = [[]];
+    const dH = scrC.height;
     scrX.globalCompositeOperation = 'source-over';
     scrX.fillStyle = '#050505';
-    scrX.fillRect(0, 0, W, H);
+    scrX.fillRect(0, 0, W, dH);
     lx = null; ly = null;
   }
 
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
+  /* scroll: only redraw blob BG — scratch canvas moves with page naturally */
   let scrollRaf = false;
   window.addEventListener('scroll', () => {
     if (!scrollRaf) {
       scrollRaf = true;
-      requestAnimationFrame(() => {
-        scrollRaf = false;
-        drawBg(window.pageYOffset);
-        redrawScratch();
-      });
+      requestAnimationFrame(() => { scrollRaf = false; drawBg(window.pageYOffset); });
     }
   }, { passive: true });
 
@@ -2163,7 +2167,8 @@
   function scratch() {
     rafId = false;
     const sy   = window.pageYOffset;
-    const docX = mx, docY = my + sy;
+    const docX = mx;
+    const docY = my + sy;  /* viewport → document coords */
     const cur  = strokes[strokes.length - 1];
     if (lx !== null) {
       const dist  = Math.hypot(docX - lx, docY - ly);
@@ -2173,11 +2178,11 @@
         const ix = lx + (docX - lx) * t;
         const iy = ly + (docY - ly) * t;
         cur.push({ x: ix, y: iy });
-        eraseAt(ix, iy - sy);
+        eraseAt(ix, iy);
       }
     } else {
       cur.push({ x: docX, y: docY });
-      eraseAt(docX, my);
+      eraseAt(docX, docY);
     }
     lx = docX; ly = docY;
   }
