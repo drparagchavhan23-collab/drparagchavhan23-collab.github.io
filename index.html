@@ -186,11 +186,7 @@
     display: flex; flex-direction: column; justify-content: flex-end;
     padding-bottom: 80px; overflow: hidden;
     position: relative;
-    background:
-      radial-gradient(ellipse at 80% 20%, rgba(255,0,204,.45) 0%, transparent 50%),
-      radial-gradient(ellipse at 95% 65%, rgba(255,230,0,.35) 0%, transparent 45%),
-      radial-gradient(ellipse at 15% 80%, rgba(0,238,255,.28) 0%, transparent 48%),
-      #050505;
+    background: transparent;
   }
 
   /* noise via CSS SVG filter â€” GPU only, zero JS */
@@ -782,7 +778,7 @@
 
   /* ── CMYK SCRATCH REVEAL ── */
   #cmyk-reveal-bg, #cmyk-reveal-scr {
-    position: absolute; top: 0; left: 0;
+    position: fixed; inset: 0;
     pointer-events: none;
   }
   #cmyk-reveal-bg  { z-index: 0; }
@@ -791,23 +787,23 @@
   @media (hover: none) { #cmyk-reveal-scr, #doodle-hint, #brush-bar { display: none !important; } }
 
   /* ── DOODLE HINT ── */
-  @keyframes dh-in  { from { opacity:0; transform:translateX(-50%) translateY(6px) } to { opacity:1; transform:translateX(-50%) translateY(0) } }
-  @keyframes dh-out { from { opacity:1 } to { opacity:0 } }
   #doodle-hint {
-    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 32px; left: 28px;
     z-index: 9000;
     font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
-    color: rgba(244,240,232,.38);
-    white-space: nowrap; pointer-events: none;
-    animation: dh-in .7s cubic-bezier(.22,1,.36,1) both;
+    font-size: 9px; letter-spacing: .13em; text-transform: uppercase;
+    color: rgba(244,240,232,.18);
+    white-space: nowrap; pointer-events: auto;
+    transition: opacity .5s ease, color .3s ease;
+    line-height: 1.8;
   }
-  #doodle-hint.hiding { animation: dh-out .7s ease forwards; }
+  #doodle-hint:hover { color: rgba(244,240,232,.65); }
+  #doodle-hint.hiding { opacity: 0; pointer-events: none; }
   #doodle-hint kbd {
     font-family: inherit; font-size: inherit;
-    background: rgba(244,240,232,.08);
-    border: 1px solid rgba(244,240,232,.14);
-    border-radius: 3px; padding: 1px 5px;
+    background: rgba(244,240,232,.06);
+    border: 1px solid rgba(244,240,232,.12);
+    border-radius: 3px; padding: 1px 4px;
   }
   @media (hover: none) { #doodle-hint { display: none !important; } }
 
@@ -872,7 +868,7 @@
 <body>
 
 <!-- DOODLE HINT -->
-<div id="doodle-hint">move cursor to reveal &middot; <kbd>&#9251;</kbd> reset &middot; <kbd>1&ndash;4</kbd> brush</div>
+<div id="doodle-hint">move cursor to reveal<br><kbd>&#9251;</kbd> reset &nbsp;&middot;&nbsp; <kbd>1&ndash;4</kbd> brush size</div>
 
 <!-- BRUSH BAR -->
 <div id="brush-bar" role="toolbar" aria-label="Brush size">
@@ -2039,18 +2035,6 @@
   /* ── Hint ── */
   const hint     = document.getElementById('doodle-hint');
   const brushBar = document.getElementById('brush-bar');
-
-  function dismissHint() {
-    if (!hint || hint.classList.contains('hiding')) return;
-    hint.classList.add('hiding');
-    setTimeout(() => { if (hint) hint.style.display = 'none'; }, 750);
-  }
-
-  let hintTimer = setTimeout(dismissHint, 4500);
-  document.addEventListener('mousemove', () => {
-    clearTimeout(hintTimer);
-    hintTimer = setTimeout(dismissHint, 1200);
-  }, { once: true });
 
   brushBar.classList.add('visible');
 
