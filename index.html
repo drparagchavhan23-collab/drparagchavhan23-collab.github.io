@@ -328,53 +328,67 @@
     letter-spacing: -.03em;
   }
 
-  /* â”€â”€ PROJECT BUBBLES â”€â”€ */
+  /* ── PROJECT BUBBLES ── */
   @keyframes float-a { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-18px)} }
   @keyframes float-b { 0%,100%{transform:translateY(-8px)} 50%{transform:translateY(14px)} }
   @keyframes float-c { 0%,100%{transform:translateY(0px)} 33%{transform:translateY(-12px)} 66%{transform:translateY(8px)} }
   @keyframes float-d { 0%,100%{transform:translateY(-6px)} 50%{transform:translateY(16px)} }
+  @keyframes ring-spin { to { transform: rotate(360deg); } }
 
   .bubble-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-wrap: wrap; gap: 0;
+    align-items: center; justify-content: center;
     padding: 80px 0 100px;
   }
 
+  /* wrapper that floats and holds card + ring SVG */
+  .bubble-wrap {
+    position: relative; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    margin: 12px;
+  }
+  .float-a .project-card { animation: float-a 5.2s ease-in-out infinite; }
+  .float-b .project-card { animation: float-b 6.8s ease-in-out infinite; }
+  .float-c .project-card { animation: float-c 4.5s ease-in-out infinite; }
+  .float-d .project-card { animation: float-d 7.1s ease-in-out infinite; }
+  .float-e .project-card { animation: float-a 5.9s ease-in-out infinite 1.2s; }
+  .float-f .project-card { animation: float-b 6.2s ease-in-out infinite 0.7s; }
+  .float-g .project-card { animation: float-c 5.5s ease-in-out infinite 2.1s; }
+
+  .bubble-wrap:hover { z-index: 3; }
+  .bubble-wrap:hover .project-card {
+    animation-play-state: paused;
+    transform: scale(1.28);
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease;
+  }
+  .bubble-wrap:hover .ring-svg { animation-play-state: paused; }
+
+  /* per-color glow */
+  .glow-cyan .project-card:hover    { box-shadow: 0 0 0 2px var(--cyan),    0 24px 64px rgba(0,238,255,.22); }
+  .glow-magenta .project-card:hover { box-shadow: 0 0 0 2px var(--magenta), 0 24px 64px rgba(255,0,204,.22); }
+  .glow-yellow .project-card:hover  { box-shadow: 0 0 0 2px var(--yellow),  0 24px 64px rgba(255,230,0,.22); }
+
   .project-card {
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    cursor: none;
-    flex-shrink: 0;
+    border-radius: 50%; overflow: hidden;
+    position: relative; cursor: none; flex-shrink: 0;
     box-shadow: 0 0 0 1px rgba(244,240,232,.08);
     transition: box-shadow .45s ease;
   }
-  .project-card:nth-child(1) { animation: float-a 5.2s ease-in-out infinite; }
-  .project-card:nth-child(2) { animation: float-b 6.8s ease-in-out infinite; }
-  .project-card:nth-child(3) { animation: float-c 4.5s ease-in-out infinite; }
-  .project-card:nth-child(4) { animation: float-d 7.1s ease-in-out infinite; }
-  .project-card:nth-child(5) { animation: float-a 5.9s ease-in-out infinite 1.2s; }
-  .project-card:nth-child(6) { animation: float-b 6.2s ease-in-out infinite 0.7s; }
-  .project-card:nth-child(7) { animation: float-c 5.5s ease-in-out infinite 2.1s; }
 
-  .project-card:hover {
-    animation-play-state: paused;
-    transform: scale(1.28);
-    z-index: 2;
-    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease;
+  /* ring SVG – spins, lives in .bubble-wrap */
+  .ring-svg {
+    position: absolute; inset: 0;
+    pointer-events: none; overflow: visible;
+    transform-origin: 50% 50%;
+    animation: ring-spin 22s linear infinite;
   }
-  .project-card:nth-child(1):hover, .project-card:nth-child(4):hover, .project-card:nth-child(7):hover {
-    box-shadow: 0 0 0 2px var(--cyan), 0 24px 64px rgba(0,238,255,.2);
+  .ring-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+    fill: rgba(244,240,232,.18);
+    transition: fill .35s ease;
   }
-  .project-card:nth-child(2):hover, .project-card:nth-child(5):hover {
-    box-shadow: 0 0 0 2px var(--magenta), 0 24px 64px rgba(255,0,204,.2);
-  }
-  .project-card:nth-child(3):hover, .project-card:nth-child(6):hover {
-    box-shadow: 0 0 0 2px var(--yellow), 0 24px 64px rgba(255,230,0,.2);
-  }
+  .bubble-wrap:hover .ring-text { fill: rgba(244,240,232,.72); }
 
   .bubble-media {
     position: absolute; inset: 0;
@@ -388,21 +402,16 @@
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center;
-    padding: 24px;
-    background: rgba(5,5,5,.52);
-    backdrop-filter: blur(2px);
-    opacity: 0;
-    transition: opacity .35s ease;
-    z-index: 2;
+    text-align: center; padding: 24px;
+    background: rgba(5,5,5,.52); backdrop-filter: blur(2px);
+    opacity: 0; transition: opacity .35s ease; z-index: 2;
   }
   .project-card:hover .bubble-label { opacity: 1; }
 
   .bubble-label-tag {
     font-family: 'DM Mono', monospace;
     font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--cyan);
-    margin-bottom: 8px;
+    color: var(--cyan); margin-bottom: 8px;
   }
   .bubble-label-title {
     font-family: 'Syne', sans-serif;
@@ -980,7 +989,7 @@
 
       <div class="about-right">
         <div class="about-portrait">
-          <img src="photo.jpg" alt="Parag Chavhan" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
+          <img src="projects/about-photo.jpg" alt="Parag Chavhan" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
         </div>
         <div class="about-stats">
           <div class="stat-box">
@@ -1858,6 +1867,66 @@
 </script>
 
 
+<script>
+/* ── BUBBLE RING TEXT ── */
+(function () {
+  const LABELS = [
+    'LOGO ANIMATION · BRAND IDENTITY · ',
+    'ARCHITECTURAL THESIS · GATEWAY TO THE SACRED · ',
+    'DIGITAL ART · RETRO FUTURISM · ',
+    'DANCE BRANDING · NRITYAMRIT · ',
+    'ARCHITECTURE · MOSAFIRO · ',
+    'UI/UX DESIGN · WINKIT · ',
+    'EXHIBITION DESIGN · DHAKOR MUSEUM · ',
+  ];
+  const FLOATS = ['float-a','float-b','float-c','float-d','float-e','float-f','float-g'];
+  const GLOWS  = ['glow-cyan','glow-magenta','glow-yellow','glow-cyan','glow-magenta','glow-yellow','glow-cyan'];
+  const NS = 'http://www.w3.org/2000/svg';
+
+  document.querySelectorAll('.project-card').forEach((card, i) => {
+    const sz  = parseInt(card.style.width) || 155;
+    const PAD = 30;
+    const wSz = sz + PAD * 2;
+    const cx  = wSz / 2, cy = wSz / 2;
+    const r   = sz / 2 + 15;
+
+    const wrap = document.createElement('div');
+    wrap.className = `bubble-wrap ${FLOATS[i]} ${GLOWS[i]}`;
+    wrap.style.cssText = `width:${wSz}px;height:${wSz}px;`;
+    card.parentNode.insertBefore(wrap, card);
+    wrap.appendChild(card);
+
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'ring-svg');
+    svg.setAttribute('viewBox', `0 0 ${wSz} ${wSz}`);
+    svg.setAttribute('width', wSz);
+    svg.setAttribute('height', wSz);
+
+    const defs = document.createElementNS(NS, 'defs');
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('id', `rp${i}`);
+    path.setAttribute('d',
+      `M ${(cx-r).toFixed(1)},${cy} ` +
+      `a ${r},${r},0,1,1,${(r*2).toFixed(1)},0 ` +
+      `a ${r},${r},0,1,1,-${(r*2).toFixed(1)},0`
+    );
+    defs.appendChild(path);
+    svg.appendChild(defs);
+
+    const text = document.createElementNS(NS, 'text');
+    text.setAttribute('class', 'ring-text');
+    const tp = document.createElementNS(NS, 'textPath');
+    tp.setAttribute('href', `#rp${i}`);
+    tp.setAttribute('startOffset', '0%');
+    tp.textContent = LABELS[i] || '';
+    text.appendChild(tp);
+    svg.appendChild(text);
+
+    wrap.appendChild(svg);
+  });
+})();
+</script>
+
 <canvas id="cmyk-reveal-bg"></canvas>
 <canvas id="cmyk-reveal-scr"></canvas>
 
@@ -1946,6 +2015,14 @@
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
     if (!raf) { raf = true; requestAnimationFrame(scratch); }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !e.target.matches('input,textarea,select')) {
+      e.preventDefault();
+      fillBlack(scrC.width, scrC.height);
+      lx = null; ly = null;
+    }
   });
 })();
 </script>
