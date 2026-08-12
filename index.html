@@ -86,8 +86,16 @@
     position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
     background: var(--border);
   }
+  @keyframes loader-cmyk {
+    0%   { background: var(--cyan); }
+    33%  { background: var(--magenta); }
+    66%  { background: var(--yellow); }
+    100% { background: var(--cyan); }
+  }
   #loader-bar {
-    height: 100%; width: 0%; background: var(--white);
+    height: 100%; width: 0%;
+    background: var(--cyan);
+    animation: loader-cmyk 2s linear infinite;
     transition: none;
   }
   #loader-label {
@@ -118,7 +126,7 @@
   }
   .nav-links a::after {
     content: ''; position: absolute; bottom: 0; left: 0;
-    width: 0; height: 1px; background: var(--white);
+    width: 0; height: 1px; background: var(--cyan);
     transition: width .35s cubic-bezier(.76,0,.24,1);
   }
   .nav-links a:hover::after { width: 100%; }
@@ -190,7 +198,7 @@
   .hero-eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 11px; letter-spacing: .25em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 24px;
+    color: var(--magenta); margin-bottom: 24px;
     overflow: hidden;
   }
   .hero-eyebrow span { display: block; transform: translateY(120%); }
@@ -292,7 +300,9 @@
     padding: 0 48px; color: var(--muted);
     display: flex; align-items: center; gap: 32px;
   }
-  .marquee-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+  .marquee-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); }
+  .marquee-item:nth-child(2n) .dot { background: var(--magenta); }
+  .marquee-item:nth-child(3n) .dot { background: var(--yellow); }
   @keyframes marqueeScroll { to { transform: translateX(-50%); } }
 
   /* ── WORK ── */
@@ -305,11 +315,11 @@
   .section-tag {
     font-family: 'DM Mono', monospace;
     font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted);
+    color: var(--cyan);
   }
   .section-num {
     font-family: 'DM Mono', monospace;
-    font-size: 11px; color: var(--muted);
+    font-size: 11px; color: var(--yellow);
   }
   .section-title {
     font-family: 'Syne', sans-serif;
@@ -353,9 +363,17 @@
   .project-card:hover {
     animation-play-state: paused;
     transform: scale(1.28);
-    box-shadow: 0 0 0 1px rgba(244,240,232,.18), 0 24px 64px rgba(0,0,0,.6);
     z-index: 2;
     transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease;
+  }
+  .project-card:nth-child(1):hover, .project-card:nth-child(4):hover, .project-card:nth-child(7):hover {
+    box-shadow: 0 0 0 2px var(--cyan), 0 24px 64px rgba(0,238,255,.2);
+  }
+  .project-card:nth-child(2):hover, .project-card:nth-child(5):hover {
+    box-shadow: 0 0 0 2px var(--magenta), 0 24px 64px rgba(255,0,204,.2);
+  }
+  .project-card:nth-child(3):hover, .project-card:nth-child(6):hover {
+    box-shadow: 0 0 0 2px var(--yellow), 0 24px 64px rgba(255,230,0,.2);
   }
 
   .bubble-media {
@@ -383,7 +401,7 @@
   .bubble-label-tag {
     font-family: 'DM Mono', monospace;
     font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
-    color: rgba(244,240,232,.55);
+    color: var(--cyan);
     margin-bottom: 8px;
   }
   .bubble-label-title {
@@ -409,7 +427,7 @@
     font-weight: 800; line-height: 1.1;
     letter-spacing: -.02em; margin-bottom: 40px;
   }
-  .about-big-text em { font-style: normal; color: var(--muted); }
+  .about-big-text em { font-style: normal; color: var(--cyan); }
   .about-body {
     font-size: 16px; line-height: 1.7; color: var(--muted);
     margin-bottom: 40px; max-width: 480px;
@@ -436,7 +454,9 @@
   .skill-name {
     font-family: 'Syne', sans-serif;
     font-size: 16px; font-weight: 700; margin-bottom: 4px;
+    color: var(--cyan);
   }
+  .skill-item:hover .skill-name { color: var(--black); }
   .skill-desc {
     font-family: 'DM Mono', monospace;
     font-size: 11px; color: var(--muted);
@@ -461,7 +481,7 @@
     font-family: 'Syne', sans-serif;
     font-size: clamp(80px, 10vw, 140px);
     font-weight: 800; letter-spacing: -.05em;
-    background: linear-gradient(135deg, var(--red) 0%, var(--purple) 100%);
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 50%, var(--yellow) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
@@ -482,6 +502,10 @@
     font-size: 40px; font-weight: 800; letter-spacing: -.03em;
     color: var(--white);
   }
+  .stat-box:nth-child(1) .stat-num { color: var(--cyan); }
+  .stat-box:nth-child(2) .stat-num { color: var(--magenta); }
+  .stat-box:nth-child(3) .stat-num { color: var(--yellow); }
+  .stat-box:nth-child(4) .stat-num { color: var(--cyan); }
   .stat-label {
     font-family: 'DM Mono', monospace;
     font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
@@ -519,7 +543,7 @@
   }
   .contact-email::after {
     content: ''; position: absolute; bottom: -4px; left: 0;
-    width: 100%; height: 1px; background: var(--white);
+    width: 100%; height: 2px; background: var(--magenta);
     transform: scaleX(0); transform-origin: right;
     transition: transform .5s cubic-bezier(.76,0,.24,1);
   }
@@ -528,15 +552,15 @@
   .cta-btn {
     display: inline-flex; align-items: center; gap: 12px;
     padding: 18px 36px;
-    border: 1px solid var(--white); border-radius: 100px;
+    border: 1px solid var(--magenta); border-radius: 100px;
     font-family: 'Space Grotesk', sans-serif;
     font-size: 14px; font-weight: 500; letter-spacing: .05em;
-    color: var(--white); text-decoration: none; cursor: none;
+    color: var(--magenta); text-decoration: none; cursor: none;
     position: relative; overflow: hidden;
   }
   .cta-btn::before {
     content: ''; position: absolute; inset: 0;
-    background: var(--white); border-radius: 100px;
+    background: var(--magenta); border-radius: 100px;
     transform: translateY(101%);
     transition: transform .45s cubic-bezier(.76,0,.24,1);
   }
@@ -551,7 +575,7 @@
     color: var(--muted); text-decoration: none;
     transition: color .3s;
   }
-  .social-link:hover { color: var(--white); }
+  .social-link:hover { color: var(--cyan); }
 
   /* ── FOOTER ── */
   footer {
