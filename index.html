@@ -352,19 +352,20 @@
     display: flex; align-items: center; justify-content: center;
     margin: 12px;
   }
-  .float-a .project-card { animation: float-a 5.2s ease-in-out infinite; }
-  .float-b .project-card { animation: float-b 6.8s ease-in-out infinite; }
-  .float-c .project-card { animation: float-c 4.5s ease-in-out infinite; }
-  .float-d .project-card { animation: float-d 7.1s ease-in-out infinite; }
-  .float-e .project-card { animation: float-a 5.9s ease-in-out infinite 1.2s; }
-  .float-f .project-card { animation: float-b 6.2s ease-in-out infinite 0.7s; }
-  .float-g .project-card { animation: float-c 5.5s ease-in-out infinite 2.1s; }
+  /* float is on the whole wrap so card + ring SVG bob together */
+  .bubble-wrap.float-a { animation: float-a 5.2s ease-in-out infinite; }
+  .bubble-wrap.float-b { animation: float-b 6.8s ease-in-out infinite; }
+  .bubble-wrap.float-c { animation: float-c 4.5s ease-in-out infinite; }
+  .bubble-wrap.float-d { animation: float-d 7.1s ease-in-out infinite; }
+  .bubble-wrap.float-e { animation: float-a 5.9s ease-in-out infinite 1.2s; }
+  .bubble-wrap.float-f { animation: float-b 6.2s ease-in-out infinite 0.7s; }
+  .bubble-wrap.float-g { animation: float-c 5.5s ease-in-out infinite 2.1s; }
 
-  .bubble-wrap:hover { z-index: 3; }
-  .bubble-wrap:hover .project-card {
+  .bubble-wrap:hover {
+    z-index: 3;
     animation-play-state: paused;
     transform: scale(1.28);
-    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease;
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1);
   }
   .bubble-wrap:hover .ring-svg { animation-play-state: paused; }
 
@@ -787,116 +788,28 @@
   #cmyk-reveal-bg  { z-index: 0; }
   #cmyk-reveal-scr { z-index: 1; }
   nav, section, footer { position: relative; z-index: 2; }
-  @media (hover: none) { #cmyk-reveal-scr, #doodle-intro, #brush-bar { display: none !important; } }
+  @media (hover: none) { #cmyk-reveal-scr, #doodle-hint, #brush-bar { display: none !important; } }
 
-  /* ── DOODLE INTRO OVERLAY ── */
-  @keyframes di-in  { from { opacity:0; transform:translateY(18px) scale(.97) } to { opacity:1; transform:none } }
-  @keyframes di-out { from { opacity:1 } to { opacity:0; pointer-events:none } }
-  #doodle-intro {
-    position: fixed; inset: 0; z-index: 10000;
-    display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(28px) brightness(.55) saturate(1.2);
-    -webkit-backdrop-filter: blur(28px) brightness(.55) saturate(1.2);
-    cursor: default;
-    animation: di-in .55s cubic-bezier(.22,1,.36,1) both;
-  }
-  #doodle-intro.hiding {
-    animation: di-out .4s ease forwards;
-  }
-  .di-card {
-    background: rgba(8,8,8,.92);
-    border: 1px solid rgba(244,240,232,.1);
-    border-radius: 16px;
-    padding: 44px 48px 40px;
-    max-width: 420px; width: 90%;
-    display: flex; flex-direction: column; gap: 0;
-    box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(244,240,232,.04);
-    position: relative; overflow: hidden;
-  }
-  .di-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
-  }
-  .di-eyebrow {
+  /* ── DOODLE HINT ── */
+  @keyframes dh-in  { from { opacity:0; transform:translateX(-50%) translateY(6px) } to { opacity:1; transform:translateX(-50%) translateY(0) } }
+  @keyframes dh-out { from { opacity:1 } to { opacity:0 } }
+  #doodle-hint {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+    z-index: 9000;
     font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--cyan); margin-bottom: 24px;
-  }
-  .di-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 26px; font-weight: 800; letter-spacing: -.02em;
-    color: var(--white); margin-bottom: 32px; line-height: 1.15;
-  }
-  .di-rows { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
-  .di-row {
-    display: flex; align-items: center; gap: 16px;
-  }
-  .di-key {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
     color: rgba(244,240,232,.38);
-    background: rgba(244,240,232,.06);
-    border: 1px solid rgba(244,240,232,.12);
-    border-radius: 6px;
-    padding: 5px 10px;
-    white-space: nowrap; flex-shrink: 0; min-width: 72px; text-align: center;
+    white-space: nowrap; pointer-events: none;
+    animation: dh-in .7s cubic-bezier(.22,1,.36,1) both;
   }
-  .di-key.wide { min-width: 96px; }
-  .di-desc {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .06em;
-    color: rgba(244,240,232,.55);
+  #doodle-hint.hiding { animation: dh-out .7s ease forwards; }
+  #doodle-hint kbd {
+    font-family: inherit; font-size: inherit;
+    background: rgba(244,240,232,.08);
+    border: 1px solid rgba(244,240,232,.14);
+    border-radius: 3px; padding: 1px 5px;
   }
-  .di-divider { height: 1px; background: rgba(244,240,232,.08); margin: 4px 0; }
-
-  /* brush size picker inside overlay */
-  .di-brush-row {
-    display: flex; align-items: center; gap: 0;
-    margin-bottom: 36px; margin-top: 4px;
-  }
-  .di-brush-btn {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-end;
-    gap: 10px; padding: 16px 0 14px;
-    background: none; border: 1px solid rgba(244,240,232,.08);
-    cursor: pointer; transition: background .2s, border-color .2s;
-    position: relative;
-  }
-  .di-brush-btn:first-child { border-radius: 8px 0 0 8px; }
-  .di-brush-btn:last-child  { border-radius: 0 8px 8px 0; }
-  .di-brush-btn + .di-brush-btn { border-left: none; }
-  .di-brush-btn:hover { background: rgba(244,240,232,.05); }
-  .di-brush-btn.active { background: rgba(244,240,232,.08); border-color: rgba(244,240,232,.22); }
-  .di-brush-dot {
-    border-radius: 50%; flex-shrink: 0;
-  }
-  .di-brush-btn[data-size="xs"] .di-brush-dot { width:6px;  height:6px;  background: var(--cyan); }
-  .di-brush-btn[data-size="s"]  .di-brush-dot { width:12px; height:12px; background: var(--magenta); }
-  .di-brush-btn[data-size="m"]  .di-brush-dot { width:20px; height:20px; background: var(--yellow); }
-  .di-brush-btn[data-size="l"]  .di-brush-dot { width:30px; height:30px; background: var(--cyan); }
-  .di-brush-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
-    color: rgba(244,240,232,.35);
-  }
-  .di-brush-btn.active .di-brush-label { color: rgba(244,240,232,.75); }
-  .di-brush-key {
-    position: absolute; top: 8px; right: 10px;
-    font-family: 'DM Mono', monospace;
-    font-size: 8px; color: rgba(244,240,232,.25); letter-spacing: .08em;
-  }
-  .di-start {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-    color: var(--black);
-    background: var(--white);
-    border: none; border-radius: 8px;
-    padding: 14px 28px;
-    cursor: pointer; width: 100%;
-    transition: background .2s, transform .15s;
-  }
-  .di-start:hover { background: var(--cyan); transform: translateY(-1px); }
+  @media (hover: none) { #doodle-hint { display: none !important; } }
 
   /* ── BRUSH BAR (persistent bottom UI) ── */
   #brush-bar {
@@ -958,36 +871,8 @@
 </head>
 <body>
 
-<!-- DOODLE INTRO OVERLAY -->
-<div id="doodle-intro" role="dialog" aria-modal="true" aria-label="Canvas instructions">
-  <div class="di-card">
-    <div class="di-eyebrow">Interactive Canvas</div>
-    <div class="di-title">Scratch the surface.</div>
-    <div class="di-rows">
-      <div class="di-row">
-        <span class="di-key">Cursor</span>
-        <span class="di-desc">Move to scrape &amp; reveal color</span>
-      </div>
-      <div class="di-divider"></div>
-      <div class="di-row">
-        <span class="di-key wide">Space bar</span>
-        <span class="di-desc">Reset canvas to black</span>
-      </div>
-      <div class="di-divider"></div>
-      <div class="di-row">
-        <span class="di-key">1 · 2 · 3 · 4</span>
-        <span class="di-desc">Switch brush size</span>
-      </div>
-    </div>
-    <div class="di-brush-row">
-      <button class="di-brush-btn active" data-size="xs"><span class="di-brush-key">1</span><div class="di-brush-dot"></div><span class="di-brush-label">XS</span></button>
-      <button class="di-brush-btn" data-size="s"><span class="di-brush-key">2</span><div class="di-brush-dot"></div><span class="di-brush-label">S</span></button>
-      <button class="di-brush-btn" data-size="m"><span class="di-brush-key">3</span><div class="di-brush-dot"></div><span class="di-brush-label">M</span></button>
-      <button class="di-brush-btn" data-size="l"><span class="di-brush-key">4</span><div class="di-brush-dot"></div><span class="di-brush-label">L</span></button>
-    </div>
-    <button class="di-start" id="di-start-btn">Start doodling &rarr;</button>
-  </div>
-</div>
+<!-- DOODLE HINT -->
+<div id="doodle-hint">move cursor to reveal &middot; <kbd>&#9251;</kbd> reset &middot; <kbd>1&ndash;4</kbd> brush</div>
 
 <!-- BRUSH BAR -->
 <div id="brush-bar" role="toolbar" aria-label="Brush size">
@@ -2151,32 +2036,32 @@
   const BRUSH_SIZES = { xs: 20, s: 40, m: 65, l: 100 };
   let BRUSH = BRUSH_SIZES.xs;
 
-  /* ── Overlay ── */
-  const intro   = document.getElementById('doodle-intro');
+  /* ── Hint ── */
+  const hint     = document.getElementById('doodle-hint');
   const brushBar = document.getElementById('brush-bar');
 
-  function dismissIntro() {
-    if (!intro || intro.classList.contains('hiding')) return;
-    intro.classList.add('hiding');
-    setTimeout(() => { intro.style.display = 'none'; }, 420);
-    brushBar.classList.add('visible');
+  function dismissHint() {
+    if (!hint || hint.classList.contains('hiding')) return;
+    hint.classList.add('hiding');
+    setTimeout(() => { if (hint) hint.style.display = 'none'; }, 750);
   }
 
-  document.getElementById('di-start-btn').addEventListener('click', dismissIntro);
-  intro.addEventListener('click', e => { if (e.target === intro) dismissIntro(); });
+  let hintTimer = setTimeout(dismissHint, 4500);
+  document.addEventListener('mousemove', () => {
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(dismissHint, 1200);
+  }, { once: true });
 
-  /* ── Brush selection (shared between overlay + bar) ── */
+  brushBar.classList.add('visible');
+
+  /* ── Brush selection ── */
   function setSize(key) {
     BRUSH = BRUSH_SIZES[key] || BRUSH_SIZES.m;
-    /* update overlay buttons */
-    document.querySelectorAll('.di-brush-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.size === key));
-    /* update bar buttons */
     document.querySelectorAll('.bb-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.size === key));
   }
 
-  document.querySelectorAll('.di-brush-btn, .bb-btn').forEach(btn => {
+  document.querySelectorAll('.bb-btn').forEach(btn => {
     btn.addEventListener('click', () => setSize(btn.dataset.size));
   });
 
