@@ -727,6 +727,54 @@
     footer { padding: 24px; }
   }
 
+  /* ── PARKOUR CHARACTER ── */
+  #parkour-char {
+    position: fixed; left: 0; top: 0;
+    z-index: 5000; pointer-events: none;
+    will-change: transform;
+    filter: drop-shadow(0 3px 10px rgba(0,0,0,.5));
+  }
+  .char-inner { transform-origin: bottom center; }
+
+  .ca-arm-b, .ca-arm-f, .ca-leg-b, .ca-leg-f {
+    transform-box: fill-box;
+    transform-origin: top center;
+    transition: transform .12s ease;
+  }
+
+  /* Idle: gentle bob */
+  @keyframes char-bob { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-5px)} }
+  #parkour-char.state-idle .char-inner { animation: char-bob 2s ease-in-out infinite; }
+
+  /* Run cycle */
+  @keyframes arm-f { 0%,100%{transform:rotate(-42deg)} 50%{transform:rotate(42deg)} }
+  @keyframes arm-b { 0%,100%{transform:rotate(42deg)}  50%{transform:rotate(-42deg)} }
+  @keyframes leg-f { 0%,100%{transform:rotate(-48deg)} 50%{transform:rotate(48deg)} }
+  @keyframes leg-b { 0%,100%{transform:rotate(48deg)}  50%{transform:rotate(-48deg)} }
+  @keyframes body-lean { 0%,100%{transform:rotate(-4deg) scaleY(1)} 50%{transform:rotate(-4deg) scaleY(1.04)} }
+
+  #parkour-char.state-run .ca-arm-f { animation: arm-f .36s linear infinite; }
+  #parkour-char.state-run .ca-arm-b { animation: arm-b .36s linear infinite; }
+  #parkour-char.state-run .ca-leg-f { animation: leg-f .36s linear infinite; }
+  #parkour-char.state-run .ca-leg-b { animation: leg-b .36s linear infinite; }
+  #parkour-char.state-run .char-inner { animation: body-lean .36s ease-in-out infinite; }
+
+  /* Jump pose */
+  #parkour-char.state-jump .ca-arm-f { transform: rotate(-85deg) !important; transition: transform .1s; }
+  #parkour-char.state-jump .ca-arm-b { transform: rotate(85deg)  !important; transition: transform .1s; }
+  #parkour-char.state-jump .ca-leg-f { transform: rotate(-22deg) !important; transition: transform .1s; }
+  #parkour-char.state-jump .ca-leg-b { transform: rotate(22deg)  !important; transition: transform .1s; }
+
+  /* Land squash */
+  @keyframes char-land {
+    0%   { transform: scaleX(1.5) scaleY(0.5) translateY(10px); }
+    55%  { transform: scaleX(0.9) scaleY(1.1) translateY(-4px); }
+    100% { transform: scaleX(1)   scaleY(1)   translateY(0); }
+  }
+  #parkour-char.state-land .char-inner { animation: char-land .38s cubic-bezier(.34,1.56,.64,1) forwards; }
+
+  @media (hover: none) { #parkour-char { display: none !important; } }
+
   /* touch devices — disable custom cursor */
   @media (hover: none) {
     body { cursor: auto; }
@@ -1817,6 +1865,169 @@
     lastY = y;
   }, { passive: true });
 
+})();
+</script>
+
+<!-- ── PARKOUR CHARACTER ── -->
+<div id="parkour-char" class="state-idle" aria-hidden="true">
+  <div class="char-inner">
+    <svg viewBox="0 0 40 84" width="40" height="84" xmlns="http://www.w3.org/2000/svg">
+      <!-- depth shadow layer -->
+      <g opacity="0.22" transform="translate(2,3)">
+        <circle cx="20" cy="13" r="10" fill="#000"/>
+        <rect x="12" y="22" width="16" height="30" rx="5" fill="#000"/>
+        <rect x="4"  y="23" width="9"  height="23" rx="4" fill="#000"/>
+        <rect x="27" y="23" width="9"  height="23" rx="4" fill="#000"/>
+        <rect x="12" y="50" width="8"  height="26" rx="4" fill="#000"/>
+        <rect x="20" y="50" width="8"  height="26" rx="4" fill="#000"/>
+      </g>
+      <!-- back arm -->
+      <g class="ca-arm-b"><rect x="3"  y="23" width="9"  height="23" rx="4" fill="#a8a49c"/></g>
+      <!-- back leg -->
+      <g class="ca-leg-b"><rect x="12" y="50" width="8"  height="26" rx="4" fill="#a8a49c"/></g>
+      <!-- torso -->
+      <rect x="11" y="22" width="18" height="30" rx="5" fill="#ddd9d1"/>
+      <!-- front leg -->
+      <g class="ca-leg-f"><rect x="20" y="50" width="8"  height="26" rx="4" fill="#ccc8c0"/></g>
+      <!-- front arm -->
+      <g class="ca-arm-f"><rect x="28" y="23" width="9"  height="23" rx="4" fill="#e8e4dc"/></g>
+      <!-- head -->
+      <circle cx="20" cy="13" r="10" fill="#f4f0e8"/>
+      <!-- eye -->
+      <circle cx="23" cy="12" r="2" fill="#1a1a1a"/>
+      <!-- smile -->
+      <path d="M20,17 Q23,20 26,17" stroke="#1a1a1a" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<script>
+/* ── PARKOUR CHARACTER JS ── */
+(function () {
+  const char = document.getElementById('parkour-char');
+  if (!char || window.matchMedia('(hover: none)').matches) return;
+
+  const CHAR_H = 84;
+
+  function docTop(sel) {
+    const el = document.querySelector(sel);
+    if (!el) return null;
+    return el.getBoundingClientRect().top + window.pageYOffset;
+  }
+  function docBottom(sel) {
+    const el = document.querySelector(sel);
+    if (!el) return null;
+    return el.getBoundingClientRect().bottom + window.pageYOffset;
+  }
+
+  let wps = [];
+
+  function buildWaypoints() {
+    wps = [];
+    const vw = window.innerWidth, vh = window.innerHeight;
+
+    function wp(scrollAt, x, docY, state) {
+      if (docY != null) wps.push({ scrollAt, x, docY, state });
+    }
+
+    const navBot    = docBottom('nav');
+    const heroTop   = docTop('.hero-name');
+    const workBot   = docBottom('#work .section-header');
+    const bubbTop   = docTop('.bubble-grid');
+    const aboutTop  = docTop('#about .about-big-text');
+    const contactTop= docTop('#contact');
+
+    // 1 — nav bar
+    wp(0,   vw * 0.78, navBot,             'idle');
+    wp(90,  vw * 0.96, navBot,             'run');
+
+    // 2 — hero name (jump down)
+    wp(180, vw * 0.04, heroTop,            'land');
+    wp(320, vw * 0.75, heroTop,            'run');
+
+    // 3 — projects section header
+    if (workBot != null) {
+      wp(workBot - vh * 0.9,  vw * 0.94, workBot, 'land');
+      wp(workBot - vh * 0.55, vw * 0.06, workBot, 'run');
+    }
+
+    // 4 — bubble grid parkour
+    if (bubbTop != null) {
+      wp(bubbTop - vh * 0.7,  vw * 0.08, bubbTop + 25, 'land');
+      wp(bubbTop - vh * 0.4,  vw * 0.38, bubbTop + 25, 'run');
+      wp(bubbTop - vh * 0.15, vw * 0.62, bubbTop + 55, 'jump');
+      wp(bubbTop + vh * 0.05, vw * 0.92, bubbTop + 25, 'land');
+    }
+
+    // 5 — about
+    if (aboutTop != null) {
+      wp(aboutTop - vh * 0.8,  vw * 0.88, aboutTop, 'land');
+      wp(aboutTop - vh * 0.45, vw * 0.12, aboutTop, 'run');
+    }
+
+    // 6 — contact
+    if (contactTop != null) {
+      wp(contactTop - vh * 0.7, vw * 0.1,  contactTop + 50, 'land');
+      wp(contactTop - vh * 0.3, vw * 0.65, contactTop + 50, 'idle');
+    }
+
+    wps.sort((a, b) => a.scrollAt - b.scrollAt);
+  }
+
+  buildWaypoints();
+  window.addEventListener('resize', buildWaypoints, { passive: true });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function arc(t)  { return Math.sin(t * Math.PI); }
+
+  let lastState = '';
+
+  function tick() {
+    requestAnimationFrame(tick);
+    if (wps.length < 2) return;
+
+    const sy = window.pageYOffset;
+    let a = wps[0], b = wps[1];
+
+    for (let i = 0; i < wps.length - 1; i++) {
+      if (sy >= wps[i].scrollAt && sy < wps[i+1].scrollAt) {
+        a = wps[i]; b = wps[i+1]; break;
+      }
+    }
+    if (sy >= wps[wps.length-1].scrollAt) {
+      a = wps[wps.length-2]; b = wps[wps.length-1];
+    }
+
+    const range = b.scrollAt - a.scrollAt || 1;
+    const rawT  = Math.max(0, Math.min(1, (sy - a.scrollAt) / range));
+    const t     = ease(rawT);
+
+    const x     = lerp(a.x, b.x, t);
+    const docY  = lerp(a.docY, b.docY, t);
+    const viewY = docY - sy;
+
+    // Jump arc lift
+    const yDelta = Math.abs(b.docY - a.docY);
+    const lift   = yDelta > 30 ? arc(rawT) * Math.min(yDelta * 0.65, 140) : 0;
+
+    const facing = b.x >= a.x ? 1 : -1;
+    const cx = x - 20;
+    const cy = viewY - CHAR_H - lift;
+
+    char.style.transform = `translate(${cx.toFixed(1)}px,${cy.toFixed(1)}px) scaleX(${facing})`;
+
+    const jumping = yDelta > 30 && rawT > 0.07 && rawT < 0.93;
+    const running = !jumping && Math.abs(b.x - a.x) > 40 && rawT > 0.07 && rawT < 0.93;
+    const state   = jumping ? 'jump' : running ? 'run' : (rawT > 0.88 ? b.state : a.state);
+
+    if (state !== lastState) {
+      char.className = `state-${state}`;
+      lastState = state;
+    }
+  }
+
+  tick();
 })();
 </script>
 </body>
