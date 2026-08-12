@@ -764,6 +764,16 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
+
+  /* ── CMYK SCRATCH REVEAL ── */
+  #cmyk-reveal-bg, #cmyk-reveal-scr {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  #cmyk-reveal-bg  { z-index: 0; }
+  #cmyk-reveal-scr { z-index: 1; }
+  nav, section, footer { position: relative; z-index: 2; }
+  @media (hover: none) { #cmyk-reveal-scr { display: none; } }
 </style>
 </head>
 <body>
@@ -1848,10 +1858,96 @@
 </script>
 
 
-<!-- parkour removed -->
+<canvas id="cmyk-reveal-bg"></canvas>
+<canvas id="cmyk-reveal-scr"></canvas>
 
 <script>
-  const _noop = null; // parkour removed
+/* ── CMYK SCRATCH REVEAL ── */
+(function () {
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  const C = '#00eeff', M = '#ff00cc', Y = '#ffe600';
+
+  const bgC  = document.getElementById('cmyk-reveal-bg');
+  const scrC = document.getElementById('cmyk-reveal-scr');
+  const bgX  = bgC.getContext('2d');
+  const scrX = scrC.getContext('2d');
+
+  const BLOBS = [
+    { xf:.12, yf:.22, rf:.30, col:C },
+    { xf:.80, yf:.52, rf:.34, col:M },
+    { xf:.42, yf:.83, rf:.26, col:Y },
+    { xf:.91, yf:.10, rf:.22, col:C },
+    { xf:.22, yf:.65, rf:.28, col:M },
+    { xf:.62, yf:.06, rf:.20, col:Y },
+    { xf:.04, yf:.90, rf:.24, col:M },
+    { xf:.55, yf:.40, rf:.18, col:C },
+    { xf:.70, yf:.78, rf:.22, col:Y },
+  ];
+
+  function resize() {
+    const w = window.innerWidth, h = window.innerHeight;
+    bgC.width  = scrC.width  = w;
+    bgC.height = scrC.height = h;
+    drawBg(w, h);
+    fillBlack(w, h);
+  }
+
+  function drawBg(w, h) {
+    bgX.fillStyle = '#050505';
+    bgX.fillRect(0, 0, w, h);
+    BLOBS.forEach(b => {
+      const x = b.xf * w, y = b.yf * h, r = b.rf * Math.min(w, h);
+      const g = bgX.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0,   b.col + 'dd');
+      g.addColorStop(0.5, b.col + '66');
+      g.addColorStop(1,   b.col + '00');
+      bgX.fillStyle = g;
+      bgX.fillRect(0, 0, w, h);
+    });
+  }
+
+  function fillBlack(w, h) {
+    scrX.globalCompositeOperation = 'source-over';
+    scrX.fillStyle = '#050505';
+    scrX.fillRect(0, 0, w, h);
+  }
+
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  const BRUSH = 88;
+  let lx = null, ly = null, raf = false;
+  let mx = 0, my = 0;
+
+  function scratch() {
+    raf = false;
+    scrX.globalCompositeOperation = 'destination-out';
+    if (lx !== null) {
+      const dist  = Math.hypot(mx - lx, my - ly);
+      const steps = Math.max(1, Math.ceil(dist / 10));
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const ix = lx + (mx - lx) * t;
+        const iy = ly + (my - ly) * t;
+        const g = scrX.createRadialGradient(ix, iy, 0, ix, iy, BRUSH);
+        g.addColorStop(0,    'rgba(0,0,0,1)');
+        g.addColorStop(0.55, 'rgba(0,0,0,0.85)');
+        g.addColorStop(1,    'rgba(0,0,0,0)');
+        scrX.fillStyle = g;
+        scrX.beginPath();
+        scrX.arc(ix, iy, BRUSH, 0, Math.PI * 2);
+        scrX.fill();
+      }
+    }
+    lx = mx; ly = my;
+  }
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    if (!raf) { raf = true; requestAnimationFrame(scratch); }
+  });
+})();
 </script>
 </body>
 </html>
