@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parag Chavhan — Architect & Designer</title>
+<title>Parag Chavhan â€” Architect & Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     cursor: none;
   }
 
-  /* ── CURSOR ── */
+  /* â”€â”€ CURSOR â”€â”€ */
   #cursor {
     position: fixed; top: 0; left: 0; z-index: 9999;
     pointer-events: none; mix-blend-mode: difference;
@@ -67,7 +67,7 @@
   body.cursor-hover #cursor-dot { width: 0; height: 0; }
   body.cursor-hover #cursor-ring { width: 72px; height: 72px; }
 
-  /* ── LOADER ── */
+  /* â”€â”€ LOADER â”€â”€ */
   #loader {
     position: fixed; inset: 0; z-index: 9998;
     background: var(--black);
@@ -104,7 +104,7 @@
     color: var(--muted); font-family: 'DM Mono', monospace;
   }
 
-  /* ── NAV ── */
+  /* â”€â”€ NAV â”€â”€ */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
@@ -176,11 +176,11 @@
     color: var(--muted); margin-bottom: 40px;
   }
 
-  /* ── SECTIONS ── */
+  /* â”€â”€ SECTIONS â”€â”€ */
   section { position: relative; }
   .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
-  /* ── HERO ── */
+  /* â”€â”€ HERO â”€â”€ */
   #hero {
     min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: flex-end;
@@ -188,7 +188,7 @@
     position: relative; background: var(--black);
   }
 
-  /* noise via CSS SVG filter — GPU only, zero JS */
+  /* noise via CSS SVG filter â€” GPU only, zero JS */
   #hero::after {
     content: '';
     position: absolute; inset: 0;
@@ -281,7 +281,7 @@
     99%   { transform: none; opacity: 0; }
   }
 
-  /* ── MARQUEE ── */
+  /* â”€â”€ MARQUEE â”€â”€ */
   .marquee-wrap {
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
@@ -305,7 +305,7 @@
   .marquee-item:nth-child(3n) .dot { background: var(--yellow); }
   @keyframes marqueeScroll { to { transform: translateX(-50%); } }
 
-  /* ── WORK ── */
+  /* â”€â”€ WORK â”€â”€ */
   #work { padding: 120px 0; }
   .section-header {
     display: flex; align-items: baseline;
@@ -328,7 +328,7 @@
     letter-spacing: -.03em;
   }
 
-  /* ── PROJECT BUBBLES ── */
+  /* â”€â”€ PROJECT BUBBLES â”€â”€ */
   @keyframes float-a { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-18px)} }
   @keyframes float-b { 0%,100%{transform:translateY(-8px)} 50%{transform:translateY(14px)} }
   @keyframes float-c { 0%,100%{transform:translateY(0px)} 33%{transform:translateY(-12px)} 66%{transform:translateY(8px)} }
@@ -411,7 +411,7 @@
     color: var(--white);
   }
 
-  /* ── ABOUT ── */
+  /* â”€â”€ ABOUT â”€â”€ */
   #about {
     padding: 120px 0;
     border-top: 1px solid var(--border);
@@ -512,7 +512,7 @@
     color: var(--muted); margin-top: 4px;
   }
 
-  /* ── CONTACT ── */
+  /* â”€â”€ CONTACT â”€â”€ */
   #contact {
     padding: 120px 0 80px;
     border-top: 1px solid var(--border);
@@ -577,7 +577,7 @@
   }
   .social-link:hover { color: var(--cyan); }
 
-  /* ── FOOTER ── */
+  /* â”€â”€ FOOTER â”€â”€ */
   footer {
     padding: 32px 40px;
     border-top: 1px solid var(--border);
@@ -589,7 +589,7 @@
     font-size: 11px; letter-spacing: .1em; color: var(--muted);
   }
 
-  /* ── PROJECT OVERLAY ── */
+  /* â”€â”€ PROJECT OVERLAY â”€â”€ */
   #project-overlay {
     position: fixed; inset: 0; z-index: 500;
     background: var(--black);
@@ -706,12 +706,12 @@
   }
   .po-next-arrow { font-size: 48px; flex-shrink: 0; }
 
-  /* ── REVEAL UTILS ── */
+  /* â”€â”€ REVEAL UTILS â”€â”€ */
   .reveal-text .char { display: inline-block; }
   .split-reveal { overflow: hidden; }
   .split-reveal .inner { transform: translateY(110%); display: block; }
 
-  /* ── RESPONSIVE ── */
+  /* â”€â”€ RESPONSIVE â”€â”€ */
   @media (max-width: 768px) {
     /* nav */
     nav { padding: 20px 24px; }
@@ -734,7 +734,7 @@
     .skills-grid { grid-template-columns: 1fr; }
     .skill-desc { word-break: break-word; overflow-wrap: break-word; }
 
-    /* projects — bubble grid on mobile */
+    /* projects â€” bubble grid on mobile */
     .bubble-grid { gap: 16px; padding: 40px 0 60px; }
     .project-card { flex-shrink: 0; }
 
@@ -754,75 +754,7 @@
     footer { padding: 24px; }
   }
 
-  /* ── PARKOUR CHARACTER ── */
-  #parkour-char {
-    position: fixed; left: 0; top: 0;
-    z-index: 5000; pointer-events: none;
-    will-change: transform;
-    filter: drop-shadow(0 3px 10px rgba(0,0,0,.5));
-  }
-  .char-inner { transform-origin: bottom center; }
-
-  .ca-arm-b, .ca-arm-f, .ca-leg-b, .ca-leg-f {
-    transform-box: fill-box;
-    transform-origin: top center;
-    transition: transform .08s ease;
-  }
-
-  /* ── IDLE: barely moves — breathe + occasional look ── */
-  @keyframes char-breathe {
-    0%,100% { transform: translateY(0)   scaleY(1);    }
-    45%     { transform: translateY(-2px) scaleY(1.01); }
-    50%     { transform: translateY(-2px) scaleY(1.01); }
-    95%     { transform: translateY(0)   scaleY(1);    }
-  }
-  @keyframes idle-look {
-    0%,30%,100% { transform: rotate(0deg);  }
-    40%,60%     { transform: rotate(8deg);  }
-    70%,90%     { transform: rotate(-4deg); }
-  }
-  #parkour-char.state-idle .char-inner     { animation: char-breathe 3.2s ease-in-out infinite; }
-  #parkour-char.state-idle .ca-arm-f       { transform: rotate(18deg);  transition: transform .4s ease; }
-  #parkour-char.state-idle .ca-arm-b       { transform: rotate(-10deg); transition: transform .4s ease; }
-  #parkour-char.state-idle .ca-leg-f       { transform: rotate(6deg);   transition: transform .4s ease; }
-  #parkour-char.state-idle .ca-leg-b       { transform: rotate(-4deg);  transition: transform .4s ease; }
-
-  /* ── RUN: full sprint with body lean ── */
-  @keyframes run-arm-f { 0%,100%{transform:rotate(-55deg)} 50%{transform:rotate(50deg)} }
-  @keyframes run-arm-b { 0%,100%{transform:rotate(55deg)}  50%{transform:rotate(-50deg)} }
-  @keyframes run-leg-f { 0%,100%{transform:rotate(-58deg)} 50%{transform:rotate(55deg)} }
-  @keyframes run-leg-b { 0%,100%{transform:rotate(58deg)}  50%{transform:rotate(-55deg)} }
-  @keyframes run-body  { 0%,100%{transform:rotate(-8deg) scaleY(1.02)} 50%{transform:rotate(-8deg) scaleY(0.97)} }
-
-  #parkour-char.state-run .ca-arm-f  { animation: run-arm-f .32s cubic-bezier(.4,0,.6,1) infinite; }
-  #parkour-char.state-run .ca-arm-b  { animation: run-arm-b .32s cubic-bezier(.4,0,.6,1) infinite; }
-  #parkour-char.state-run .ca-leg-f  { animation: run-leg-f .32s cubic-bezier(.4,0,.6,1) infinite; }
-  #parkour-char.state-run .ca-leg-b  { animation: run-leg-b .32s cubic-bezier(.4,0,.6,1) infinite; }
-  #parkour-char.state-run .char-inner { animation: run-body  .32s ease-in-out infinite; }
-
-  /* ── JUMP: arms thrown back, knees tucked up ── */
-  #parkour-char.state-jump .ca-arm-f  { transform: rotate(-110deg) !important; transition: transform .08s ease; }
-  #parkour-char.state-jump .ca-arm-b  { transform: rotate(110deg)  !important; transition: transform .08s ease; }
-  #parkour-char.state-jump .ca-leg-f  { transform: rotate(-55deg)  !important; transition: transform .08s ease; }
-  #parkour-char.state-jump .ca-leg-b  { transform: rotate(-40deg)  !important; transition: transform .08s ease; }
-  #parkour-char.state-jump .char-inner { transform: rotate(-12deg); transition: transform .08s ease; }
-
-  /* ── LAND: hard squash → snap back ── */
-  @keyframes char-land {
-    0%   { transform: scaleX(1.7) scaleY(0.4) translateY(14px); }
-    40%  { transform: scaleX(0.88) scaleY(1.15) translateY(-6px); }
-    70%  { transform: scaleX(1.04) scaleY(0.97) translateY(0); }
-    100% { transform: scaleX(1) scaleY(1) translateY(0); }
-  }
-  #parkour-char.state-land .char-inner { animation: char-land .42s cubic-bezier(.34,1.56,.64,1) forwards; }
-  #parkour-char.state-land .ca-arm-f  { transform: rotate(60deg)  !important; transition: transform .06s; }
-  #parkour-char.state-land .ca-arm-b  { transform: rotate(-60deg) !important; transition: transform .06s; }
-  #parkour-char.state-land .ca-leg-f  { transform: rotate(30deg)  !important; transition: transform .06s; }
-  #parkour-char.state-land .ca-leg-b  { transform: rotate(-30deg) !important; transition: transform .06s; }
-
-  @media (hover: none) { #parkour-char { display: none !important; } }
-
-  /* touch devices — disable custom cursor */
+  /* touch devices â€” disable custom cursor */
   @media (hover: none) {
     body { cursor: auto; }
     #cursor { display: none !important; }
@@ -874,7 +806,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="container" style="position:relative;z-index:2;">
-    <div class="hero-eyebrow"><span>Architect · Designer · Visualizer</span></div>
+    <div class="hero-eyebrow"><span>Architect Â· Designer Â· Visualizer</span></div>
     <h1 class="hero-name" data-text="Parag Chavhan">
       <span class="line"><span class="word">Parag</span></span>
       <span class="line"><span class="word">Chavhan</span></span>
@@ -885,7 +817,7 @@
       </p>
     </div>
   </div>
-  <div class="hero-counter">2026 · Portfolio</div>
+  <div class="hero-counter">2026 Â· Portfolio</div>
 </section>
 
 <!-- MARQUEE -->
@@ -918,70 +850,70 @@
         <div class="section-tag">Selected Work</div>
         <h2 class="section-title split-reveal"><span class="inner">Projects</span></h2>
       </div>
-      <span class="section-num">2022 – 2024</span>
+      <span class="section-num">2022 â€“ 2024</span>
     </div>
 
     <div class="bubble-grid">
 
-      <!-- 01 ABODE — medium -->
+      <!-- 01 ABODE â€” medium -->
       <div class="project-card" data-project="01" style="width:155px;height:155px;">
         <video class="bubble-media" src="projects/abode-logo.mp4" autoplay loop muted playsinline></video>
         <div class="bubble-label">
-          <div class="bubble-label-tag">Brand Identity · 2023</div>
+          <div class="bubble-label-tag">Brand Identity Â· 2023</div>
           <div class="bubble-label-title">ABODE</div>
         </div>
       </div>
 
-      <!-- 02 Thesis — hero/largest -->
+      <!-- 02 Thesis â€” hero/largest -->
       <div class="project-card" data-project="02" style="width:225px;height:225px;">
         <img class="bubble-media" src="projects/thesis-thumb.jpg" alt="Thesis">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Architecture · 2026</div>
+          <div class="bubble-label-tag">Architecture Â· 2026</div>
           <div class="bubble-label-title">Gateway to the Sacred</div>
         </div>
       </div>
 
-      <!-- 03 Retro Futurism — small -->
+      <!-- 03 Retro Futurism â€” small -->
       <div class="project-card" data-project="03" style="width:118px;height:118px;">
         <img class="bubble-media" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Digital Art · 2025</div>
+          <div class="bubble-label-tag">Digital Art Â· 2025</div>
           <div class="bubble-label-title">Retro Futurism</div>
         </div>
       </div>
 
-      <!-- 04 NRITYAMRIT — large -->
+      <!-- 04 NRITYAMRIT â€” large -->
       <div class="project-card" data-project="04" style="width:190px;height:190px;">
         <img class="bubble-media" src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Branding · 2023</div>
+          <div class="bubble-label-tag">Branding Â· 2023</div>
           <div class="bubble-label-title">NRITYAMRIT</div>
         </div>
       </div>
 
-      <!-- 05 MOSAFIRO — tiny -->
+      <!-- 05 MOSAFIRO â€” tiny -->
       <div class="project-card" data-project="05" style="width:108px;height:108px;">
         <img class="bubble-media" src="projects/ai-mosafiro.webp" alt="MOSAFIRO">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Architecture · 2023</div>
+          <div class="bubble-label-tag">Architecture Â· 2023</div>
           <div class="bubble-label-title">MOSAFIRO</div>
         </div>
       </div>
 
-      <!-- 06 Winkit — large -->
+      <!-- 06 Winkit â€” large -->
       <div class="project-card" data-project="06" style="width:195px;height:195px;">
         <img class="bubble-media" src="projects/ai-winkit.webp" alt="Winkit">
         <div class="bubble-label">
-          <div class="bubble-label-tag">UI/UX · 2024</div>
+          <div class="bubble-label-tag">UI/UX Â· 2024</div>
           <div class="bubble-label-title">Winkit</div>
         </div>
       </div>
 
-      <!-- 07 Dhakor — medium-small -->
+      <!-- 07 Dhakor â€” medium-small -->
       <div class="project-card" data-project="07" style="width:138px;height:138px;">
         <img class="bubble-media" src="projects/ai-dhakor.webp" alt="Dhakor Museum">
         <div class="bubble-label">
-          <div class="bubble-label-tag">Exhibition · 2023</div>
+          <div class="bubble-label-tag">Exhibition Â· 2023</div>
           <div class="bubble-label-title">Dhakor Museum</div>
         </div>
       </div>
@@ -997,7 +929,7 @@
     <div class="about-grid">
       <div class="about-left">
         <h2 class="about-big-text">
-          Where space<br>meets <em>story</em> —<br>built to last.
+          Where space<br>meets <em>story</em> â€”<br>built to last.
         </h2>
         <p class="about-body">
           I'm Parag, currently in my fifth year pursuing Architecture at the
@@ -1007,31 +939,31 @@
         </p>
         <p class="about-body" style="margin-bottom:0;">
           I have a keen interest in architectural visualization, visual design,
-          and branding. I stay on the cutting edge of AI tools — using them
+          and branding. I stay on the cutting edge of AI tools â€” using them
           actively for generative design, AI-assisted marketing, motion graphics,
-          and campaign production — bringing the speed of technology to
+          and campaign production â€” bringing the speed of technology to
           design-driven storytelling.
         </p>
         <div class="skills-grid">
           <div class="skill-item">
             <div class="skill-name">Architecture</div>
-            <div class="skill-desc">AutoCAD · Revit · SketchUp</div>
+            <div class="skill-desc">AutoCAD Â· Revit Â· SketchUp</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">3D & Rendering</div>
-            <div class="skill-desc">Blender · ZBrush · Enscape · V-ray</div>
+            <div class="skill-desc">Blender Â· ZBrush Â· Enscape Â· V-ray</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">Visual Design</div>
-            <div class="skill-desc">Photoshop · Illustrator · InDesign</div>
+            <div class="skill-desc">Photoshop Â· Illustrator Â· InDesign</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">Branding & Identity</div>
-            <div class="skill-desc">Logo · Packaging · Exhibition</div>
+            <div class="skill-desc">Logo Â· Packaging Â· Exhibition</div>
           </div>
           <div class="skill-item">
             <div class="skill-name">AI Marketing</div>
-            <div class="skill-desc">Higgsfield · Kling · Veo · Midjourney · Runway</div>
+            <div class="skill-desc">Higgsfield Â· Kling Â· Veo Â· Midjourney Â· Runway</div>
           </div>
         </div>
       </div>
@@ -1074,7 +1006,7 @@
     </div>
     <div class="contact-row">
       <a href="mailto:drparagchavhan23@gmail.com" class="contact-email">
-        drparagchavhan23@gmail.com ↗
+        drparagchavhan23@gmail.com â†—
       </a>
       <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
         <div class="socials">
@@ -1084,7 +1016,7 @@
         </div>
         <a href="mailto:drparagchavhan23@gmail.com" class="cta-btn">
           <span>Start a project</span>
-          <span>→</span>
+          <span>â†’</span>
         </a>
       </div>
     </div>
@@ -1093,13 +1025,13 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-copy">© 2026 Parag Chavhan. All rights reserved.</div>
-  <div class="footer-copy">SPA Vijayawada · B.Arch 5th Year · drparagchavhan23@gmail.com</div>
+  <div class="footer-copy">Â© 2026 Parag Chavhan. All rights reserved.</div>
+  <div class="footer-copy">SPA Vijayawada Â· B.Arch 5th Year Â· drparagchavhan23@gmail.com</div>
 </footer>
 
 <!-- PROJECT OVERLAY -->
 <div id="project-overlay" role="dialog" aria-modal="true" aria-label="Project detail">
-  <button class="po-close" id="po-close-btn" aria-label="Close project">✕</button>
+  <button class="po-close" id="po-close-btn" aria-label="Close project">âœ•</button>
   <div class="po-inner" id="po-inner"></div>
 </div>
 
@@ -1111,10 +1043,10 @@
 (function () {
   gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-  /* ── NOISE: static SVG filter, zero JS cost ── */
-  /* canvas removed — handled by CSS SVG filter in hero::after */
+  /* â”€â”€ NOISE: static SVG filter, zero JS cost â”€â”€ */
+  /* canvas removed â€” handled by CSS SVG filter in hero::after */
 
-  /* ── CURSOR — pure RAF, no GSAP ticker overhead ── */
+  /* â”€â”€ CURSOR â€” pure RAF, no GSAP ticker overhead â”€â”€ */
   const dot = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
   let mx = 0, my = 0, rx = 0, ry = 0;
@@ -1132,7 +1064,7 @@
   });
 
 
-  /* ── MOBILE HAMBURGER MENU ── */
+  /* â”€â”€ MOBILE HAMBURGER MENU â”€â”€ */
   (function() {
     const btn = document.querySelector('.nav-hamburger');
     const menu = document.getElementById('mobile-menu');
@@ -1158,7 +1090,7 @@
     links.forEach(a => a.addEventListener('click', closeMenu));
   })();
 
-  /* ── HERO NAME LETTER REPULSION ── */
+  /* â”€â”€ HERO NAME LETTER REPULSION â”€â”€ */
   (function() {
     if (window.matchMedia('(hover: none)').matches) return; // skip on touch
     const words = document.querySelectorAll('.hero-name .word');
@@ -1204,7 +1136,7 @@
           const force = Math.pow((REPEL_RADIUS - dist) / REPEL_RADIUS, 1.6);
           tx = (dx / dist) * force * REPEL_STRENGTH;
           ty = (dy / dist) * force * REPEL_STRENGTH;
-          ty = Math.max(ty, 0); // never move upward — keeps eyebrow untouched
+          ty = Math.max(ty, 0); // never move upward â€” keeps eyebrow untouched
         }
 
         const lerpF = inZone ? LERP_OUT : LERP_BACK;
@@ -1217,7 +1149,7 @@
     })();
   })();
 
-  /* ── LOADER ── */
+  /* â”€â”€ LOADER â”€â”€ */
   const loaderCount = document.getElementById('loader-count');
   const loaderBar = document.getElementById('loader-bar');
   const loader = document.getElementById('loader');
@@ -1246,7 +1178,7 @@
     }
   });
 
-  /* ── MAIN ANIMATIONS ── */
+  /* â”€â”€ MAIN ANIMATIONS â”€â”€ */
   function initAnimations() {
     /* Hero eyebrow */
     gsap.to('.hero-eyebrow span', {
@@ -1333,7 +1265,7 @@
   }
 
 
-  /* ── MAGNETIC BUTTONS ── */
+  /* â”€â”€ MAGNETIC BUTTONS â”€â”€ */
   document.querySelectorAll('[data-magnetic], .cta-btn').forEach(btn => {
     btn.addEventListener('mousemove', e => {
       const r = btn.getBoundingClientRect();
@@ -1346,7 +1278,7 @@
     });
   });
 
-  /* ── PROJECT DATA ── */
+  /* â”€â”€ PROJECT DATA â”€â”€ */
   /* project images live in ./projects/ folder */
   const IMG = {
     aykyata:    ['projects/p05-aykyata.jpg',  'projects/ai-aykyata.webp'],
@@ -1367,17 +1299,17 @@
       tags: ['Brand Identity', 'Packaging', 'Web Design'],
       type: 'Brand Identity + Web',
       year: '2025',
-      tools: 'Illustrator · Photoshop · Figma · InDesign',
+      tools: 'Illustrator Â· Photoshop Â· Figma Â· InDesign',
       imgKey: 'abode',
       location: 'urabode.in',
-      brief: `ABODE is a contemporary home décor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website — creating a cohesive brand experience that feels personal and timeless.`,
+      brief: `ABODE is a contemporary home dÃ©cor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website â€” creating a cohesive brand experience that feels personal and timeless.`,
       highlights: ['Logo System', 'Packaging Design', 'Instagram Presence', 'E-Commerce Website'],
       logoVideo: 'projects/abode-logo.mp4',
       sections: [
-        { type: 'video', src: 'projects/abode-logo.mp4', label: '01 — Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch — a universal symbol of home — into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
-        { type: 'image', src: 'projects/p08-abode.jpg', label: '02 — Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint — from stationery to signage — follows a unified system built around warmth, trust, and domesticity.' },
-        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 — Packaging · Social · Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem — a cohesive end-to-end brand experience.' },
-        { type: 'image', src: 'projects/ai-abode.webp', label: '04 — Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth — terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
+        { type: 'video', src: 'projects/abode-logo.mp4', label: '01 â€” Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch â€” a universal symbol of home â€” into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
+        { type: 'image', src: 'projects/p08-abode.jpg', label: '02 â€” Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint â€” from stationery to signage â€” follows a unified system built around warmth, trust, and domesticity.' },
+        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 â€” Packaging Â· Social Â· Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem â€” a cohesive end-to-end brand experience.' },
+        { type: 'image', src: 'projects/ai-abode.webp', label: '04 â€” Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth â€” terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
       ],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M40 12 L64 38 L64 68 L16 68 L16 38 Z" stroke="#b55418" stroke-width="2.5" fill="none"/>
@@ -1396,10 +1328,10 @@
       tags: ['Architecture', 'Thesis', 'Sacred Space'],
       type: 'B.Arch Thesis',
       year: '2026',
-      tools: 'AutoCAD · Revit · Rhino · Enscape · Photoshop · InDesign',
+      tools: 'AutoCAD Â· Revit Â· Rhino Â· Enscape Â· Photoshop Â· InDesign',
       imgKey: 'thesis',
       location: 'Govind Ghat, Uttarakhand',
-      brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat — the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage — creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
+      brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat â€” the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage â€” creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
       highlights: ['Ropeway Terminal Design', 'Sacred Threshold Architecture', 'Landscape Integration', '8-Sheet Documentation'],
       bigImage: 'projects/thesis-big4.webp',
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1420,21 +1352,21 @@
       id: '03',
       num: '03',
       title: 'RETRO FUTURISM',
-      subtitle: 'Self-Made Working Model · Product Design · AI Marketing',
+      subtitle: 'Self-Made Working Model Â· Product Design Â· AI Marketing',
       tags: ['Product Design', 'Prototyping', 'AI Marketing', 'Digital Art'],
-      type: 'Self-Made Working Model · Digital Arts',
+      type: 'Self-Made Working Model Â· Digital Arts',
       year: '2025',
-      tools: 'Acrylic Paint · Hand Lettering · Mixed Media · Kling AI · Higgsfield · Veo',
+      tools: 'Acrylic Paint Â· Hand Lettering Â· Mixed Media Â· Kling AI Â· Higgsfield Â· Veo',
       location: 'SPA Vijayawada',
-      brief: `A fully self-made product design project — not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing — a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
-      highlights: ['Fully functional working model — it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille · Graffiti lettering · Sticker collage'],
+      brief: `A fully self-made product design project â€” not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing â€” a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
+      highlights: ['Fully functional working model â€” it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille Â· Graffiti lettering Â· Sticker collage'],
       sections: [
-        { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 — AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker — it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
-        { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 — Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate — from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
-        { type: 'video', src: 'projects/retro-op3.mp4', muted: false, label: '04 — All Four Faces', heading: 'Four Faces, Four Visual Languages', body: 'A 360 showcase: folk art mandala grille, street graffiti side, sticker collage back, and embossed nameplate. Each face is a separate visual world, unified by the retro-futurist concept.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png', label: '05 — Front Face', heading: 'The Speaker as Canvas', body: 'DM-30 hardware reframed by a blue-painted window border, butterfly stickers, and folk art leaf motifs — turning functional controls into compositional elements.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/e5faec23-47d0-49bc-8bc0-ee49ae082838.png', label: '06 — Graffiti Side', heading: 'Street Language Meets Folk Memory', body: '"Retro Futurism" in graffiti-style freehand lettering with a lightning bolt burst. Pop art energy meets Indian street signage.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/1af2e1ec-c4e6-49fd-936f-b84bb23d3d3f.png', label: '07 — Mandala Grille', heading: 'Folk Art Frequency', body: 'A concentric mandala in purple and pink painted over the speaker grille — a folk art pattern that mirrors sound waves. The glowing cut-out rings are the visual heartbeat of the object.' },
+        { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 â€” AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker â€” it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
+        { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 â€” Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate â€” from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
+        { type: 'video', src: 'projects/retro-op3.mp4', muted: false, label: '04 â€” All Four Faces', heading: 'Four Faces, Four Visual Languages', body: 'A 360 showcase: folk art mandala grille, street graffiti side, sticker collage back, and embossed nameplate. Each face is a separate visual world, unified by the retro-futurist concept.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png', label: '05 â€” Front Face', heading: 'The Speaker as Canvas', body: 'DM-30 hardware reframed by a blue-painted window border, butterfly stickers, and folk art leaf motifs â€” turning functional controls into compositional elements.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/e5faec23-47d0-49bc-8bc0-ee49ae082838.png', label: '06 â€” Graffiti Side', heading: 'Street Language Meets Folk Memory', body: '"Retro Futurism" in graffiti-style freehand lettering with a lightning bolt burst. Pop art energy meets Indian street signage.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/1af2e1ec-c4e6-49fd-936f-b84bb23d3d3f.png', label: '07 â€” Mandala Grille', heading: 'Folk Art Frequency', body: 'A concentric mandala in purple and pink painted over the speaker grille â€” a folk art pattern that mirrors sound waves. The glowing cut-out rings are the visual heartbeat of the object.' },
       ],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <polygon points="40,8 44,30 66,30 49,44 55,66 40,53 25,66 31,44 14,30 36,30" stroke="#e8355a" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
@@ -1447,11 +1379,11 @@
       id: '04',
       num: '04',
       title: 'NRITYAMRIT',
-      subtitle: 'Lavani Dance Studio — Brand Identity',
+      subtitle: 'Lavani Dance Studio â€” Brand Identity',
       tags: ['Branding', 'Logo Design', 'Visual Identity'],
       type: 'Brand Identity',
       year: '2025',
-      tools: 'Illustrator · Photoshop · InDesign',
+      tools: 'Illustrator Â· Photoshop Â· InDesign',
       imgKey: 'nrityamrit',
       location: 'Maharashtra',
       brief: `NRITYAMRIT is a Lavani dance studio rooted in the energy, grace, and cultural richness of Maharashtra's traditional performance art. The identity captures the expressive movement of Lavani through a contemporary visual language, creating a balance between heritage and modernity.\n\nThe logo abstracts the form of a Lavani dancer into a minimal symbolic figure using flowing curves and rhythmic geometry. Warm tones of saffron, red, black, and earthy brown evoke celebration, passion, strength, and cultural identity.`,
@@ -1472,15 +1404,15 @@
       id: '05',
       num: '05',
       title: 'MOSAFIRO',
-      subtitle: 'ka KARAVANA — Nomadic Dwelling',
+      subtitle: 'ka KARAVANA â€” Nomadic Dwelling',
       tags: ['Architecture', 'Spatial Design', 'Blender'],
       type: 'Architectural Design',
-      year: '2024 — Semester V',
-      tools: 'AutoCAD · Blender · Photoshop · Illustrator',
+      year: '2024 â€” Semester V',
+      tools: 'AutoCAD Â· Blender Â· Photoshop Â· Illustrator',
       imgKey: 'mosafiro',
       location: 'Mobile / Off-Grid',
-      brief: `MOVANA is a compact 9m × 3m portable dwelling designed for modern nomadic living — combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
-      highlights: ['9m × 3m Footprint', 'Off-Grid Systems', 'Loft Sleeping Space', 'Terrace Garden'],
+      brief: `MOVANA is a compact 9m Ã— 3m portable dwelling designed for modern nomadic living â€” combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
+      highlights: ['9m Ã— 3m Footprint', 'Off-Grid Systems', 'Loft Sleeping Space', 'Terrace Garden'],
       panelBg: ['linear-gradient(160deg,#1a1a08 0%,#3a3010 100%)'],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="40" cy="40" r="10" stroke="#d48300" stroke-width="2.5" fill="none"/>
@@ -1505,10 +1437,10 @@
       tags: ['UI/UX', 'Critical Design', 'Graphic Design'],
       type: 'Critical Design / UI',
       year: '2025',
-      tools: 'Figma · Illustrator · Photoshop',
+      tools: 'Figma Â· Illustrator Â· Photoshop',
       imgKey: 'winkit',
-      location: 'Digital — Conceptual',
-      brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it — exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
+      location: 'Digital â€” Conceptual',
+      brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it â€” exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
       highlights: ['Parody Commerce UI', 'Product Storytelling', 'Critical Awareness', 'Interactive Experience'],
       panelBg: ['linear-gradient(160deg,#0a1a10 0%,#0d3020 100%)'],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1524,14 +1456,14 @@
       id: '07',
       num: '07',
       title: 'DHAKOR',
-      subtitle: 'Industrial Museum — Visual Identity',
+      subtitle: 'Industrial Museum â€” Visual Identity',
       tags: ['Graphic Design', 'Exhibition Design', 'Government Project'],
-      type: 'Graphic Design — Work Experience',
-      year: '2024 — Ongoing',
-      tools: 'Illustrator · Photoshop · InDesign',
+      type: 'Graphic Design â€” Work Experience',
+      year: '2024 â€” Ongoing',
+      tools: 'Illustrator Â· Photoshop Â· InDesign',
       imgKey: 'dhakor',
       location: 'Dhakor, Gujarat',
-      brief: `An ongoing government project — conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
+      brief: `An ongoing government project â€” conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
       highlights: ['Visual Identity System', 'Exhibition Graphics', 'Wayfinding', 'Brand Strategy'],
       panelBg: ['linear-gradient(160deg,#2a0808 0%,#4a1010 100%)'],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1640,18 +1572,18 @@
 
           ${p.bigImage ? `
           <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(244,240,232,.35);margin-bottom:20px;">
-            8 A1 Sheets · Scroll to zoom · Drag to pan
+            8 A1 Sheets Â· Scroll to zoom Â· Drag to pan
           </div>
           <div id="pz-container" style="width:100%;height:92vh;overflow:hidden;cursor:grab;background:#050e1a;border-radius:3px;position:relative;touch-action:none;">
             <div id="pz-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.3);z-index:2;">
-              Loading full resolution…
+              Loading full resolutionâ€¦
             </div>
             <img id="pz-img" src="${p.bigImage}" alt="Thesis sheets"
               style="position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;user-select:none;pointer-events:none;opacity:0;transition:opacity .4s;"
               draggable="false">
             <div id="pz-zoom-badge" style="position:absolute;bottom:20px;right:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;color:rgba(244,240,232,.35);pointer-events:none;background:rgba(5,14,26,.7);padding:6px 12px;border-radius:40px;backdrop-filter:blur(4px);"></div>
             <div id="pz-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.4);pointer-events:none;white-space:nowrap;background:rgba(5,14,26,.7);padding:6px 16px;border-radius:40px;backdrop-filter:blur(4px);transition:opacity 1.5s;">
-              ← Scroll to zoom · Drag to pan →
+              â† Scroll to zoom Â· Drag to pan â†’
             </div>
           </div>` : ''}
 
@@ -1692,13 +1624,13 @@
       <div class="po-next" id="po-next-btn" data-idx="${(idx+1)%PROJECTS.length}">
         <div>
           <div class="po-next-label">Next Project</div>
-          <div class="po-next-title">${next.title} — ${next.subtitle}</div>
+          <div class="po-next-title">${next.title} â€” ${next.subtitle}</div>
         </div>
-        <div class="po-next-arrow">→</div>
+        <div class="po-next-arrow">â†’</div>
       </div>`;
   }
 
-  /* ── OVERLAY OPEN / CLOSE ── */
+  /* â”€â”€ OVERLAY OPEN / CLOSE â”€â”€ */
   const overlay = document.getElementById('project-overlay');
   const overlayInner = document.getElementById('po-inner');
   const closeBtn = document.getElementById('po-close-btn');
@@ -1725,7 +1657,7 @@
     gsap.to('.po-subtitle', { y: 0, opacity: 1, duration: .7, ease: 'expo.out', delay: .75 });
   }
 
-  /* ── PAN-ZOOM VIEWER for large thesis sheets ── */
+  /* â”€â”€ PAN-ZOOM VIEWER for large thesis sheets â”€â”€ */
   function initPanZoom() {
     const container = document.getElementById('pz-container');
     const img = document.getElementById('pz-img');
@@ -1766,7 +1698,7 @@
       const iw = img.naturalWidth;
       const ih = img.naturalHeight;
 
-      /* start zoomed in: image fills 2× the viewport width */
+      /* start zoomed in: image fills 2Ã— the viewport width */
       scale = (cw * 2) / iw;
       tx = -(iw * scale - cw) / 2;
       ty = -(ih * scale - ch) / 2;
@@ -1781,10 +1713,10 @@
       if (container.clientWidth > 0 && img.naturalWidth > 0) { setup(); }
       else { setTimeout(trySetup, 80); }
     }
-    /* always poll — handles both cached and uncached image */
+    /* always poll â€” handles both cached and uncached image */
     trySetup();
 
-    /* ── WHEEL ZOOM ── */
+    /* â”€â”€ WHEEL ZOOM â”€â”€ */
     container.addEventListener('wheel', e => {
       e.preventDefault();
       e.stopPropagation();
@@ -1804,7 +1736,7 @@
       hint.style.opacity = '0';
     }, { passive: false });
 
-    /* ── DRAG PAN ── */
+    /* â”€â”€ DRAG PAN â”€â”€ */
     container.addEventListener('mousedown', e => {
       isDragging = true;
       startX = e.clientX; startY = e.clientY;
@@ -1823,13 +1755,13 @@
       container.style.cursor = 'grab';
     });
 
-    /* ── DOUBLE-CLICK: toggle overview ↔ detail ── */
+    /* â”€â”€ DOUBLE-CLICK: toggle overview â†” detail â”€â”€ */
     let isOverview = false;
     container.addEventListener('dblclick', e => {
       const cw = container.clientWidth;
       const ch = container.clientHeight;
       if (isOverview) {
-        /* zoom back to 2× detail */
+        /* zoom back to 2Ã— detail */
         scale = (cw * 2) / img.naturalWidth;
         tx = -(img.naturalWidth * scale - cw) / 2;
         ty = -(img.naturalHeight * scale - ch) / 2;
@@ -1846,7 +1778,7 @@
     });
   }
 
-  /* event delegation — handles next-project clicks inside the overlay */
+  /* event delegation â€” handles next-project clicks inside the overlay */
   overlay.addEventListener('click', e => {
     const btn = e.target.closest('#po-next-btn');
     if (btn) loadProject(+btn.dataset.idx);
@@ -1893,7 +1825,7 @@
     item.addEventListener('click', () => openProject(idx));
   });
 
-  /* ── SMOOTH SCROLL (native + offset) ── */
+  /* â”€â”€ SMOOTH SCROLL (native + offset) â”€â”€ */
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
@@ -1902,7 +1834,7 @@
     });
   });
 
-  /* ── NAV HIDE/SHOW ON SCROLL ── */
+  /* â”€â”€ NAV HIDE/SHOW ON SCROLL â”€â”€ */
   const navEl = document.querySelector('nav');
   let lastY = 0;
   window.addEventListener('scroll', () => {
@@ -1915,296 +1847,11 @@
 })();
 </script>
 
-<!-- ── PARKOUR CHARACTER ── -->
-<div id="parkour-char" class="state-idle" aria-hidden="true">
-  <div class="char-inner">
-    <svg viewBox="0 0 40 84" width="40" height="84" xmlns="http://www.w3.org/2000/svg">
-      <!-- depth shadow layer -->
-      <g opacity="0.22" transform="translate(2,3)">
-        <circle cx="20" cy="13" r="10" fill="#000"/>
-        <rect x="12" y="22" width="16" height="30" rx="5" fill="#000"/>
-        <rect x="4"  y="23" width="9"  height="23" rx="4" fill="#000"/>
-        <rect x="27" y="23" width="9"  height="23" rx="4" fill="#000"/>
-        <rect x="12" y="50" width="8"  height="26" rx="4" fill="#000"/>
-        <rect x="20" y="50" width="8"  height="26" rx="4" fill="#000"/>
-      </g>
-      <!-- back arm -->
-      <g class="ca-arm-b"><rect x="3"  y="23" width="9"  height="23" rx="4" fill="#a8a49c"/></g>
-      <!-- back leg -->
-      <g class="ca-leg-b"><rect x="12" y="50" width="8"  height="26" rx="4" fill="#a8a49c"/></g>
-      <!-- torso -->
-      <rect x="11" y="22" width="18" height="30" rx="5" fill="#ddd9d1"/>
-      <!-- front leg -->
-      <g class="ca-leg-f"><rect x="20" y="50" width="8"  height="26" rx="4" fill="#ccc8c0"/></g>
-      <!-- front arm -->
-      <g class="ca-arm-f"><rect x="28" y="23" width="9"  height="23" rx="4" fill="#e8e4dc"/></g>
-      <!-- head -->
-      <circle cx="20" cy="13" r="10" fill="#f4f0e8"/>
-      <!-- eye -->
-      <circle cx="23" cy="12" r="2" fill="#1a1a1a"/>
-      <!-- smile -->
-      <path d="M20,17 Q23,20 26,17" stroke="#1a1a1a" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-    </svg>
-  </div>
-</div>
+
+<!-- parkour removed -->
 
 <script>
-/* ── PARKOUR WORLD ── */
-(function () {
-  const char = document.getElementById('parkour-char');
-  if (!char || window.matchMedia('(hover: none)').matches) return;
-
-  const CHAR_H = 84;
-  document.body.style.position = 'relative';
-
-  /* ── Platform SVG templates — CMYK accent, minimal, architectural ── */
-  const C = '#00eeff', M = '#ff00cc', Y = '#ffe600';
-
-  const PLAT_SVG = {
-    // Cyan beam — structural horizontal bar, left-anchored
-    beam_c: {
-      w: 120, landY: 6,
-      svg: `<svg width="120" height="48" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="120" height="6" fill="${C}" opacity=".9"/>
-        <rect x="0" y="6" width="120" height="2" fill="${C}" opacity=".25"/>
-        <rect x="0" y="8" width="6"   height="38" fill="${C}" opacity=".4"/>
-        <rect x="114" y="8" width="6" height="38" fill="${C}" opacity=".4"/>
-        <line x1="6" y1="8" x2="114" y2="46" stroke="${C}" stroke-width=".8" opacity=".2"/>
-        <circle cx="3"   cy="3" r="3" fill="${C}" opacity=".7"/>
-        <circle cx="117" cy="3" r="3" fill="${C}" opacity=".7"/>
-      </svg>`
-    },
-    // Magenta lamp — pole right, light head left
-    lamp_m: {
-      w: 48, landY: 22,
-      svg: `<svg width="48" height="170" viewBox="0 0 48 170" xmlns="http://www.w3.org/2000/svg">
-        <rect x="22" y="38" width="4" height="132" fill="${M}" opacity=".55"/>
-        <rect x="14" y="163" width="20" height="5" rx="2" fill="${M}" opacity=".4"/>
-        <rect x="4"  y="26"  width="32" height="3" rx="1" fill="${M}" opacity=".7"/>
-        <rect x="4"  y="22"  width="3"  height="7" rx="1" fill="${M}" opacity=".5"/>
-        <ellipse cx="5" cy="14" rx="12" ry="9" fill="${M}" opacity=".15"/>
-        <ellipse cx="5" cy="14" rx="12" ry="9" fill="none" stroke="${M}" stroke-width="1.2" opacity=".7"/>
-        <circle  cx="5" cy="14" r="4" fill="${M}" opacity=".9"/>
-        <line x1="16" y1="29" x2="22" y2="38" stroke="${M}" stroke-width="1.5" opacity=".5"/>
-      </svg>`
-    },
-    // Yellow scaffold — construction frame
-    scaffold_y: {
-      w: 130, landY: 6,
-      svg: `<svg width="130" height="65" viewBox="0 0 130 65" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="130" height="6" fill="${Y}" opacity=".9"/>
-        <rect x="3"   y="6" width="5" height="58" fill="${Y}" opacity=".45"/>
-        <rect x="62"  y="6" width="5" height="58" fill="${Y}" opacity=".45"/>
-        <rect x="122" y="6" width="5" height="58" fill="${Y}" opacity=".45"/>
-        <line x1="3"   y1="6"  x2="67"  y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
-        <line x1="67"  y1="6"  x2="3"   y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
-        <line x1="67"  y1="6"  x2="127" y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
-        <line x1="127" y1="6"  x2="67"  y2="64" stroke="${Y}" stroke-width="1" opacity=".28"/>
-        <circle cx="3"   cy="3" r="3.5" fill="${Y}" opacity=".8"/>
-        <circle cx="127" cy="3" r="3.5" fill="${Y}" opacity=".8"/>
-      </svg>`
-    },
-    // Cyan pipe — horizontal conduit
-    pipe_c: {
-      w: 100, landY: 5,
-      svg: `<svg width="100" height="36" viewBox="0 0 100 36" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="2"  width="100" height="5" rx="2.5" fill="${C}" opacity=".8"/>
-        <rect x="0" y="7"  width="100" height="2" fill="${C}" opacity=".2"/>
-        <circle cx="6"  cy="4.5" r="5" fill="none" stroke="${C}" stroke-width="1.2" opacity=".6"/>
-        <circle cx="94" cy="4.5" r="5" fill="none" stroke="${C}" stroke-width="1.2" opacity=".6"/>
-        <circle cx="6"  cy="4.5" r="2" fill="${C}" opacity=".8"/>
-        <circle cx="94" cy="4.5" r="2" fill="${C}" opacity=".8"/>
-        <rect x="8"  y="9" width="4" height="27" rx="1" fill="${C}" opacity=".35"/>
-        <rect x="88" y="9" width="4" height="27" rx="1" fill="${C}" opacity=".35"/>
-      </svg>`
-    },
-    // Magenta sign — name plate on pole
-    sign_m: {
-      w: 64, landY: 6,
-      svg: `<svg width="64" height="120" viewBox="0 0 64 120" xmlns="http://www.w3.org/2000/svg">
-        <rect x="30" y="50" width="4" height="70" fill="${M}" opacity=".5"/>
-        <rect x="24" y="117" width="16" height="3" rx="1" fill="${M}" opacity=".4"/>
-        <rect x="2"  y="4"  width="60" height="42" rx="4" fill="#0d0d0d"/>
-        <rect x="2"  y="4"  width="60" height="42" rx="4" fill="none" stroke="${M}" stroke-width="1.5" opacity=".85"/>
-        <text x="32" y="22" text-anchor="middle" font-family="monospace" font-size="7.5" fill="${M}" letter-spacing="2" opacity=".95">PARAG</text>
-        <line x1="8" y1="28" x2="56" y2="28" stroke="${M}" stroke-width=".5" opacity=".3"/>
-        <text x="32" y="38" text-anchor="middle" font-family="monospace" font-size="5.5" fill="${M}" opacity=".6" letter-spacing="1.5">CHAVHAN.COM</text>
-        <line x1="30" y1="46" x2="30" y2="50" stroke="${M}" stroke-width="1.5" opacity=".6"/>
-      </svg>`
-    },
-    // Yellow beam — right-anchored variant
-    beam_y: {
-      w: 110, landY: 6,
-      svg: `<svg width="110" height="48" viewBox="0 0 110 48" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="110" height="6" fill="${Y}" opacity=".88"/>
-        <rect x="0" y="6" width="110" height="2" fill="${Y}" opacity=".22"/>
-        <rect x="0"   y="8" width="6" height="38" fill="${Y}" opacity=".38"/>
-        <rect x="104" y="8" width="6" height="38" fill="${Y}" opacity=".38"/>
-        <line x1="6" y1="8" x2="104" y2="46" stroke="${Y}" stroke-width=".8" opacity=".18"/>
-        <circle cx="3"   cy="3" r="3" fill="${Y}" opacity=".75"/>
-        <circle cx="107" cy="3" r="3" fill="${Y}" opacity=".75"/>
-      </svg>`
-    },
-  };
-
-  /* ── Platform layout — hugs left/right margins, never overlaps content ── */
-  const PLAT_DEFS = [
-    { sec: '#hero',    yFrac: 0.20, side: 'right', type: 'beam_c'     },
-    { sec: '#hero',    yFrac: 0.46, side: 'left',  type: 'lamp_m'     },
-    { sec: '#hero',    yFrac: 0.72, side: 'right', type: 'pipe_c'     },
-    { sec: '#work',    yFrac: 0.06, side: 'left',  type: 'scaffold_y' },
-    { sec: '#about',   yFrac: 0.16, side: 'right', type: 'sign_m'     },
-    { sec: '#about',   yFrac: 0.55, side: 'left',  type: 'beam_y'     },
-    { sec: '#contact', yFrac: 0.20, side: 'right', type: 'lamp_m'     },
-  ];
-
-  let platData = []; // { el, docY (landing surface), centerX }
-
-  function buildPlatforms() {
-    platData.forEach(p => p.el && p.el.remove());
-    platData = [];
-
-    const vw = window.innerWidth;
-    const MARGIN = 18; // px from screen edge
-
-    PLAT_DEFS.forEach(def => {
-      const sec = document.querySelector(def.sec);
-      if (!sec) return;
-      const sr   = sec.getBoundingClientRect();
-      const sTop = sr.top + window.pageYOffset;
-      const sH   = sr.height;
-      const tmpl = PLAT_SVG[def.type];
-
-      const docY = sTop + sH * def.yFrac;
-
-      // Hug the margin edge
-      const left = def.side === 'left'
-        ? MARGIN
-        : vw - tmpl.w - MARGIN;
-      const centerX = left + tmpl.w / 2;
-
-      const el = document.createElement('div');
-      el.innerHTML = tmpl.svg;
-      el.style.cssText = `position:absolute;top:${docY}px;left:${left}px;pointer-events:none;z-index:800;`;
-      document.body.appendChild(el);
-
-      platData.push({ el, docY: docY + tmpl.landY, centerX });
-    });
-  }
-
-  buildPlatforms();
-  window.addEventListener('resize', () => { buildPlatforms(); buildWaypoints(); }, { passive: true });
-
-  /* ── Waypoints ── */
-  let wps = [];
-
-  function docBottom(sel) {
-    const el = document.querySelector(sel);
-    if (!el) return null;
-    return el.getBoundingClientRect().bottom + window.pageYOffset;
-  }
-  function docTop(sel) {
-    const el = document.querySelector(sel);
-    if (!el) return null;
-    return el.getBoundingClientRect().top + window.pageYOffset;
-  }
-
-  function buildWaypoints() {
-    wps = [];
-    const vw = window.innerWidth, vh = window.innerHeight;
-
-    function wp(scrollAt, x, docY, state) {
-      wps.push({ scrollAt, x, docY, state });
-    }
-
-    // Surface helper: character lands when surface is ~30% from top of viewport
-    // scrollAt = docY_of_surface - vh * 0.3
-    function onSurf(p, xFrac, state, xOffset = 0) {
-      const scrollAt = p.docY - vh * 0.3;
-      wp(scrollAt, p.centerX * xFrac + xOffset, p.docY, state);
-    }
-
-    const navBot = docBottom('nav');
-
-    // NAV — start here
-    wp(0,  vw * 0.78, navBot, 'idle');
-    wp(80, vw * 0.96, navBot, 'run');
-
-    // PLATFORMS in order
-    platData.forEach((p, i) => {
-      const isLeft = p.centerX < vw * 0.5;
-      // Land near center of platform
-      const landScrollAt = p.docY - vh * 0.32;
-      wp(landScrollAt, p.centerX, p.docY, 'land');
-      // Run to opposite edge before jumping off
-      const runTo = isLeft ? vw * 0.05 : vw * 0.95;
-      wp(landScrollAt + 120, runTo, p.docY, 'run');
-    });
-
-    // BUBBLE ROW — hop across tops
-    const bubbTop = docTop('.bubble-grid');
-    if (bubbTop != null) {
-      wp(bubbTop - vh * 0.32,        vw * 0.12, bubbTop + 20, 'land');
-      wp(bubbTop - vh * 0.32 + 80,   vw * 0.88, bubbTop + 20, 'run');
-    }
-
-    // CONTACT bottom — idle
-    const contactBot = docBottom('#contact');
-    if (contactBot != null) {
-      wp(contactBot - vh * 0.4, vw * 0.5, contactBot - 60, 'idle');
-    }
-
-    wps.sort((a, b) => a.scrollAt - b.scrollAt);
-  }
-
-  buildWaypoints();
-
-  /* ── Animation loop ── */
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-  function arc(t)  { return Math.sin(t * Math.PI); }
-
-  let lastState = '';
-
-  function tick() {
-    requestAnimationFrame(tick);
-    if (wps.length < 2) return;
-
-    const sy = window.pageYOffset;
-    let a = wps[0], b = wps[1];
-
-    for (let i = 0; i < wps.length - 1; i++) {
-      if (sy >= wps[i].scrollAt && sy < wps[i+1].scrollAt) {
-        a = wps[i]; b = wps[i+1]; break;
-      }
-    }
-    if (sy >= wps[wps.length-1].scrollAt) {
-      a = wps[wps.length-2]; b = wps[wps.length-1];
-    }
-
-    const range = b.scrollAt - a.scrollAt || 1;
-    const rawT  = Math.max(0, Math.min(1, (sy - a.scrollAt) / range));
-    const t     = ease(rawT);
-
-    const x    = lerp(a.x, b.x, t);
-    const docY = lerp(a.docY, b.docY, t);
-    const viewY = docY - sy;
-
-    const yDelta = Math.abs(b.docY - a.docY);
-    const lift   = yDelta > 25 ? arc(rawT) * Math.min(yDelta * 0.7, 150) : 0;
-
-    const facing = b.x >= a.x ? 1 : -1;
-    char.style.transform = `translate(${(x - 20).toFixed(1)}px,${(viewY - CHAR_H - lift).toFixed(1)}px) scaleX(${facing})`;
-
-    const jumping = yDelta > 25 && rawT > 0.07 && rawT < 0.93;
-    const running = !jumping && Math.abs(b.x - a.x) > 40 && rawT > 0.07 && rawT < 0.93;
-    const state   = jumping ? 'jump' : running ? 'run' : (rawT > 0.88 ? b.state : a.state);
-
-    if (state !== lastState) { char.className = `state-${state}`; lastState = state; }
-  }
-
-  tick();
-})();
+  const _noop = null; // parkour removed
 </script>
 </body>
 </html>
