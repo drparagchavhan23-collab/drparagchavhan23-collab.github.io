@@ -1902,81 +1902,183 @@
 </div>
 
 <script>
-/* ── PARKOUR CHARACTER JS ── */
+/* ── PARKOUR WORLD ── */
 (function () {
   const char = document.getElementById('parkour-char');
   if (!char || window.matchMedia('(hover: none)').matches) return;
 
   const CHAR_H = 84;
+  document.body.style.position = 'relative';
 
-  function docTop(sel) {
-    const el = document.querySelector(sel);
-    if (!el) return null;
-    return el.getBoundingClientRect().top + window.pageYOffset;
+  /* ── Platform SVG templates ── */
+  const PLAT_SVG = {
+    shelf: {
+      w: 110, landY: 8,
+      svg: `<svg width="110" height="55" viewBox="0 0 110 55" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="110" height="9" rx="3" fill="#f4f0e8" opacity=".88"/>
+        <rect x="7"  y="9" width="5" height="38" rx="2" fill="#ddd9d1" opacity=".7"/>
+        <rect x="98" y="9" width="5" height="38" rx="2" fill="#ddd9d1" opacity=".7"/>
+        <line x1="7" y1="9" x2="110" y2="47" stroke="#c8c4bc" stroke-width="1" opacity=".4"/>
+      </svg>`
+    },
+    lamp: {
+      w: 52, landY: 30,
+      svg: `<svg width="52" height="160" viewBox="0 0 52 160" xmlns="http://www.w3.org/2000/svg">
+        <rect x="24" y="45" width="4" height="115" fill="#ddd9d1" opacity=".85"/>
+        <rect x="24" y="154" width="4" height="6" rx="1" fill="#c8c4bc"/>
+        <rect x="13" y="153" width="26" height="5" rx="2" fill="#b8b4ac" opacity=".8"/>
+        <rect x="6"  y="28" width="38" height="4" rx="2" fill="#ddd9d1" opacity=".85"/>
+        <ellipse cx="8" cy="20" rx="14" ry="11" fill="#f4f0e8" opacity=".92"/>
+        <ellipse cx="8" cy="20" rx="7"  ry="6"  fill="#fffdf0" opacity=".7"/>
+        <line x1="8" y1="31" x2="24" y2="45" stroke="#ddd9d1" stroke-width="2" opacity=".6"/>
+      </svg>`
+    },
+    scaffold: {
+      w: 140, landY: 7,
+      svg: `<svg width="140" height="70" viewBox="0 0 140 70" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="140" height="8" rx="2" fill="#f4f0e8" opacity=".9"/>
+        <rect x="4"  y="8" width="5" height="58" rx="1" fill="#ddd9d1" opacity=".72"/>
+        <rect x="67" y="8" width="5" height="58" rx="1" fill="#ddd9d1" opacity=".72"/>
+        <rect x="131" y="8" width="5" height="58" rx="1" fill="#ddd9d1" opacity=".72"/>
+        <line x1="4"  y1="8"  x2="72" y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
+        <line x1="72" y1="8"  x2="4"  y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
+        <line x1="72" y1="8"  x2="136" y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
+        <line x1="136" y1="8" x2="72" y2="66" stroke="#c8c4bc" stroke-width="1.2" opacity=".45"/>
+      </svg>`
+    },
+    sign: {
+      w: 68, landY: 8,
+      svg: `<svg width="68" height="130" viewBox="0 0 68 130" xmlns="http://www.w3.org/2000/svg">
+        <rect x="32" y="55" width="4" height="75" fill="#ddd9d1" opacity=".85"/>
+        <rect x="26" y="126" width="16" height="4" rx="1" fill="#b8b4ac"/>
+        <rect x="4" y="8" width="60" height="44" rx="5" fill="#0d0d0d" stroke="#f4f0e8" stroke-width="1.5" opacity=".92"/>
+        <text x="34" y="26" text-anchor="middle" font-family="monospace" font-size="7" fill="#f4f0e8" letter-spacing="2" opacity=".9">PARAG</text>
+        <text x="34" y="38" text-anchor="middle" font-family="monospace" font-size="6" fill="#f4f0e8" opacity=".55" letter-spacing="1">CHAVHAN</text>
+        <line x1="32" y1="52" x2="32" y2="55" stroke="#ddd9d1" stroke-width="2"/>
+      </svg>`
+    },
+    pipe: {
+      w: 90, landY: 6,
+      svg: `<svg width="90" height="40" viewBox="0 0 90 40" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0"  y="0"  width="90" height="7" rx="3" fill="#c8c4bc" opacity=".8"/>
+        <rect x="0"  y="7"  width="90" height="3" rx="1" fill="#a8a49c" opacity=".5"/>
+        <circle cx="5"  cy="3" r="4" fill="#ddd9d1" opacity=".8"/>
+        <circle cx="85" cy="3" r="4" fill="#ddd9d1" opacity=".8"/>
+        <rect x="10" y="10" width="5" height="30" rx="2" fill="#b8b4ac" opacity=".5"/>
+        <rect x="75" y="10" width="5" height="30" rx="2" fill="#b8b4ac" opacity=".5"/>
+      </svg>`
+    }
+  };
+
+  /* ── Platform layout definitions ── */
+  // Each: which section, how far down (yFrac of section height), x pos (vw fraction), type
+  const PLAT_DEFS = [
+    { sec: '#hero',    yFrac: 0.22, xFrac: 0.84, type: 'shelf'    },
+    { sec: '#hero',    yFrac: 0.48, xFrac: 0.07, type: 'lamp'     },
+    { sec: '#hero',    yFrac: 0.72, xFrac: 0.78, type: 'pipe'     },
+    { sec: '#work',    yFrac: 0.08, xFrac: 0.05, type: 'scaffold' },
+    { sec: '#about',   yFrac: 0.18, xFrac: 0.86, type: 'sign'     },
+    { sec: '#about',   yFrac: 0.55, xFrac: 0.06, type: 'shelf'    },
+    { sec: '#contact', yFrac: 0.22, xFrac: 0.82, type: 'lamp'     },
+  ];
+
+  let platData = []; // { el, docY (landing surface), centerX }
+
+  function buildPlatforms() {
+    platData.forEach(p => p.el && p.el.remove());
+    platData = [];
+
+    const vw = window.innerWidth;
+
+    PLAT_DEFS.forEach(def => {
+      const sec = document.querySelector(def.sec);
+      if (!sec) return;
+      const sr   = sec.getBoundingClientRect();
+      const sTop = sr.top + window.pageYOffset;
+      const sH   = sr.height;
+      const tmpl = PLAT_SVG[def.type];
+
+      const docY   = sTop + sH * def.yFrac;           // doc Y of platform top
+      const centerX = vw * def.xFrac;
+      const left   = centerX - tmpl.w / 2;
+
+      const el = document.createElement('div');
+      el.innerHTML = tmpl.svg;
+      el.style.cssText = `position:absolute;top:${docY}px;left:${left}px;pointer-events:none;z-index:800;opacity:.78;`;
+      document.body.appendChild(el);
+
+      platData.push({ el, docY: docY + tmpl.landY, centerX });
+    });
   }
+
+  buildPlatforms();
+  window.addEventListener('resize', () => { buildPlatforms(); buildWaypoints(); }, { passive: true });
+
+  /* ── Waypoints ── */
+  let wps = [];
+
   function docBottom(sel) {
     const el = document.querySelector(sel);
     if (!el) return null;
     return el.getBoundingClientRect().bottom + window.pageYOffset;
   }
-
-  let wps = [];
+  function docTop(sel) {
+    const el = document.querySelector(sel);
+    if (!el) return null;
+    return el.getBoundingClientRect().top + window.pageYOffset;
+  }
 
   function buildWaypoints() {
     wps = [];
     const vw = window.innerWidth, vh = window.innerHeight;
 
     function wp(scrollAt, x, docY, state) {
-      if (docY != null) wps.push({ scrollAt, x, docY, state });
+      wps.push({ scrollAt, x, docY, state });
     }
 
-    const navBot    = docBottom('nav');
-    const heroTop   = docTop('.hero-name');
-    const workBot   = docBottom('#work .section-header');
-    const bubbTop   = docTop('.bubble-grid');
-    const aboutTop  = docTop('#about .about-big-text');
-    const contactTop= docTop('#contact');
-
-    // 1 — nav bar
-    wp(0,   vw * 0.78, navBot,             'idle');
-    wp(90,  vw * 0.96, navBot,             'run');
-
-    // 2 — hero name (jump down)
-    wp(180, vw * 0.04, heroTop,            'land');
-    wp(320, vw * 0.75, heroTop,            'run');
-
-    // 3 — projects section header
-    if (workBot != null) {
-      wp(workBot - vh * 0.9,  vw * 0.94, workBot, 'land');
-      wp(workBot - vh * 0.55, vw * 0.06, workBot, 'run');
+    // Surface helper: character lands when surface is ~30% from top of viewport
+    // scrollAt = docY_of_surface - vh * 0.3
+    function onSurf(p, xFrac, state, xOffset = 0) {
+      const scrollAt = p.docY - vh * 0.3;
+      wp(scrollAt, p.centerX * xFrac + xOffset, p.docY, state);
     }
 
-    // 4 — bubble grid parkour
+    const navBot = docBottom('nav');
+
+    // NAV — start here
+    wp(0,  vw * 0.78, navBot, 'idle');
+    wp(80, vw * 0.96, navBot, 'run');
+
+    // PLATFORMS in order
+    platData.forEach((p, i) => {
+      const isLeft = p.centerX < vw * 0.5;
+      // Land near center of platform
+      const landScrollAt = p.docY - vh * 0.32;
+      wp(landScrollAt, p.centerX, p.docY, 'land');
+      // Run to opposite edge before jumping off
+      const runTo = isLeft ? vw * 0.05 : vw * 0.95;
+      wp(landScrollAt + 120, runTo, p.docY, 'run');
+    });
+
+    // BUBBLE ROW — hop across tops
+    const bubbTop = docTop('.bubble-grid');
     if (bubbTop != null) {
-      wp(bubbTop - vh * 0.7,  vw * 0.08, bubbTop + 25, 'land');
-      wp(bubbTop - vh * 0.4,  vw * 0.38, bubbTop + 25, 'run');
-      wp(bubbTop - vh * 0.15, vw * 0.62, bubbTop + 55, 'jump');
-      wp(bubbTop + vh * 0.05, vw * 0.92, bubbTop + 25, 'land');
+      wp(bubbTop - vh * 0.32,        vw * 0.12, bubbTop + 20, 'land');
+      wp(bubbTop - vh * 0.32 + 80,   vw * 0.88, bubbTop + 20, 'run');
     }
 
-    // 5 — about
-    if (aboutTop != null) {
-      wp(aboutTop - vh * 0.8,  vw * 0.88, aboutTop, 'land');
-      wp(aboutTop - vh * 0.45, vw * 0.12, aboutTop, 'run');
-    }
-
-    // 6 — contact
-    if (contactTop != null) {
-      wp(contactTop - vh * 0.7, vw * 0.1,  contactTop + 50, 'land');
-      wp(contactTop - vh * 0.3, vw * 0.65, contactTop + 50, 'idle');
+    // CONTACT bottom — idle
+    const contactBot = docBottom('#contact');
+    if (contactBot != null) {
+      wp(contactBot - vh * 0.4, vw * 0.5, contactBot - 60, 'idle');
     }
 
     wps.sort((a, b) => a.scrollAt - b.scrollAt);
   }
 
   buildWaypoints();
-  window.addEventListener('resize', buildWaypoints, { passive: true });
 
+  /* ── Animation loop ── */
   function lerp(a, b, t) { return a + (b - a) * t; }
   function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
   function arc(t)  { return Math.sin(t * Math.PI); }
@@ -2003,28 +2105,21 @@
     const rawT  = Math.max(0, Math.min(1, (sy - a.scrollAt) / range));
     const t     = ease(rawT);
 
-    const x     = lerp(a.x, b.x, t);
-    const docY  = lerp(a.docY, b.docY, t);
+    const x    = lerp(a.x, b.x, t);
+    const docY = lerp(a.docY, b.docY, t);
     const viewY = docY - sy;
 
-    // Jump arc lift
     const yDelta = Math.abs(b.docY - a.docY);
-    const lift   = yDelta > 30 ? arc(rawT) * Math.min(yDelta * 0.65, 140) : 0;
+    const lift   = yDelta > 25 ? arc(rawT) * Math.min(yDelta * 0.7, 150) : 0;
 
     const facing = b.x >= a.x ? 1 : -1;
-    const cx = x - 20;
-    const cy = viewY - CHAR_H - lift;
+    char.style.transform = `translate(${(x - 20).toFixed(1)}px,${(viewY - CHAR_H - lift).toFixed(1)}px) scaleX(${facing})`;
 
-    char.style.transform = `translate(${cx.toFixed(1)}px,${cy.toFixed(1)}px) scaleX(${facing})`;
-
-    const jumping = yDelta > 30 && rawT > 0.07 && rawT < 0.93;
+    const jumping = yDelta > 25 && rawT > 0.07 && rawT < 0.93;
     const running = !jumping && Math.abs(b.x - a.x) > 40 && rawT > 0.07 && rawT < 0.93;
     const state   = jumping ? 'jump' : running ? 'run' : (rawT > 0.88 ? b.state : a.state);
 
-    if (state !== lastState) {
-      char.className = `state-${state}`;
-      lastState = state;
-    }
+    if (state !== lastState) { char.className = `state-${state}`; lastState = state; }
   }
 
   tick();
