@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parag Chavhan â€” Architect & Designer</title>
+<title>Parag Chavhan — Architect & Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     cursor: none;
   }
 
-  /* â”€â”€ CURSOR â”€â”€ */
+  /* ── CURSOR ── */
   #cursor {
     position: fixed; top: 0; left: 0; z-index: 9999;
     pointer-events: none; mix-blend-mode: difference;
@@ -67,7 +67,7 @@
   body.cursor-hover #cursor-dot { width: 0; height: 0; }
   body.cursor-hover #cursor-ring { width: 72px; height: 72px; }
 
-  /* â”€â”€ LOADER â”€â”€ */
+  /* ── LOADER ── */
   #loader {
     position: fixed; inset: 0; z-index: 9998;
     background: var(--black);
@@ -104,7 +104,7 @@
     color: var(--muted); font-family: 'DM Mono', monospace;
   }
 
-  /* â”€â”€ NAV â”€â”€ */
+  /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
@@ -176,11 +176,11 @@
     color: var(--muted); margin-bottom: 40px;
   }
 
-  /* â”€â”€ SECTIONS â”€â”€ */
+  /* ── SECTIONS ── */
   section { position: relative; }
   .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
-  /* â”€â”€ HERO â”€â”€ */
+  /* ── HERO ── */
   #hero {
     min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: flex-end;
@@ -189,7 +189,7 @@
     background: transparent;
   }
 
-  /* noise via CSS SVG filter â€” GPU only, zero JS */
+  /* noise via CSS SVG filter — GPU only, zero JS */
   #hero::after {
     content: '';
     position: absolute; inset: 0;
@@ -282,7 +282,7 @@
     99%   { transform: none; opacity: 0; }
   }
 
-  /* â”€â”€ MARQUEE â”€â”€ */
+  /* ── MARQUEE ── */
   .marquee-wrap {
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
@@ -306,7 +306,7 @@
   .marquee-item:nth-child(3n) .dot { background: var(--yellow); }
   @keyframes marqueeScroll { to { transform: translateX(-50%); } }
 
-  /* â”€â”€ WORK â”€â”€ */
+  /* ── WORK ── */
   #work { padding: 120px 0; }
   .section-header {
     display: flex; align-items: baseline;
@@ -422,7 +422,7 @@
     color: var(--white);
   }
 
-  /* â”€â”€ ABOUT â”€â”€ */
+  /* ── ABOUT ── */
   #about {
     padding: 120px 0;
     border-top: 1px solid var(--border);
@@ -523,7 +523,7 @@
     color: var(--muted); margin-top: 4px;
   }
 
-  /* â”€â”€ CONTACT â”€â”€ */
+  /* ── CONTACT ── */
   #contact {
     padding: 120px 0 80px;
     border-top: 1px solid var(--border);
@@ -588,7 +588,7 @@
   }
   .social-link:hover { color: var(--cyan); }
 
-  /* â”€â”€ FOOTER â”€â”€ */
+  /* ── FOOTER ── */
   footer {
     padding: 32px 40px;
     border-top: 1px solid var(--border);
@@ -600,7 +600,7 @@
     font-size: 11px; letter-spacing: .1em; color: var(--muted);
   }
 
-  /* â”€â”€ PROJECT OVERLAY â”€â”€ */
+  /* ── PROJECT OVERLAY ── */
   #project-overlay {
     position: fixed; inset: 0; z-index: 500;
     background: var(--black);
@@ -717,12 +717,12 @@
   }
   .po-next-arrow { font-size: 48px; flex-shrink: 0; }
 
-  /* â”€â”€ REVEAL UTILS â”€â”€ */
+  /* ── REVEAL UTILS ── */
   .reveal-text .char { display: inline-block; }
   .split-reveal { overflow: hidden; }
   .split-reveal .inner { transform: translateY(110%); display: block; }
 
-  /* â”€â”€ RESPONSIVE â”€â”€ */
+  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     /* nav */
     nav { padding: 20px 24px; }
@@ -745,7 +745,7 @@
     .skills-grid { grid-template-columns: 1fr; }
     .skill-desc { word-break: break-word; overflow-wrap: break-word; }
 
-    /* projects â€” bubble grid on mobile */
+    /* projects — bubble grid on mobile */
     .bubble-grid { gap: 16px; padding: 40px 0 60px; }
     .project-card { flex-shrink: 0; }
 
@@ -765,7 +765,7 @@
     footer { padding: 24px; }
   }
 
-  /* touch devices â€” disable custom cursor */
+  /* touch devices — disable custom cursor */
   @media (hover: none) {
     body { cursor: auto; }
     #cursor { display: none !important; }
@@ -964,12 +964,12 @@
         <div class="section-tag">Selected Work</div>
         <h2 class="section-title split-reveal"><span class="inner">Projects</span></h2>
       </div>
-      <span class="section-num">2022 â€“ 2024</span>
+      <span class="section-num">2022 – 2024</span>
     </div>
 
     <div class="bubble-grid">
 
-      <!-- 01 ABODE â€” medium -->
+      <!-- 01 ABODE — medium -->
       <div class="project-card" data-project="01" style="width:155px;height:155px;">
         <video class="bubble-media" src="projects/abode-logo.mp4" autoplay loop muted playsinline></video>
         <div class="bubble-label">
@@ -978,7 +978,7 @@
         </div>
       </div>
 
-      <!-- 02 Thesis â€” hero/largest -->
+      <!-- 02 Thesis — hero/largest -->
       <div class="project-card" data-project="02" style="width:225px;height:225px;">
         <img class="bubble-media" src="projects/thesis-thumb.jpg" alt="Thesis">
         <div class="bubble-label">
@@ -987,7 +987,7 @@
         </div>
       </div>
 
-      <!-- 03 Retro Futurism â€” small -->
+      <!-- 03 Retro Futurism — small -->
       <div class="project-card" data-project="03" style="width:118px;height:118px;">
         <img class="bubble-media" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism">
         <div class="bubble-label">
@@ -996,7 +996,7 @@
         </div>
       </div>
 
-      <!-- 04 NRITYAMRIT â€” large -->
+      <!-- 04 NRITYAMRIT — large -->
       <div class="project-card" data-project="04" style="width:190px;height:190px;">
         <img class="bubble-media" src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT">
         <div class="bubble-label">
@@ -1005,7 +1005,7 @@
         </div>
       </div>
 
-      <!-- 05 MOSAFIRO â€” tiny -->
+      <!-- 05 MOSAFIRO — tiny -->
       <div class="project-card" data-project="05" style="width:108px;height:108px;">
         <img class="bubble-media" src="projects/ai-mosafiro.webp" alt="MOSAFIRO">
         <div class="bubble-label">
@@ -1014,7 +1014,7 @@
         </div>
       </div>
 
-      <!-- 06 Winkit â€” large -->
+      <!-- 06 Winkit — large -->
       <div class="project-card" data-project="06" style="width:195px;height:195px;">
         <img class="bubble-media" src="projects/ai-winkit.webp" alt="Winkit">
         <div class="bubble-label">
@@ -1023,7 +1023,7 @@
         </div>
       </div>
 
-      <!-- 07 Dhakor â€” medium-small -->
+      <!-- 07 Dhakor — medium-small -->
       <div class="project-card" data-project="07" style="width:138px;height:138px;">
         <img class="bubble-media" src="projects/ai-dhakor.webp" alt="Dhakor Museum">
         <div class="bubble-label">
@@ -1043,7 +1043,7 @@
     <div class="about-grid">
       <div class="about-left">
         <h2 class="about-big-text">
-          Where space<br>meets <em>story</em> â€”<br>built to last.
+          Where space<br>meets <em>story</em> —<br>built to last.
         </h2>
         <p class="about-body">
           I'm Parag, currently in my fifth year pursuing Architecture at the
@@ -1053,9 +1053,9 @@
         </p>
         <p class="about-body" style="margin-bottom:0;">
           I have a keen interest in architectural visualization, visual design,
-          and branding. I stay on the cutting edge of AI tools â€” using them
+          and branding. I stay on the cutting edge of AI tools — using them
           actively for generative design, AI-assisted marketing, motion graphics,
-          and campaign production â€” bringing the speed of technology to
+          and campaign production — bringing the speed of technology to
           design-driven storytelling.
         </p>
         <div class="skills-grid">
@@ -1130,7 +1130,7 @@
         </div>
         <a href="mailto:drparagchavhan23@gmail.com" class="cta-btn">
           <span>Start a project</span>
-          <span>â†’</span>
+          <span>→</span>
         </a>
       </div>
     </div>
@@ -1145,7 +1145,7 @@
 
 <!-- PROJECT OVERLAY -->
 <div id="project-overlay" role="dialog" aria-modal="true" aria-label="Project detail">
-  <button class="po-close" id="po-close-btn" aria-label="Close project">âœ•</button>
+  <button class="po-close" id="po-close-btn" aria-label="Close project">✕</button>
   <div class="po-inner" id="po-inner"></div>
 </div>
 
@@ -1157,10 +1157,10 @@
 (function () {
   gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-  /* â”€â”€ NOISE: static SVG filter, zero JS cost â”€â”€ */
-  /* canvas removed â€” handled by CSS SVG filter in hero::after */
+  /* ── NOISE: static SVG filter, zero JS cost ── */
+  /* canvas removed — handled by CSS SVG filter in hero::after */
 
-  /* â”€â”€ CURSOR â€” pure RAF, no GSAP ticker overhead â”€â”€ */
+  /* ── CURSOR — pure RAF, no GSAP ticker overhead ── */
   const dot = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
   let mx = 0, my = 0, rx = 0, ry = 0;
@@ -1178,7 +1178,7 @@
   });
 
 
-  /* â”€â”€ MOBILE HAMBURGER MENU â”€â”€ */
+  /* ── MOBILE HAMBURGER MENU ── */
   (function() {
     const btn = document.querySelector('.nav-hamburger');
     const menu = document.getElementById('mobile-menu');
@@ -1204,7 +1204,7 @@
     links.forEach(a => a.addEventListener('click', closeMenu));
   })();
 
-  /* â”€â”€ HERO NAME LETTER REPULSION â”€â”€ */
+  /* ── HERO NAME LETTER REPULSION ── */
   (function() {
     if (window.matchMedia('(hover: none)').matches) return; // skip on touch
     const words = document.querySelectorAll('.hero-name .word');
@@ -1250,7 +1250,7 @@
           const force = Math.pow((REPEL_RADIUS - dist) / REPEL_RADIUS, 1.6);
           tx = (dx / dist) * force * REPEL_STRENGTH;
           ty = (dy / dist) * force * REPEL_STRENGTH;
-          ty = Math.max(ty, 0); // never move upward â€” keeps eyebrow untouched
+          ty = Math.max(ty, 0); // never move upward — keeps eyebrow untouched
         }
 
         const lerpF = inZone ? LERP_OUT : LERP_BACK;
@@ -1263,7 +1263,7 @@
     })();
   })();
 
-  /* â”€â”€ LOADER â”€â”€ */
+  /* ── LOADER ── */
   const loaderCount = document.getElementById('loader-count');
   const loaderBar = document.getElementById('loader-bar');
   const loader = document.getElementById('loader');
@@ -1292,7 +1292,7 @@
     }
   });
 
-  /* â”€â”€ MAIN ANIMATIONS â”€â”€ */
+  /* ── MAIN ANIMATIONS ── */
   function initAnimations() {
     /* Hero eyebrow */
     gsap.to('.hero-eyebrow span', {
@@ -1379,7 +1379,7 @@
   }
 
 
-  /* â”€â”€ MAGNETIC BUTTONS â”€â”€ */
+  /* ── MAGNETIC BUTTONS ── */
   document.querySelectorAll('[data-magnetic], .cta-btn').forEach(btn => {
     btn.addEventListener('mousemove', e => {
       const r = btn.getBoundingClientRect();
@@ -1392,7 +1392,7 @@
     });
   });
 
-  /* â”€â”€ PROJECT DATA â”€â”€ */
+  /* ── PROJECT DATA ── */
   /* project images live in ./projects/ folder */
   const IMG = {
     aykyata:    ['projects/p05-aykyata.jpg',  'projects/ai-aykyata.webp'],
@@ -1416,14 +1416,14 @@
       tools: 'Illustrator · Photoshop · Figma · InDesign',
       imgKey: 'abode',
       location: 'urabode.in',
-      brief: `ABODE is a contemporary home décor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website â€” creating a cohesive brand experience that feels personal and timeless.`,
+      brief: `ABODE is a contemporary home décor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website — creating a cohesive brand experience that feels personal and timeless.`,
       highlights: ['Logo System', 'Packaging Design', 'Instagram Presence', 'E-Commerce Website'],
       logoVideo: 'projects/abode-logo.mp4',
       sections: [
-        { type: 'video', src: 'projects/abode-logo.mp4', label: '01 â€” Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch â€” a universal symbol of home â€” into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
-        { type: 'image', src: 'projects/p08-abode.jpg', label: '02 â€” Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint â€” from stationery to signage â€” follows a unified system built around warmth, trust, and domesticity.' },
-        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 â€” Packaging · Social · Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem â€” a cohesive end-to-end brand experience.' },
-        { type: 'image', src: 'projects/ai-abode.webp', label: '04 â€” Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth â€” terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
+        { type: 'video', src: 'projects/abode-logo.mp4', label: '01 — Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch — a universal symbol of home — into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
+        { type: 'image', src: 'projects/p08-abode.jpg', label: '02 — Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint — from stationery to signage — follows a unified system built around warmth, trust, and domesticity.' },
+        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 — Packaging · Social · Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem — a cohesive end-to-end brand experience.' },
+        { type: 'image', src: 'projects/ai-abode.webp', label: '04 — Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth — terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
       ],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M40 12 L64 38 L64 68 L16 68 L16 38 Z" stroke="#b55418" stroke-width="2.5" fill="none"/>
@@ -1445,7 +1445,7 @@
       tools: 'AutoCAD · Revit · Rhino · Enscape · Photoshop · InDesign',
       imgKey: 'thesis',
       location: 'Govind Ghat, Uttarakhand',
-      brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat â€” the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage â€” creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
+      brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat — the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage — creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
       highlights: ['Ropeway Terminal Design', 'Sacred Threshold Architecture', 'Landscape Integration', '8-Sheet Documentation'],
       bigImage: 'projects/thesis-big4.webp',
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1472,15 +1472,15 @@
       year: '2025',
       tools: 'Acrylic Paint · Hand Lettering · Mixed Media · Kling AI · Higgsfield · Veo',
       location: 'SPA Vijayawada',
-      brief: `A fully self-made product design project â€” not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing â€” a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
-      highlights: ['Fully functional working model â€” it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille · Graffiti lettering · Sticker collage'],
+      brief: `A fully self-made product design project — not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing — a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
+      highlights: ['Fully functional working model — it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille · Graffiti lettering · Sticker collage'],
       sections: [
-        { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 â€” AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker â€” it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
-        { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 â€” Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate â€” from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
-        { type: 'video', src: 'projects/retro-op3.mp4', muted: false, label: '04 â€” All Four Faces', heading: 'Four Faces, Four Visual Languages', body: 'A 360 showcase: folk art mandala grille, street graffiti side, sticker collage back, and embossed nameplate. Each face is a separate visual world, unified by the retro-futurist concept.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png', label: '05 â€” Front Face', heading: 'The Speaker as Canvas', body: 'DM-30 hardware reframed by a blue-painted window border, butterfly stickers, and folk art leaf motifs â€” turning functional controls into compositional elements.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/e5faec23-47d0-49bc-8bc0-ee49ae082838.png', label: '06 â€” Graffiti Side', heading: 'Street Language Meets Folk Memory', body: '"Retro Futurism" in graffiti-style freehand lettering with a lightning bolt burst. Pop art energy meets Indian street signage.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/1af2e1ec-c4e6-49fd-936f-b84bb23d3d3f.png', label: '07 â€” Mandala Grille', heading: 'Folk Art Frequency', body: 'A concentric mandala in purple and pink painted over the speaker grille â€” a folk art pattern that mirrors sound waves. The glowing cut-out rings are the visual heartbeat of the object.' },
+        { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 — AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker — it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
+        { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 — Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate — from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
+        { type: 'video', src: 'projects/retro-op3.mp4', muted: false, label: '04 — All Four Faces', heading: 'Four Faces, Four Visual Languages', body: 'A 360 showcase: folk art mandala grille, street graffiti side, sticker collage back, and embossed nameplate. Each face is a separate visual world, unified by the retro-futurist concept.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png', label: '05 — Front Face', heading: 'The Speaker as Canvas', body: 'DM-30 hardware reframed by a blue-painted window border, butterfly stickers, and folk art leaf motifs — turning functional controls into compositional elements.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/e5faec23-47d0-49bc-8bc0-ee49ae082838.png', label: '06 — Graffiti Side', heading: 'Street Language Meets Folk Memory', body: '"Retro Futurism" in graffiti-style freehand lettering with a lightning bolt burst. Pop art energy meets Indian street signage.' },
+        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/1af2e1ec-c4e6-49fd-936f-b84bb23d3d3f.png', label: '07 — Mandala Grille', heading: 'Folk Art Frequency', body: 'A concentric mandala in purple and pink painted over the speaker grille — a folk art pattern that mirrors sound waves. The glowing cut-out rings are the visual heartbeat of the object.' },
       ],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <polygon points="40,8 44,30 66,30 49,44 55,66 40,53 25,66 31,44 14,30 36,30" stroke="#e8355a" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
@@ -1493,7 +1493,7 @@
       id: '04',
       num: '04',
       title: 'NRITYAMRIT',
-      subtitle: 'Lavani Dance Studio â€” Brand Identity',
+      subtitle: 'Lavani Dance Studio — Brand Identity',
       tags: ['Branding', 'Logo Design', 'Visual Identity'],
       type: 'Brand Identity',
       year: '2025',
@@ -1518,14 +1518,14 @@
       id: '05',
       num: '05',
       title: 'MOSAFIRO',
-      subtitle: 'ka KARAVANA â€” Nomadic Dwelling',
+      subtitle: 'ka KARAVANA — Nomadic Dwelling',
       tags: ['Architecture', 'Spatial Design', 'Blender'],
       type: 'Architectural Design',
-      year: '2024 â€” Semester V',
+      year: '2024 — Semester V',
       tools: 'AutoCAD · Blender · Photoshop · Illustrator',
       imgKey: 'mosafiro',
       location: 'Mobile / Off-Grid',
-      brief: `MOVANA is a compact 9m Ã— 3m portable dwelling designed for modern nomadic living â€” combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
+      brief: `MOVANA is a compact 9m Ã— 3m portable dwelling designed for modern nomadic living — combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
       highlights: ['9m Ã— 3m Footprint', 'Off-Grid Systems', 'Loft Sleeping Space', 'Terrace Garden'],
       panelBg: ['linear-gradient(160deg,#1a1a08 0%,#3a3010 100%)'],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1553,8 +1553,8 @@
       year: '2025',
       tools: 'Figma · Illustrator · Photoshop',
       imgKey: 'winkit',
-      location: 'Digital â€” Conceptual',
-      brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it â€” exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
+      location: 'Digital — Conceptual',
+      brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it — exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
       highlights: ['Parody Commerce UI', 'Product Storytelling', 'Critical Awareness', 'Interactive Experience'],
       panelBg: ['linear-gradient(160deg,#0a1a10 0%,#0d3020 100%)'],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1570,14 +1570,14 @@
       id: '07',
       num: '07',
       title: 'DHAKOR',
-      subtitle: 'Industrial Museum â€” Visual Identity',
+      subtitle: 'Industrial Museum — Visual Identity',
       tags: ['Graphic Design', 'Exhibition Design', 'Government Project'],
-      type: 'Graphic Design â€” Work Experience',
-      year: '2024 â€” Ongoing',
+      type: 'Graphic Design — Work Experience',
+      year: '2024 — Ongoing',
       tools: 'Illustrator · Photoshop · InDesign',
       imgKey: 'dhakor',
       location: 'Dhakor, Gujarat',
-      brief: `An ongoing government project â€” conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
+      brief: `An ongoing government project — conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
       highlights: ['Visual Identity System', 'Exhibition Graphics', 'Wayfinding', 'Brand Strategy'],
       panelBg: ['linear-gradient(160deg,#2a0808 0%,#4a1010 100%)'],
       logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1690,14 +1690,14 @@
           </div>
           <div id="pz-container" style="width:100%;height:92vh;overflow:hidden;cursor:grab;background:#050e1a;border-radius:3px;position:relative;touch-action:none;">
             <div id="pz-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.3);z-index:2;">
-              Loading full resolutionâ€¦
+              Loading full resolution…
             </div>
             <img id="pz-img" src="${p.bigImage}" alt="Thesis sheets"
               style="position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;user-select:none;pointer-events:none;opacity:0;transition:opacity .4s;"
               draggable="false">
             <div id="pz-zoom-badge" style="position:absolute;bottom:20px;right:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;color:rgba(244,240,232,.35);pointer-events:none;background:rgba(5,14,26,.7);padding:6px 12px;border-radius:40px;backdrop-filter:blur(4px);"></div>
             <div id="pz-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.4);pointer-events:none;white-space:nowrap;background:rgba(5,14,26,.7);padding:6px 16px;border-radius:40px;backdrop-filter:blur(4px);transition:opacity 1.5s;">
-              â† Scroll to zoom · Drag to pan â†’
+              â† Scroll to zoom · Drag to pan →
             </div>
           </div>` : ''}
 
@@ -1738,13 +1738,13 @@
       <div class="po-next" id="po-next-btn" data-idx="${(idx+1)%PROJECTS.length}">
         <div>
           <div class="po-next-label">Next Project</div>
-          <div class="po-next-title">${next.title} â€” ${next.subtitle}</div>
+          <div class="po-next-title">${next.title} — ${next.subtitle}</div>
         </div>
-        <div class="po-next-arrow">â†’</div>
+        <div class="po-next-arrow">→</div>
       </div>`;
   }
 
-  /* â”€â”€ OVERLAY OPEN / CLOSE â”€â”€ */
+  /* ── OVERLAY OPEN / CLOSE ── */
   const overlay = document.getElementById('project-overlay');
   const overlayInner = document.getElementById('po-inner');
   const closeBtn = document.getElementById('po-close-btn');
@@ -1771,7 +1771,7 @@
     gsap.to('.po-subtitle', { y: 0, opacity: 1, duration: .7, ease: 'expo.out', delay: .75 });
   }
 
-  /* â”€â”€ PAN-ZOOM VIEWER for large thesis sheets â”€â”€ */
+  /* ── PAN-ZOOM VIEWER for large thesis sheets ── */
   function initPanZoom() {
     const container = document.getElementById('pz-container');
     const img = document.getElementById('pz-img');
@@ -1827,10 +1827,10 @@
       if (container.clientWidth > 0 && img.naturalWidth > 0) { setup(); }
       else { setTimeout(trySetup, 80); }
     }
-    /* always poll â€” handles both cached and uncached image */
+    /* always poll — handles both cached and uncached image */
     trySetup();
 
-    /* â”€â”€ WHEEL ZOOM â”€â”€ */
+    /* ── WHEEL ZOOM ── */
     container.addEventListener('wheel', e => {
       e.preventDefault();
       e.stopPropagation();
@@ -1850,7 +1850,7 @@
       hint.style.opacity = '0';
     }, { passive: false });
 
-    /* â”€â”€ DRAG PAN â”€â”€ */
+    /* ── DRAG PAN ── */
     container.addEventListener('mousedown', e => {
       isDragging = true;
       startX = e.clientX; startY = e.clientY;
@@ -1869,7 +1869,7 @@
       container.style.cursor = 'grab';
     });
 
-    /* â”€â”€ DOUBLE-CLICK: toggle overview â†” detail â”€â”€ */
+    /* ── DOUBLE-CLICK: toggle overview â†” detail ── */
     let isOverview = false;
     container.addEventListener('dblclick', e => {
       const cw = container.clientWidth;
@@ -1892,7 +1892,7 @@
     });
   }
 
-  /* event delegation â€” handles next-project clicks inside the overlay */
+  /* event delegation — handles next-project clicks inside the overlay */
   overlay.addEventListener('click', e => {
     const btn = e.target.closest('#po-next-btn');
     if (btn) loadProject(+btn.dataset.idx);
@@ -1939,7 +1939,7 @@
     item.addEventListener('click', () => openProject(idx));
   });
 
-  /* â”€â”€ SMOOTH SCROLL (native + offset) â”€â”€ */
+  /* ── SMOOTH SCROLL (native + offset) ── */
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
@@ -1948,7 +1948,7 @@
     });
   });
 
-  /* â”€â”€ NAV HIDE/SHOW ON SCROLL â”€â”€ */
+  /* ── NAV HIDE/SHOW ON SCROLL ── */
   const navEl = document.querySelector('nav');
   let lastY = 0;
   window.addEventListener('scroll', () => {
