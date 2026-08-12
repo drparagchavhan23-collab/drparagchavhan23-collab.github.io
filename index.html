@@ -40,7 +40,7 @@
   html { scroll-behavior: auto; overflow-x: hidden; }
 
   body {
-    background: var(--black);
+    background: transparent;
     color: var(--white);
     font-family: 'Space Grotesk', sans-serif;
     overflow-x: hidden;
@@ -185,7 +185,7 @@
     min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: flex-end;
     padding-bottom: 80px; overflow: hidden;
-    position: relative; background: var(--black);
+    position: relative; background: transparent;
   }
 
   /* noise via CSS SVG filter â€” GPU only, zero JS */
@@ -782,10 +782,217 @@
   #cmyk-reveal-bg  { z-index: 0; }
   #cmyk-reveal-scr { z-index: 1; }
   nav, section, footer { position: relative; z-index: 2; }
-  @media (hover: none) { #cmyk-reveal-scr { display: none; } }
+  @media (hover: none) { #cmyk-reveal-scr, #doodle-intro, #brush-bar { display: none !important; } }
+
+  /* ── DOODLE INTRO OVERLAY ── */
+  @keyframes di-in  { from { opacity:0; transform:translateY(18px) scale(.97) } to { opacity:1; transform:none } }
+  @keyframes di-out { from { opacity:1 } to { opacity:0; pointer-events:none } }
+  #doodle-intro {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(28px) brightness(.55) saturate(1.2);
+    -webkit-backdrop-filter: blur(28px) brightness(.55) saturate(1.2);
+    cursor: default;
+    animation: di-in .55s cubic-bezier(.22,1,.36,1) both;
+  }
+  #doodle-intro.hiding {
+    animation: di-out .4s ease forwards;
+  }
+  .di-card {
+    background: rgba(8,8,8,.92);
+    border: 1px solid rgba(244,240,232,.1);
+    border-radius: 16px;
+    padding: 44px 48px 40px;
+    max-width: 420px; width: 90%;
+    display: flex; flex-direction: column; gap: 0;
+    box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(244,240,232,.04);
+    position: relative; overflow: hidden;
+  }
+  .di-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+  }
+  .di-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 24px;
+  }
+  .di-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px; font-weight: 800; letter-spacing: -.02em;
+    color: var(--white); margin-bottom: 32px; line-height: 1.15;
+  }
+  .di-rows { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+  .di-row {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .di-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(244,240,232,.38);
+    background: rgba(244,240,232,.06);
+    border: 1px solid rgba(244,240,232,.12);
+    border-radius: 6px;
+    padding: 5px 10px;
+    white-space: nowrap; flex-shrink: 0; min-width: 72px; text-align: center;
+  }
+  .di-key.wide { min-width: 96px; }
+  .di-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .06em;
+    color: rgba(244,240,232,.55);
+  }
+  .di-divider { height: 1px; background: rgba(244,240,232,.08); margin: 4px 0; }
+
+  /* brush size picker inside overlay */
+  .di-brush-row {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 36px; margin-top: 4px;
+  }
+  .di-brush-btn {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    gap: 10px; padding: 16px 0 14px;
+    background: none; border: 1px solid rgba(244,240,232,.08);
+    cursor: pointer; transition: background .2s, border-color .2s;
+    position: relative;
+  }
+  .di-brush-btn:first-child { border-radius: 8px 0 0 8px; }
+  .di-brush-btn:last-child  { border-radius: 0 8px 8px 0; }
+  .di-brush-btn + .di-brush-btn { border-left: none; }
+  .di-brush-btn:hover { background: rgba(244,240,232,.05); }
+  .di-brush-btn.active { background: rgba(244,240,232,.08); border-color: rgba(244,240,232,.22); }
+  .di-brush-dot {
+    border-radius: 50%; flex-shrink: 0;
+  }
+  .di-brush-btn[data-size="xs"] .di-brush-dot { width:6px;  height:6px;  background: var(--cyan); }
+  .di-brush-btn[data-size="s"]  .di-brush-dot { width:12px; height:12px; background: var(--magenta); }
+  .di-brush-btn[data-size="m"]  .di-brush-dot { width:20px; height:20px; background: var(--yellow); }
+  .di-brush-btn[data-size="l"]  .di-brush-dot { width:30px; height:30px; background: var(--cyan); }
+  .di-brush-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(244,240,232,.35);
+  }
+  .di-brush-btn.active .di-brush-label { color: rgba(244,240,232,.75); }
+  .di-brush-key {
+    position: absolute; top: 8px; right: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 8px; color: rgba(244,240,232,.25); letter-spacing: .08em;
+  }
+  .di-start {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--black);
+    background: var(--white);
+    border: none; border-radius: 8px;
+    padding: 14px 28px;
+    cursor: pointer; width: 100%;
+    transition: background .2s, transform .15s;
+  }
+  .di-start:hover { background: var(--cyan); transform: translateY(-1px); }
+
+  /* ── BRUSH BAR (persistent bottom UI) ── */
+  #brush-bar {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    z-index: 9000;
+    display: flex; align-items: center; gap: 0;
+    background: rgba(8,8,8,.88);
+    border: 1px solid rgba(244,240,232,.12);
+    border-radius: 100px;
+    padding: 8px 12px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    opacity: 0; pointer-events: none;
+    transition: opacity .4s ease;
+  }
+  #brush-bar.visible { opacity: 1; pointer-events: auto; }
+  .bb-divider { width: 1px; height: 20px; background: rgba(244,240,232,.12); margin: 0 10px; flex-shrink:0; }
+  .bb-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 1px solid transparent;
+    cursor: pointer; position: relative;
+    transition: border-color .2s, background .2s;
+  }
+  .bb-btn:hover { background: rgba(244,240,232,.07); }
+  .bb-btn.active { border-color: rgba(244,240,232,.28); background: rgba(244,240,232,.1); }
+  .bb-dot {
+    border-radius: 50%; pointer-events: none;
+    transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .bb-btn[data-size="xs"] .bb-dot { width:4px;  height:4px;  background:var(--cyan); }
+  .bb-btn[data-size="s"]  .bb-dot { width:8px;  height:8px;  background:var(--magenta); }
+  .bb-btn[data-size="m"]  .bb-dot { width:14px; height:14px; background:var(--yellow); }
+  .bb-btn[data-size="l"]  .bb-dot { width:22px; height:22px; background:var(--cyan); }
+  .bb-btn.active .bb-dot { transform: scale(1.25); }
+  .bb-key {
+    position: absolute; top: -2px; right: 1px;
+    font-family: 'DM Mono', monospace;
+    font-size: 7px; color: rgba(244,240,232,.3); letter-spacing: 0;
+  }
+  .bb-reset {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(244,240,232,.38);
+    background: none; border: none; cursor: pointer;
+    padding: 4px 8px; border-radius: 6px;
+    transition: color .2s, background .2s;
+    white-space: nowrap;
+  }
+  .bb-reset:hover { color: rgba(244,240,232,.8); background: rgba(244,240,232,.06); }
+  .bb-reset-key {
+    font-size: 8px; background: rgba(244,240,232,.1);
+    border: 1px solid rgba(244,240,232,.15); border-radius: 3px;
+    padding: 1px 4px;
+  }
 </style>
 </head>
 <body>
+
+<!-- DOODLE INTRO OVERLAY -->
+<div id="doodle-intro" role="dialog" aria-modal="true" aria-label="Canvas instructions">
+  <div class="di-card">
+    <div class="di-eyebrow">Interactive Canvas</div>
+    <div class="di-title">Scratch the surface.</div>
+    <div class="di-rows">
+      <div class="di-row">
+        <span class="di-key">Cursor</span>
+        <span class="di-desc">Move to scrape &amp; reveal color</span>
+      </div>
+      <div class="di-divider"></div>
+      <div class="di-row">
+        <span class="di-key wide">Space bar</span>
+        <span class="di-desc">Reset canvas to black</span>
+      </div>
+      <div class="di-divider"></div>
+      <div class="di-row">
+        <span class="di-key">1 · 2 · 3 · 4</span>
+        <span class="di-desc">Switch brush size</span>
+      </div>
+    </div>
+    <div class="di-brush-row">
+      <button class="di-brush-btn active" data-size="xs"><span class="di-brush-key">1</span><div class="di-brush-dot"></div><span class="di-brush-label">XS</span></button>
+      <button class="di-brush-btn" data-size="s"><span class="di-brush-key">2</span><div class="di-brush-dot"></div><span class="di-brush-label">S</span></button>
+      <button class="di-brush-btn" data-size="m"><span class="di-brush-key">3</span><div class="di-brush-dot"></div><span class="di-brush-label">M</span></button>
+      <button class="di-brush-btn" data-size="l"><span class="di-brush-key">4</span><div class="di-brush-dot"></div><span class="di-brush-label">L</span></button>
+    </div>
+    <button class="di-start" id="di-start-btn">Start doodling &rarr;</button>
+  </div>
+</div>
+
+<!-- BRUSH BAR -->
+<div id="brush-bar" role="toolbar" aria-label="Brush size">
+  <button class="bb-btn active" data-size="xs" title="XS brush (1)"><span class="bb-key">1</span><div class="bb-dot"></div></button>
+  <button class="bb-btn" data-size="s"  title="S brush (2)"><span class="bb-key">2</span><div class="bb-dot"></div></button>
+  <button class="bb-btn" data-size="m"  title="M brush (3)"><span class="bb-key">3</span><div class="bb-dot"></div></button>
+  <button class="bb-btn" data-size="l"  title="L brush (4)"><span class="bb-key">4</span><div class="bb-dot"></div></button>
+  <div class="bb-divider"></div>
+  <button class="bb-reset" id="bb-reset-btn"><span class="bb-reset-key">⎵</span> Reset</button>
+</div>
 
 <!-- CURSOR -->
 <div id="cursor">
@@ -1321,7 +1528,7 @@
       tools: 'Illustrator · Photoshop · Figma · InDesign',
       imgKey: 'abode',
       location: 'urabode.in',
-      brief: `ABODE is a contemporary home dÃ©cor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website â€” creating a cohesive brand experience that feels personal and timeless.`,
+      brief: `ABODE is a contemporary home décor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website â€” creating a cohesive brand experience that feels personal and timeless.`,
       highlights: ['Logo System', 'Packaging Design', 'Instagram Presence', 'E-Commerce Website'],
       logoVideo: 'projects/abode-logo.mp4',
       sections: [
@@ -1931,9 +2138,42 @@
 <canvas id="cmyk-reveal-scr"></canvas>
 
 <script>
-/* ── CMYK SCRATCH REVEAL ── */
+/* ── CMYK SCRATCH REVEAL + DOODLE UI ── */
 (function () {
   if (window.matchMedia('(hover: none)').matches) return;
+
+  /* ── Brush sizes map ── */
+  const BRUSH_SIZES = { xs: 20, s: 40, m: 65, l: 100 };
+  let BRUSH = BRUSH_SIZES.xs;
+
+  /* ── Overlay ── */
+  const intro   = document.getElementById('doodle-intro');
+  const brushBar = document.getElementById('brush-bar');
+
+  function dismissIntro() {
+    if (!intro || intro.classList.contains('hiding')) return;
+    intro.classList.add('hiding');
+    setTimeout(() => { intro.style.display = 'none'; }, 420);
+    brushBar.classList.add('visible');
+  }
+
+  document.getElementById('di-start-btn').addEventListener('click', dismissIntro);
+  intro.addEventListener('click', e => { if (e.target === intro) dismissIntro(); });
+
+  /* ── Brush selection (shared between overlay + bar) ── */
+  function setSize(key) {
+    BRUSH = BRUSH_SIZES[key] || BRUSH_SIZES.m;
+    /* update overlay buttons */
+    document.querySelectorAll('.di-brush-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.size === key));
+    /* update bar buttons */
+    document.querySelectorAll('.bb-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.size === key));
+  }
+
+  document.querySelectorAll('.di-brush-btn, .bb-btn').forEach(btn => {
+    btn.addEventListener('click', () => setSize(btn.dataset.size));
+  });
 
   const C = '#00eeff', M = '#ff00cc', Y = '#ffe600';
   const bgC  = document.getElementById('cmyk-reveal-bg');
@@ -1941,115 +2181,147 @@
   const bgX  = bgC.getContext('2d');
   const scrX = scrC.getContext('2d');
 
-  /* blob layout per viewport-height tile (repeated down the page) */
+  /* Blobs tiled per viewport, re-drawn on scroll */
   const TILE_BLOBS = [
-    { xf:.08,  yf:.10, rf:.38, col:C },
-    { xf:.55,  yf:.05, rf:.32, col:Y },
-    { xf:.90,  yf:.18, rf:.36, col:M },
-    { xf:.28,  yf:.35, rf:.40, col:M },
-    { xf:.75,  yf:.42, rf:.34, col:C },
-    { xf:.10,  yf:.58, rf:.38, col:Y },
-    { xf:.50,  yf:.62, rf:.36, col:C },
-    { xf:.85,  yf:.72, rf:.32, col:Y },
-    { xf:.30,  yf:.82, rf:.40, col:M },
-    { xf:.68,  yf:.90, rf:.34, col:C },
+    { xf:.06, yf:.08, rf:.40, col:C },
+    { xf:.58, yf:.04, rf:.34, col:Y },
+    { xf:.92, yf:.20, rf:.38, col:M },
+    { xf:.26, yf:.36, rf:.42, col:M },
+    { xf:.74, yf:.44, rf:.36, col:C },
+    { xf:.10, yf:.60, rf:.40, col:Y },
+    { xf:.52, yf:.64, rf:.38, col:C },
+    { xf:.84, yf:.74, rf:.34, col:Y },
+    { xf:.32, yf:.84, rf:.42, col:M },
+    { xf:.68, yf:.92, rf:.36, col:C },
   ];
 
-  function docH() {
-    return Math.max(document.documentElement.scrollHeight, window.innerHeight);
+  let W = 0, H = 0;
+
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    bgC.width  = scrC.width  = W;
+    bgC.height = scrC.height = H;
+    drawBg(window.pageYOffset);
+    redrawScratch();
   }
 
-  function init() {
-    const w = window.innerWidth, h = docH();
-    bgC.width  = scrC.width  = w;
-    bgC.height = scrC.height = h;
-    bgC.style.width  = scrC.style.width  = w + 'px';
-    bgC.style.height = scrC.style.height = h + 'px';
-    drawBg(w, h);
-    fillBlack(w, h);
-  }
-
-  function drawBg(w, h) {
-    /* warm dark base — never pure black */
-    const base = bgX.createLinearGradient(0, 0, w, h);
+  function drawBg(sy) {
+    const base = bgX.createLinearGradient(0, 0, W, H);
     base.addColorStop(0,    '#03060f');
-    base.addColorStop(0.33, '#0f0308');
-    base.addColorStop(0.66, '#0a0a02');
-    base.addColorStop(1,    '#03080f');
+    base.addColorStop(0.4,  '#0f0308');
+    base.addColorStop(0.75, '#0a0a02');
+    base.addColorStop(1,    '#030a10');
     bgX.fillStyle = base;
-    bgX.fillRect(0, 0, w, h);
-
-    /* tile blobs down the full page height */
-    const tileH = window.innerHeight;
-    const tiles  = Math.ceil(h / tileH) + 1;
-    for (let t = 0; t < tiles; t++) {
-      TILE_BLOBS.forEach(b => {
-        const x = b.xf * w;
-        const y = b.yf * tileH + t * tileH;
-        const r = b.rf * Math.min(w, tileH);
+    bgX.fillRect(0, 0, W, H);
+    const tileH = H;
+    const tIdx  = Math.floor(sy / tileH);
+    const cols  = [C, M, Y];
+    for (let dt = -1; dt <= 2; dt++) {
+      const tileY = (tIdx + dt) * tileH - sy;
+      TILE_BLOBS.forEach((b, bi) => {
+        const col = cols[(bi + tIdx + dt + 30) % 3];
+        const x = b.xf * W, y = b.yf * tileH + tileY;
+        const r = b.rf * Math.min(W, tileH);
+        if (y + r < -50 || y - r > H + 50) return;
         const g = bgX.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0,    b.col + 'cc');
-        g.addColorStop(0.45, b.col + '77');
-        g.addColorStop(0.8,  b.col + '22');
-        g.addColorStop(1,    b.col + '00');
+        g.addColorStop(0,    col + 'cc');
+        g.addColorStop(0.4,  col + '88');
+        g.addColorStop(0.75, col + '33');
+        g.addColorStop(1,    col + '00');
         bgX.fillStyle = g;
-        bgX.fillRect(0, 0, w, h);
+        bgX.fillRect(0, 0, W, H);
       });
     }
   }
 
-  function fillBlack(w, h) {
-    scrX.globalCompositeOperation = 'source-over';
-    scrX.fillStyle = '#050505';
-    scrX.fillRect(0, 0, w, h);
+  /* Scratch marks stored in doc coordinates, redrawn each scroll frame */
+  let strokes = [[]];
+
+  function eraseAt(vx, vy) {
+    const g = scrX.createRadialGradient(vx, vy, 0, vx, vy, BRUSH);
+    g.addColorStop(0,   'rgba(0,0,0,1)');
+    g.addColorStop(0.5, 'rgba(0,0,0,0.88)');
+    g.addColorStop(1,   'rgba(0,0,0,0)');
+    scrX.globalCompositeOperation = 'destination-out';
+    scrX.fillStyle = g;
+    scrX.beginPath();
+    scrX.arc(vx, vy, BRUSH, 0, Math.PI * 2);
+    scrX.fill();
   }
 
-  init();
-  window.addEventListener('resize', init, { passive: true });
+  function redrawScratch() {
+    const sy = window.pageYOffset;
+    scrX.globalCompositeOperation = 'source-over';
+    scrX.fillStyle = '#050505';
+    scrX.fillRect(0, 0, W, H);
+    strokes.forEach(stroke => stroke.forEach(pt => eraseAt(pt.x, pt.y - sy)));
+  }
 
-  const BRUSH = 52;
-  let lx = null, ly = null, raf = false;
+  function resetCanvas() {
+    strokes = [[]];
+    scrX.globalCompositeOperation = 'source-over';
+    scrX.fillStyle = '#050505';
+    scrX.fillRect(0, 0, W, H);
+    lx = null; ly = null;
+  }
+
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  let scrollRaf = false;
+  window.addEventListener('scroll', () => {
+    if (!scrollRaf) {
+      scrollRaf = true;
+      requestAnimationFrame(() => {
+        scrollRaf = false;
+        drawBg(window.pageYOffset);
+        redrawScratch();
+      });
+    }
+  }, { passive: true });
+
+  let lx = null, ly = null, rafId = false;
   let mx = 0, my = 0;
 
   function scratch() {
-    raf = false;
-    /* canvas coords include scroll offset — marks persist across scroll */
-    const sy = window.pageYOffset;
-    const cx = mx, cy = my + sy;
-
-    scrX.globalCompositeOperation = 'destination-out';
+    rafId = false;
+    const sy   = window.pageYOffset;
+    const docX = mx, docY = my + sy;
+    const cur  = strokes[strokes.length - 1];
     if (lx !== null) {
-      const dist  = Math.hypot(cx - lx, cy - ly);
-      const steps = Math.max(1, Math.ceil(dist / 8));
-      for (let i = 0; i <= steps; i++) {
-        const t  = i / steps;
-        const ix = lx + (cx - lx) * t;
-        const iy = ly + (cy - ly) * t;
-        const g  = scrX.createRadialGradient(ix, iy, 0, ix, iy, BRUSH);
-        g.addColorStop(0,    'rgba(0,0,0,1)');
-        g.addColorStop(0.5,  'rgba(0,0,0,0.9)');
-        g.addColorStop(1,    'rgba(0,0,0,0)');
-        scrX.fillStyle = g;
-        scrX.beginPath();
-        scrX.arc(ix, iy, BRUSH, 0, Math.PI * 2);
-        scrX.fill();
+      const dist  = Math.hypot(docX - lx, docY - ly);
+      const steps = Math.max(1, Math.ceil(dist / 6));
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        const ix = lx + (docX - lx) * t;
+        const iy = ly + (docY - ly) * t;
+        cur.push({ x: ix, y: iy });
+        eraseAt(ix, iy - sy);
       }
+    } else {
+      cur.push({ x: docX, y: docY });
+      eraseAt(docX, my);
     }
-    lx = cx; ly = cy;
+    lx = docX; ly = docY;
   }
 
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
-    if (!raf) { raf = true; requestAnimationFrame(scratch); }
+    if (!rafId) { rafId = true; requestAnimationFrame(scratch); }
+  });
+  document.addEventListener('mouseup', () => {
+    lx = null; ly = null; strokes.push([]);
   });
 
   document.addEventListener('keydown', e => {
     if (e.code === 'Space' && !e.target.matches('input,textarea,select')) {
-      e.preventDefault();
-      fillBlack(scrC.width, scrC.height);
-      lx = null; ly = null;
+      e.preventDefault(); resetCanvas();
     }
+    const km = { Digit1:'xs', Digit2:'s', Digit3:'m', Digit4:'l' };
+    if (km[e.code]) setSize(km[e.code]);
   });
+
+  document.getElementById('bb-reset-btn').addEventListener('click', resetCanvas);
 })();
 </script>
 </body>
