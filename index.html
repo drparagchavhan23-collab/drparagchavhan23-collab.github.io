@@ -2249,13 +2249,13 @@ void main(){
   /* Packed uniforms from spec */
   gl.uniform4f(uShape,     1.50, 0.48, 0.50, 0.00);
   gl.uniform4f(uSurface,   2.40, 0.92,-0.50, 1.00);
-  gl.uniform4f(uFinish,    3.04, 0.61, 0.016,0.18);
+  gl.uniform4f(uFinish,    3.04, 0.61, 0.0,  0.18); // blur=0: skip 5-tap pass
   gl.uniform4f(uTransform, 7.0,  0.00, 0.32, 0.0);
   gl.uniform4f(uSpace,     0.0,  0.0,  0.0,  0.0); // cursor off
   gl.uniform4f(uCursor,    0.0,  2.0,  0.65, 0.30);
 
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = 1; // fixed at 1× — halves pixel count on retina, major perf gain
     canvas.width  = Math.round(window.innerWidth  * dpr);
     canvas.height = Math.round(window.innerHeight * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
