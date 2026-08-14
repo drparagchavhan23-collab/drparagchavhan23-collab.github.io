@@ -204,6 +204,70 @@
   }
   .hero-eyebrow span { display: block; transform: translateY(120%); }
 
+  @font-face {
+    font-family: 'HitMePunk';
+    src: url('hit-me-punk.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
+  }
+
+  /* ── HERO PHOTO STACK ── */
+  .hero-photo-stack {
+    position: relative;
+    width: clamp(220px, 28vw, 380px);
+    flex-shrink: 0;
+  }
+  .hero-photo-main {
+    width: 100%; aspect-ratio: 3/4;
+    border-radius: 6px; overflow: hidden;
+    position: relative; z-index: 2;
+  }
+  .hero-photo-main img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block; position: absolute; inset: 0;
+    transition: opacity .35s ease;
+  }
+  .hero-photo-main img.tongue { opacity: 0; }
+
+  /* bloom petals */
+  .bloom-petal {
+    position: absolute;
+    width: 52%; aspect-ratio: 3/4;
+    border-radius: 6px; overflow: hidden;
+    z-index: 1;
+    transform-origin: center center;
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    border: 2px solid rgba(255,255,255,.08);
+  }
+  .bloom-petal img { width:100%;height:100%;object-fit:cover;display:block; }
+
+  /* petal positions (top: 50% + left: 50% = center of stack) */
+  .bloom-petal:nth-child(1) { top: 50%; left: 50%; }
+  .bloom-petal:nth-child(2) { top: 50%; left: 50%; }
+  .bloom-petal:nth-child(3) { top: 50%; left: 50%; }
+  .bloom-petal:nth-child(4) { top: 50%; left: 50%; }
+  .bloom-petal:nth-child(5) { top: 50%; left: 50%; }
+  .bloom-petal:nth-child(6) { top: 50%; left: 50%; }
+
+  /* color burst theme — applied to :root on scroll */
+  :root {
+    --burst-bg: #050505;
+    --burst-text: #f4f0e8;
+    --burst-accent1: #ff2d00;
+    --burst-accent2: #00eeff;
+    --burst-accent3: #ffe600;
+  }
+  body.color-burst { background: #0a0a0a; }
+  body.color-burst #hero { background: transparent; }
+
+  /* Hit Me Punk font toggle on hero name */
+  .hero-name.punk-font {
+    font-family: 'HitMePunk', 'Syne', sans-serif !important;
+    letter-spacing: .01em;
+  }
+
   .hero-name {
     font-family: 'Syne', sans-serif;
     font-size: clamp(64px, 10.5vw, 180px);
@@ -214,6 +278,7 @@
     overflow: visible;
     padding: 60px 0 60px 0;
     margin-top: -60px;
+    transition: font-family .1s step-end, letter-spacing .3s ease;
   }
   .hero-name .line { overflow: visible; display: block; }
   .hero-name .word { display: inline-block; transform: translateY(115%); }
@@ -823,17 +888,54 @@
 </div>
 
 <!-- HERO -->
-<section id="hero">
-  <div class="container" style="position:relative;z-index:2;">
-    <div class="hero-eyebrow"><span>Architect · Designer · Visualizer</span></div>
-    <h1 class="hero-name" data-text="Parag Chavhan">
-      <span class="line"><span class="word">Parag</span></span>
-      <span class="line"><span class="word">Chavhan</span></span>
-    </h1>
-    <div class="hero-sub-row">
-      <p class="hero-tagline split-reveal">
-        <span class="inner">Architecture, design, and everything<br>that lives in between.</span>
-      </p>
+<section id="hero" id="hero-bloom-trigger">
+  <div class="hero-bg-year" aria-hidden="true">2026</div>
+  <div class="container" style="position:relative;z-index:2;display:flex;align-items:center;gap:clamp(32px,5vw,80px);">
+    <!-- Photo stack -->
+    <div class="hero-photo-stack" id="heroPhotoStack">
+      <!-- bloom petals behind main photo -->
+      <div class="bloom-petal"><img src="projects/bloom-1.jpg" alt=""></div>
+      <div class="bloom-petal"><img src="projects/bloom-2.jpg" alt=""></div>
+      <div class="bloom-petal"><img src="projects/bloom-3.jpg" alt=""></div>
+      <div class="bloom-petal"><img src="projects/bloom-4.jpg" alt=""></div>
+      <div class="bloom-petal"><img src="projects/bloom-5.jpg" alt=""></div>
+      <div class="bloom-petal"><img src="projects/bloom-6.jpg" alt=""></div>
+      <!-- main photo on top -->
+      <div class="hero-photo-main">
+        <img src="projects/hero-serious.jpg" alt="Parag Chavhan" class="serious">
+        <img src="projects/hero-tongue.jpg"  alt="Parag Chavhan" class="tongue">
+      </div>
+    </div>
+    <!-- Text -->
+    <div style="flex:1;min-width:0;">
+      <div class="hero-eyebrow"><span>Architect · Designer · Visualizer</span></div>
+      <h1 class="hero-name" id="heroName" data-text="Parag Chavhan">
+        <span class="line"><span class="word">Parag</span></span>
+        <span class="line"><span class="word">Chavhan</span></span>
+      </h1>
+      <div class="hero-sub-row">
+        <p class="hero-tagline split-reveal">
+          <span class="inner">Architecture, design, and everything<br>that lives in between.</span>
+        </p>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Based in</span>
+            <span class="hero-meta-val">Vijayawada, IN</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Status</span>
+            <span class="hero-meta-val"><span class="hero-avail-dot"></span>Available</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Program</span>
+            <span class="hero-meta-val">B.Arch · SPA</span>
+          </div>
+        </div>
+      </div>
+      <a href="#work" class="hero-cta" data-magnetic>
+        <span>View Work</span>
+        <span class="hero-cta-arrow">→</span>
+      </a>
     </div>
   </div>
   <div class="hero-counter">2026 · Portfolio</div>
@@ -1940,6 +2042,101 @@
 </script>
 
 
+
+
+<script>
+/* ── HERO BLOOM SCROLL SEQUENCE ── */
+(function () {
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const serious  = document.querySelector('.hero-photo-main img.serious');
+  const tongue   = document.querySelector('.hero-photo-main img.tongue');
+  const petals   = document.querySelectorAll('.bloom-petal');
+  const heroName = document.getElementById('heroName');
+
+  // Petal bloom destinations: angle + distance from center
+  const PETALS = [
+    { angle: -80,  dist: 1.4 },
+    { angle: -30,  dist: 1.6 },
+    { angle:  20,  dist: 1.55 },
+    { angle:  70,  dist: 1.5 },
+    { angle: 130,  dist: 1.6 },
+    { angle: 175,  dist: 1.45 },
+  ];
+
+  // Crazy color palette for burst
+  const BURST_COLORS = {
+    '--black':   '#0a0005',
+    '--white':   '#f7f0ff',
+    '--red':     '#ff2d00',
+    '--green':   '#39ff14',
+    '--purple':  '#ff00ff',
+    '--cyan':    '#00eeff',
+    '--magenta': '#ff00cc',
+    '--yellow':  '#ffe600',
+    '--muted':   'rgba(247,240,255,0.6)',
+  };
+
+  let burstActive = false;
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: '+=220%',
+      scrub: 1.2,
+      pin: true,
+    }
+  });
+
+  // Step 1 (0–15%): tongue swap
+  tl.to(serious, { opacity: 0, duration: 0.15 }, 0)
+    .to(tongue,  { opacity: 1, duration: 0.15 }, 0);
+
+  // Step 2 (15–60%): petals bloom out
+  petals.forEach((petal, i) => {
+    const cfg = PETALS[i];
+    const rad = cfg.angle * Math.PI / 180;
+    const tx  = Math.cos(rad) * cfg.dist * 100; // % of petal width
+    const ty  = Math.sin(rad) * cfg.dist * 100;
+    tl.fromTo(petal,
+      { opacity: 0, scale: 0, x: '0%', y: '0%', rotation: cfg.angle * 0.3 },
+      { opacity: 1, scale: 1,
+        x: tx + '%', y: ty + '%',
+        rotation: cfg.angle * 0.15,
+        duration: 0.35,
+        ease: 'back.out(1.4)' },
+      0.15 + i * 0.05
+    );
+  });
+
+  // Step 3 (60–75%): color burst
+  tl.add(() => {
+    if (!burstActive) {
+      burstActive = true;
+      const root = document.documentElement;
+      Object.entries(BURST_COLORS).forEach(([k, v]) => root.style.setProperty(k, v));
+      document.body.classList.add('color-burst');
+    }
+  }, 0.60);
+
+  // Step 3 reverse
+  tl.add(() => {
+    if (burstActive) {
+      burstActive = false;
+      const root = document.documentElement;
+      Object.keys(BURST_COLORS).forEach(k => root.style.removeProperty(k));
+      document.body.classList.remove('color-burst');
+    }
+  }, 0.58); // fires on reverse just before 0.60
+
+  // Step 4 (75–100%): Hit Me Punk font swap
+  tl.add(() => { heroName.classList.add('punk-font'); },    0.75);
+  tl.add(() => { heroName.classList.remove('punk-font'); }, 0.73);
+
+})();
+</script>
 
 </body>
 </html>
