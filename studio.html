@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parag Chavhan — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{background:#050505;color:#f4f0e8;font-family:'DM Mono',monospace;overflow-x:hidden}
+
+/* ── Canvas ── */
+#c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+
+/* ── Nav ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:24px 40px;z-index:20;
+}
+.nav-logo{font-size:13px;letter-spacing:.2em;color:rgba(244,240,232,.45);font-weight:400}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:10px;letter-spacing:.2em;text-decoration:none;color:rgba(244,240,232,.35);transition:color .3s}
+.nav-links a:hover{color:#f4f0e8}
+
+/* ── Progress bar ── */
+#progress{
+  position:fixed;right:28px;top:50%;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:20px;
+  z-index:20;
+}
+.pdot{
+  position:relative;width:5px;height:5px;
+  border-radius:50%;background:rgba(244,240,232,.18);
+  cursor:pointer;transition:background .5s, box-shadow .5s, transform .5s;
+}
+.pdot::before{
+  content:attr(data-label);
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  font-size:8px;letter-spacing:.18em;white-space:nowrap;
+  color:rgba(244,240,232,.0);transition:color .4s;
+  font-family:'DM Mono',monospace;
+}
+.pdot.active{background:var(--dot-color,#00eeff);box-shadow:0 0 10px var(--dot-color,#00eeff);transform:scale(1.4)}
+.pdot.active::before{color:rgba(244,240,232,.4)}
+
+/* ── Stage name ── */
+#stage-label{
+  position:fixed;left:40px;bottom:44px;
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(244,240,232,.25);z-index:20;
+  transition:color .5s;
+}
+
+/* ── Scroll hint ── */
+#scroll-hint{
+  position:fixed;bottom:44px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:8px;letter-spacing:.3em;color:rgba(244,240,232,.3);
+  z-index:20;transition:opacity .8s;
+}
+.s-arrow{animation:sarrow .9s ease-in-out infinite alternate}
+@keyframes sarrow{from{transform:translateY(0)}to{transform:translateY(7px)}}
+
+/* ── Stage counter (like Zero's BZ) ── */
+#stage-counter{
+  position:fixed;left:40px;top:50%;transform:translateY(-50%);
+  z-index:20;
+}
+.counter-track{overflow:hidden;height:28px;display:flex;flex-direction:column;align-items:flex-start}
+.counter-num{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  color:rgba(244,240,232,.1);line-height:28px;
+  transition:transform .7s cubic-bezier(.16,1,.3,1);
+}
+
+/* ── Stage content panels ── */
+.stage-content{
+  position:fixed;inset:0;z-index:15;
+  display:flex;align-items:center;
+  justify-content:flex-end;
+  padding:0 9vw;
+  pointer-events:none;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+.stage-content.visible{opacity:1;transform:translateY(0)}
+.stage-inner{max-width:360px;text-align:right}
+.s-tag{
+  font-size:8px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--a,#00eeff);margin-bottom:18px;display:block;
+}
+.s-head{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(24px,3.5vw,48px);font-weight:800;
+  line-height:.95;letter-spacing:-.025em;
+  color:#f4f0e8;margin-bottom:18px;
+}
+.s-body{font-size:11px;line-height:1.9;color:rgba(244,240,232,.45);font-style:italic}
+.s-cta{
+  display:inline-block;margin-top:24px;
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--a,#00eeff);text-decoration:none;
+  border-bottom:1px solid var(--a,#00eeff);padding-bottom:3px;
+  pointer-events:all;transition:opacity .3s;
+}
+.s-cta:hover{opacity:.6}
+
+/* ── Scan line effect ── */
+#scan{
+  position:fixed;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,238,255,.4),transparent);
+  z-index:8;pointer-events:none;
+  animation:scan 4s linear infinite;
+}
+@keyframes scan{from{top:-1px}to{top:100vh}}
+
+/* ── Scroll space ── */
+#scroll-space{height:600vh}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<nav id="nav">
+  <span class="nav-logo">PC</span>
+  <div class="nav-links">
+    <a href="#">Work</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div id="progress">
+  <div class="pdot" data-index="0" data-label="THE SPARK"  style="--dot-color:#00eeff"></div>
+  <div class="pdot" data-index="1" data-label="THE CHAOS"  style="--dot-color:#ff00cc"></div>
+  <div class="pdot" data-index="2" data-label="THE WORK"   style="--dot-color:#f4f0e8"></div>
+  <div class="pdot" data-index="3" data-label="THE HUMAN"  style="--dot-color:#ffb300"></div>
+  <div class="pdot" data-index="4" data-label="THE INVITE" style="--dot-color:#ffe600"></div>
+</div>
+
+<div id="stage-counter">
+  <div class="counter-track"><div class="counter-num" id="cnt">01</div></div>
+</div>
+
+<div id="stage-label">The Spark</div>
+
+<div id="scroll-hint">
+  <span>SCROLL</span>
+  <div class="s-arrow">↓</div>
+</div>
+
+<div id="scan"></div>
+
+<!-- Stage 0 -->
+<div class="stage-content visible" id="sc0" style="--a:#00eeff">
+  <div class="stage-inner">
+    <span class="s-tag">Stage 01 · The Spark</span>
+    <h2 class="s-head">A kid who questioned every wall.</h2>
+    <p class="s-body">2021. Architecture school. A pencil, a dream, and a T-square he never quite mastered.</p>
+  </div>
+</div>
+
+<!-- Stage 1 -->
+<div class="stage-content" id="sc1" style="--a:#ff00cc">
+  <div class="stage-inner">
+    <span class="s-tag">Stage 02 · The Chaos</span>
+    <h2 class="s-head">Order inside the disorder.</h2>
+    <p class="s-body">Five studios deep. The beautiful mess of deadlines, physical models, and 3am epiphanies.</p>
+  </div>
+</div>
+
+<!-- Stage 2 -->
+<div class="stage-content" id="sc2" style="--a:#f4f0e8">
+  <div class="stage-inner">
+    <span class="s-tag">Stage 03 · The Work</span>
+    <h2 class="s-head">Projects that ask better questions.</h2>
+    <p class="s-body">Housing, urbanism, spatial installations. Each one a hypothesis about how people want to live.</p>
+    <a class="s-cta" href="#">View Projects →</a>
+  </div>
+</div>
+
+<!-- Stage 3 -->
+<div class="stage-content" id="sc3" style="--a:#ffb300">
+  <div class="stage-inner">
+    <span class="s-tag">Stage 04 · The Human</span>
+    <h2 class="s-head">Chaotic. Orderly. Impossibly creative.</h2>
+    <p class="s-body">Pink pagdi at weddings. LED headphones in studio. Floral shirts everywhere. That guy.</p>
+  </div>
+</div>
+
+<!-- Stage 4 -->
+<div class="stage-content" id="sc4" style="--a:#ffe600">
+  <div class="stage-inner">
+    <span class="s-tag">Stage 05 · The Invite</span>
+    <h2 class="s-head">Let's build something worth talking about.</h2>
+    <p class="s-body">Available. Ready. Obsessively curious.</p>
+    <a class="s-cta" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com →</a>
+  </div>
+</div>
+
+<!-- Scroll driver -->
+<div id="scroll-space"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+/* ── PARAG CHAVHAN · 3D SCROLL WORLD ── */
+(function () {
+  const canvas = document.getElementById('c');
+  const W = () => window.innerWidth;
+  const H = () => window.innerHeight;
+
+  /* ── Scene ── */
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x050505);
+  scene.fog = new THREE.FogExp2(0x050505, 0.008);
+
+  /* ── Camera ── */
+  const camera = new THREE.PerspectiveCamera(62, W()/H(), 0.1, 350);
+  camera.position.set(0, 2.4, 10);
+
+  /* ── Renderer ── */
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(W(), H());
+
+  /* ── Stage definitions ── */
+  const STAGES = [
+    { z: -25,  color: 0x00eeff, bgHex: 0x030809, name: 'THE SPARK'  },
+    { z: -120, color: 0xff00cc, bgHex: 0x070305, name: 'THE CHAOS'  },
+    { z: -215, color: 0xeeeae0, bgHex: 0x050505, name: 'THE WORK'   },
+    { z: -310, color: 0xffb300, bgHex: 0x070600, name: 'THE HUMAN'  },
+    { z: -400, color: 0xffe600, bgHex: 0x080700, name: 'THE INVITE' },
+  ];
+  const STAGE_COUNTS = ['01','02','03','04','05'];
+
+  /* ── Floor grid ── */
+  const floor = new THREE.GridHelper(800, 160, 0x003333, 0x001a1a);
+  floor.position.set(0, -1.8, -200);
+  scene.add(floor);
+
+  /* ── Ceiling grid ── */
+  const ceil = new THREE.GridHelper(800, 80, 0x001515, 0x000b0b);
+  ceil.position.set(0, 9, -200);
+  scene.add(ceil);
+
+  /* ── Particles ── */
+  const N = 2200;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    pos[i*3]   = (Math.random()-.5) * 28;
+    pos[i*3+1] = Math.random() * 14 - 1.5;
+    pos[i*3+2] = -Math.random() * 480;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
+    color: 0x88ccff, size: 0.07, transparent: true, opacity: 0.4, sizeAttenuation: true,
+  })));
+
+  /* ── Helpers ── */
+  function ln(a, b, col, op=1) {
+    const g = new THREE.BufferGeometry().setFromPoints([a, b]);
+    return new THREE.Line(g, new THREE.LineBasicMaterial({
+      color: col, transparent: op<1, opacity: op,
+    }));
+  }
+  function rect(w, h, col, op) {
+    const p = [
+      new THREE.Vector3(-w/2, 0, 0), new THREE.Vector3(w/2, 0, 0),
+      new THREE.Vector3(w/2, h, 0),  new THREE.Vector3(-w/2, h, 0),
+      new THREE.Vector3(-w/2, 0, 0),
+    ];
+    const g = new THREE.BufferGeometry().setFromPoints(p);
+    return new THREE.Line(g, new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op }));
+  }
+
+  /* ── Portal frames per stage ── */
+  const portals = [];
+  const accents = [];
+  const GEOMS = [
+    () => new THREE.IcosahedronGeometry(1.3, 0),
+    () => new THREE.OctahedronGeometry(1.3, 0),
+    () => new THREE.TetrahedronGeometry(1.5, 0),
+    () => new THREE.DodecahedronGeometry(1.1, 0),
+    () => new THREE.TorusGeometry(1.1, 0.45, 6, 14),
+  ];
+
+  STAGES.forEach(({ z, color }, i) => {
+    const grp = new THREE.Group();
+    grp.position.set(0, -1.8, z);
+
+    // Outer frame
+    const outer = rect(16, 12, color, 0.5);
+    grp.add(outer);
+
+    // Inner frame (slight inset)
+    const inner = rect(12.5, 9.5, color, 0.2);
+    inner.position.y = 1.25; inner.position.z = 0.3;
+    grp.add(inner);
+
+    // Vertical center line
+    grp.add(ln(
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 12, 0),
+      color, 0.08
+    ));
+
+    // Horizontal thirds
+    [4, 8].forEach(y => {
+      grp.add(ln(
+        new THREE.Vector3(-8, y, 0),
+        new THREE.Vector3(8, y, 0),
+        color, 0.1
+      ));
+    });
+
+    scene.add(grp);
+    portals.push({ grp, color, mat: outer.material });
+
+    // Floating accent geometry
+    const wGeo = new THREE.WireframeGeometry(GEOMS[i]());
+    const acc = new THREE.LineSegments(wGeo, new THREE.LineBasicMaterial({
+      color, transparent: true, opacity: 0.65,
+    }));
+    acc.position.set(i % 2 === 0 ? 6.5 : -6.5, 3.5, z - 6);
+    scene.add(acc);
+    accents.push(acc);
+  });
+
+  /* ── Corridor columns ── */
+  for (let z = 5; z > -440; z -= 18) {
+    [-11, 11].forEach(x => {
+      scene.add(ln(
+        new THREE.Vector3(x, -1.8, z),
+        new THREE.Vector3(x, 9, z),
+        0x0e2020, 0.9
+      ));
+    });
+    // Overhead beam
+    scene.add(ln(
+      new THREE.Vector3(-11, 9, z),
+      new THREE.Vector3(11, 9, z),
+      0x091515, 0.7
+    ));
+    // Floor accent
+    scene.add(ln(
+      new THREE.Vector3(-11, -1.79, z),
+      new THREE.Vector3(11, -1.79, z),
+      0x002828, 0.6
+    ));
+  }
+
+  /* ── Diagonal cross-braces every 36 units (architectural detail) ── */
+  for (let z = 0; z > -440; z -= 36) {
+    [-11, 11].forEach(x => {
+      const sign = x > 0 ? 1 : -1;
+      scene.add(ln(
+        new THREE.Vector3(x, -1.8, z),
+        new THREE.Vector3(x, 9, z - 18),
+        0x071414, 0.5
+      ));
+    });
+  }
+
+  /* ── Ambient / dir light ── */
+  scene.add(new THREE.AmbientLight(0x112222, 0.4));
+  const dir = new THREE.DirectionalLight(0x00eeff, 0.2);
+  dir.position.set(0, 10, 5);
+  scene.add(dir);
+
+  /* ── Animate ── */
+  const clock = new THREE.Clock();
+  const bgColor = new THREE.Color();
+  const fgColor = new THREE.Color();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    accents.forEach((a, i) => {
+      a.rotation.x += 0.004 + i * 0.0008;
+      a.rotation.y += 0.007 + i * 0.0006;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  /* ── Scroll ── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  const dots = [...document.querySelectorAll('.pdot')];
+  const contents = [...document.querySelectorAll('.stage-content')];
+  const labelEl = document.getElementById('stage-label');
+  const hintEl  = document.getElementById('scroll-hint');
+  const cntEl   = document.getElementById('cnt');
+  const camLookAt = new THREE.Vector3();
+  let lastStage = 0;
+
+  // bg color lerp targets per stage
+  const stageBg = STAGES.map(s => new THREE.Color(s.bgHex));
+
+  ScrollTrigger.create({
+    trigger: '#scroll-space',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 2.2,
+    onUpdate(self) {
+      const p = self.progress;
+
+      /* Camera path: smooth Z travel + gentle sway */
+      camera.position.z = THREE.MathUtils.lerp(10, -440, p);
+      camera.position.x = Math.sin(p * Math.PI * 3.5) * 0.7;
+      camera.position.y = 2.4 + Math.sin(p * Math.PI * 6) * 0.2;
+
+      /* Always look ahead */
+      camLookAt.set(
+        camera.position.x * 0.4,
+        camera.position.y - 0.4,
+        camera.position.z - 18
+      );
+      camera.lookAt(camLookAt);
+
+      /* Background color lerp across stages */
+      const rawStage = p * (STAGES.length - 1);
+      const si = Math.floor(rawStage);
+      const sf = rawStage - si;
+      const c1 = stageBg[Math.min(si, stageBg.length-1)];
+      const c2 = stageBg[Math.min(si+1, stageBg.length-1)];
+      bgColor.lerpColors(c1, c2, sf);
+      scene.background.copy(bgColor);
+      scene.fog.color.copy(bgColor);
+
+      /* Portal glow: brighten active portal */
+      const nearZ = camera.position.z;
+      portals.forEach((prt, i) => {
+        const dist = Math.abs(STAGES[i].z - nearZ);
+        prt.mat.opacity = dist < 30 ? THREE.MathUtils.mapLinear(dist, 0, 30, 0.9, 0.4) : 0.4;
+      });
+
+      /* Stage detection */
+      const stageIdx = Math.min(Math.floor(p * 5.5), 4);
+      if (stageIdx !== lastStage) {
+        lastStage = stageIdx;
+
+        /* Dots */
+        dots.forEach((d, i) => d.classList.toggle('active', i === stageIdx));
+
+        /* Stage label */
+        labelEl.textContent = STAGES[stageIdx].name;
+
+        /* Counter */
+        cntEl.textContent = STAGE_COUNTS[stageIdx];
+
+        /* Content panels */
+        contents.forEach((c, i) => c.classList.toggle('visible', i === stageIdx));
+      }
+
+      /* Scroll hint fades out */
+      hintEl.style.opacity = p > 0.03 ? '0' : '1';
+    },
+  });
+
+  /* ── Resize ── */
+  window.addEventListener('resize', () => {
+    camera.aspect = W() / H();
+    camera.updateProjectionMatrix();
+    renderer.setSize(W(), H());
+  });
+
+  /* ── Dot click navigation ── */
+  dots.forEach((d, i) => {
+    d.addEventListener('click', () => {
+      const target = i / 5 * document.getElementById('scroll-space').offsetHeight;
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
