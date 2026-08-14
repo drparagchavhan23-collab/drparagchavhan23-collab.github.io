@@ -291,83 +291,109 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
   })));
 
   /* ── Floating islands ── */
+  // Layered sine waves give organic terrain without a noise library
+  function terrainY(x, z, size) {
+    const r = Math.sqrt(x*x + z*z);
+    return (
+      Math.sin(x * 0.85 + z * 0.6)  * 0.30 +
+      Math.sin(x * 1.9  - z * 1.3)  * 0.16 +
+      Math.sin(z * 0.7  - x * 0.45) * 0.22 -
+      (r / size) * 0.45              // edges dip below center
+    ) * size * 0.38;
+  }
+
   function makeIsland(size, hasTree) {
     const grp = new THREE.Group();
+    const RS = 24; // radial segments — smooth silhouette
 
-    // Top slab — low-poly flat cylinder, vertices jittered for rocky edges
-    const topGeo = new THREE.CylinderGeometry(size, size * 0.88, size * 0.38, 8, 1);
+    // ── Rock body: high-segment cylinder with eroded sides + terrain top ──
+    const topGeo = new THREE.CylinderGeometry(size, size * 0.82, size * 0.55, RS, 6);
     const tPos = topGeo.attributes.position;
     for (let i = 0; i < tPos.count; i++) {
-      const y = tPos.getY(i);
-      const jitter = (Math.random() - 0.5) * size * 0.18;
-      tPos.setX(i, tPos.getX(i) + jitter);
-      tPos.setZ(i, tPos.getZ(i) + jitter);
-      if (y > 0) tPos.setY(i, y + Math.random() * size * 0.08);
+      const x = tPos.getX(i), y = tPos.getY(i), z = tPos.getZ(i);
+      const r = Math.sqrt(x*x + z*z);
+      if (y > size * 0.05) {
+        // Top surface: organic terrain displacement
+        tPos.setY(i, y + terrainY(x, z, size));
+      } else {
+        // Side + bottom: erode outward for cliff-face look
+        const erosion = 0.82 + Math.random() * 0.22;
+        const lean = (Math.random() - 0.5) * size * 0.08;
+        tPos.setX(i, x * erosion + lean);
+        tPos.setZ(i, z * erosion + lean);
+        tPos.setY(i, y + (Math.random() - 0.5) * size * 0.12);
+      }
     }
     topGeo.computeVertexNormals();
-    grp.add(new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: 0x6a8299 })));
+    grp.add(new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: 0x7a8fa2 })));
 
-    // Dirt cap on top surface
-    const dirtGeo = new THREE.CylinderGeometry(size * 0.78, size * 0.78, size * 0.06, 8);
-    const dirt = new THREE.Mesh(dirtGeo, new THREE.MeshBasicMaterial({ color: 0x7a5c38 }));
-    dirt.position.y = size * 0.22;
-    grp.add(dirt);
-
-    // Hanging rock underbelly — tapered downward
-    const botGeo = new THREE.CylinderGeometry(size * 0.52, size * 0.08, size * 0.9, 7, 1);
-    const bPos = botGeo.attributes.position;
-    for (let i = 0; i < bPos.count; i++) {
-      bPos.setX(i, bPos.getX(i) + (Math.random() - 0.5) * size * 0.14);
-      bPos.setZ(i, bPos.getZ(i) + (Math.random() - 0.5) * size * 0.14);
+    // ── Grass surface layer that follows the terrain ──
+    const gGeo = new THREE.CylinderGeometry(size * 0.8, size * 0.8, size * 0.07, RS, 2);
+    const gPos = gGeo.attributes.position;
+    for (let i = 0; i < gPos.count; i++) {
+      const x = gPos.getX(i), y = gPos.getY(i), z = gPos.getZ(i);
+      if (y > 0) gPos.setY(i, size * 0.28 + terrainY(x, z, size) + size * 0.03);
     }
-    botGeo.computeVertexNormals();
-    const bot = new THREE.Mesh(botGeo, new THREE.MeshBasicMaterial({ color: 0x445566 }));
-    bot.position.y = -(size * 0.19 + size * 0.45);
-    grp.add(bot);
+    gGeo.computeVertexNormals();
+    grp.add(new THREE.Mesh(gGeo, new THREE.MeshBasicMaterial({ color: 0x4d8c40 })));
 
-    // Rim highlight line
-    const rimPts = [];
-    for (let i = 0; i <= 32; i++) {
-      const a = (i / 32) * Math.PI * 2;
-      rimPts.push(new THREE.Vector3(Math.cos(a) * size * 0.95, size * 0.19, Math.sin(a) * size * 0.95));
-    }
-    grp.add(new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints(rimPts),
-      new THREE.LineBasicMaterial({ color: 0x4a6080, transparent: true, opacity: 0.5 })
-    ));
-
-    // Moss patches — small flat discs on top
-    for (let m = 0; m < 4; m++) {
-      const mGeo = new THREE.CylinderGeometry(size * 0.18, size * 0.15, size * 0.04, 6);
-      const moss = new THREE.Mesh(mGeo, new THREE.MeshBasicMaterial({ color: 0x3a6632 }));
-      const a = Math.random() * Math.PI * 2;
-      const r = Math.random() * size * 0.6;
-      moss.position.set(Math.cos(a) * r, size * 0.24, Math.sin(a) * r);
-      grp.add(moss);
-    }
-
-    // Tree (optional)
-    if (hasTree) {
-      const trunkH = size * 0.75;
-      const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(size * 0.06, size * 0.1, trunkH, 5),
-        new THREE.MeshBasicMaterial({ color: 0x7a5030 })
+    // ── Hanging stalactite spires — multiple thin tapered pillars ──
+    const spireCount = 4 + Math.floor(Math.random() * 3);
+    for (let s = 0; s < spireCount; s++) {
+      const isCenter = s === 0;
+      const angle  = isCenter ? 0 : (s / (spireCount - 1)) * Math.PI * 2 + Math.random() * 0.6;
+      const radOff = isCenter ? 0 : (0.15 + Math.random() * 0.4) * size;
+      const spireH = size * (0.55 + Math.random() * 0.75);
+      const spireR = size * (0.06 + Math.random() * 0.1);
+      const spire  = new THREE.Mesh(
+        new THREE.CylinderGeometry(spireR * 0.05, spireR, spireH, 10, 2),
+        new THREE.MeshBasicMaterial({ color: isCenter ? 0x506878 : 0x5c7080 })
       );
-      trunk.position.y = size * 0.24 + trunkH * 0.5;
-      trunk.rotation.z = (Math.random() - 0.5) * 0.25;
+      spire.position.set(
+        Math.cos(angle) * radOff,
+        -(size * 0.1 + spireH * 0.5),
+        Math.sin(angle) * radOff
+      );
+      spire.rotation.z = (Math.random() - 0.5) * 0.18;
+      spire.rotation.x = (Math.random() - 0.5) * 0.18;
+      grp.add(spire);
+    }
+
+    // ── Tree ──
+    if (hasTree) {
+      const tx = (Math.random() - 0.5) * size * 0.35;
+      const tz = (Math.random() - 0.5) * size * 0.35;
+      const baseY = size * 0.28 + terrainY(tx, tz, size);
+      const trunkH = size * (0.75 + Math.random() * 0.45);
+
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(size * 0.035, size * 0.075, trunkH, 10),
+        new THREE.MeshBasicMaterial({ color: 0x7a5535 })
+      );
+      trunk.position.set(tx, baseY + trunkH * 0.5, tz);
+      trunk.rotation.z = (Math.random() - 0.5) * 0.16;
       grp.add(trunk);
 
-      // Crown — multiple overlapping spheres like reference image
-      const crownY = size * 0.24 + trunkH;
-      [[0, 0, 0, 0.7], [-size*0.22, size*0.15, size*0.1, 0.55], [size*0.2, size*0.2, -size*0.1, 0.5],
-       [0, size*0.3, 0, 0.5], [size*0.15, -size*0.05, size*0.2, 0.45]].forEach(([x, y, z, s]) => {
+      // Large cloud-like crown — many overlapping puffs spread wide
+      const crownY = baseY + trunkH;
+      const crownR = size * 0.55;
+      const puffN  = 10 + Math.floor(Math.random() * 5);
+      for (let p = 0; p < puffN; p++) {
+        const pa = (p / puffN) * Math.PI * 2 + Math.random() * 0.7;
+        const pr = Math.random() * crownR * (p < 3 ? 0.3 : 1);
+        const ps = crownR * (0.3 + Math.random() * 0.4);
+        const col = 0x2d6830 + Math.floor(Math.random() * 0x15) * 0x010100;
         const puff = new THREE.Mesh(
-          new THREE.SphereGeometry(size * s, 6, 5),
-          new THREE.MeshBasicMaterial({ color: 0x3a7038 })
+          new THREE.SphereGeometry(ps, 9, 7),
+          new THREE.MeshBasicMaterial({ color: col })
         );
-        puff.position.set(x, crownY + y, z);
+        puff.position.set(
+          tx + Math.cos(pa) * pr,
+          crownY + Math.random() * crownR * 0.65,
+          tz + Math.sin(pa) * pr
+        );
         grp.add(puff);
-      });
+      }
     }
 
     return grp;
