@@ -290,21 +290,156 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
     color:0x446677, size:0.1, transparent:true, opacity:0.35, sizeAttenuation:true,
   })));
 
-  /* ── Large distant wireframe shapes for scale ── */
-  const FAR_SHAPES = [
-    { geo: new THREE.IcosahedronGeometry(30, 0), pos: [-80,  20,-100], col:0x0a2020, op:0.3 },
-    { geo: new THREE.OctahedronGeometry(22, 0),  pos: [ 90, -15,-220], col:0x150010, op:0.3 },
-    { geo: new THREE.TetrahedronGeometry(28, 0), pos: [-70,  30,-340], col:0x100800, op:0.3 },
+  /* ── Floating islands ── */
+  function makeIsland(size, hasTree) {
+    const grp = new THREE.Group();
+
+    // Top slab — low-poly flat cylinder, vertices jittered for rocky edges
+    const topGeo = new THREE.CylinderGeometry(size, size * 0.88, size * 0.38, 8, 1);
+    const tPos = topGeo.attributes.position;
+    for (let i = 0; i < tPos.count; i++) {
+      const y = tPos.getY(i);
+      const jitter = (Math.random() - 0.5) * size * 0.18;
+      tPos.setX(i, tPos.getX(i) + jitter);
+      tPos.setZ(i, tPos.getZ(i) + jitter);
+      if (y > 0) tPos.setY(i, y + Math.random() * size * 0.08);
+    }
+    topGeo.computeVertexNormals();
+    grp.add(new THREE.Mesh(topGeo, new THREE.MeshLambertMaterial({ color: 0x2c3545, flatShading: true })));
+
+    // Dirt cap on top surface
+    const dirtGeo = new THREE.CylinderGeometry(size * 0.78, size * 0.78, size * 0.06, 8);
+    const dirt = new THREE.Mesh(dirtGeo, new THREE.MeshLambertMaterial({ color: 0x2a1f12, flatShading: true }));
+    dirt.position.y = size * 0.22;
+    grp.add(dirt);
+
+    // Hanging rock underbelly — tapered downward
+    const botGeo = new THREE.CylinderGeometry(size * 0.52, size * 0.08, size * 0.9, 7, 1);
+    const bPos = botGeo.attributes.position;
+    for (let i = 0; i < bPos.count; i++) {
+      bPos.setX(i, bPos.getX(i) + (Math.random() - 0.5) * size * 0.14);
+      bPos.setZ(i, bPos.getZ(i) + (Math.random() - 0.5) * size * 0.14);
+    }
+    botGeo.computeVertexNormals();
+    const bot = new THREE.Mesh(botGeo, new THREE.MeshLambertMaterial({ color: 0x1a2030, flatShading: true }));
+    bot.position.y = -(size * 0.19 + size * 0.45);
+    grp.add(bot);
+
+    // Rim highlight line
+    const rimPts = [];
+    for (let i = 0; i <= 32; i++) {
+      const a = (i / 32) * Math.PI * 2;
+      rimPts.push(new THREE.Vector3(Math.cos(a) * size * 0.95, size * 0.19, Math.sin(a) * size * 0.95));
+    }
+    grp.add(new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(rimPts),
+      new THREE.LineBasicMaterial({ color: 0x4a6080, transparent: true, opacity: 0.5 })
+    ));
+
+    // Moss patches — small flat discs on top
+    for (let m = 0; m < 4; m++) {
+      const mGeo = new THREE.CylinderGeometry(size * 0.18, size * 0.15, size * 0.04, 6);
+      const moss = new THREE.Mesh(mGeo, new THREE.MeshLambertMaterial({ color: 0x1a3318, flatShading: true }));
+      const a = Math.random() * Math.PI * 2;
+      const r = Math.random() * size * 0.6;
+      moss.position.set(Math.cos(a) * r, size * 0.24, Math.sin(a) * r);
+      grp.add(moss);
+    }
+
+    // Tree (optional)
+    if (hasTree) {
+      const trunkH = size * 0.75;
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(size * 0.06, size * 0.1, trunkH, 5),
+        new THREE.MeshLambertMaterial({ color: 0x3d2810 })
+      );
+      trunk.position.y = size * 0.24 + trunkH * 0.5;
+      trunk.rotation.z = (Math.random() - 0.5) * 0.25;
+      grp.add(trunk);
+
+      // Crown — multiple overlapping spheres like reference image
+      const crownY = size * 0.24 + trunkH;
+      [[0, 0, 0, 0.7], [-size*0.22, size*0.15, size*0.1, 0.55], [size*0.2, size*0.2, -size*0.1, 0.5],
+       [0, size*0.3, 0, 0.5], [size*0.15, -size*0.05, size*0.2, 0.45]].forEach(([x, y, z, s]) => {
+        const puff = new THREE.Mesh(
+          new THREE.SphereGeometry(size * s, 6, 5),
+          new THREE.MeshLambertMaterial({ color: 0x1d4020, flatShading: true })
+        );
+        puff.position.set(x, crownY + y, z);
+        grp.add(puff);
+      });
+    }
+
+    return grp;
+  }
+
+  // Island placements: [x, y, z, size, hasTree, rotY]
+  const ISLAND_DATA = [
+    [ 28,  14,  -45,  5.5, true,  0.4  ],
+    [-32, -12,  -95,  4.2, false, 1.1  ],
+    [ 38,   8, -155,  6.0, true,  2.2  ],
+    [-22,  22, -210,  3.8, true,  0.9  ],
+    [ 18, -20, -270,  5.0, false, 1.7  ],
+    [-40,  10, -330,  4.5, true,  2.8  ],
+    [ 30,  18, -385,  3.5, false, 0.3  ],
+    [-15, -16, -130,  3.2, true,  1.5  ],
   ];
-  const farObjs = FAR_SHAPES.map(f => {
-    const o = wireObj(f.geo, f.col, f.op);
-    o.position.set(...f.pos);
-    scene.add(o);
-    return o;
+
+  const islandGroups = ISLAND_DATA.map(([x, y, z, size, hasTree, rotY]) => {
+    const isl = makeIsland(size, hasTree);
+    isl.position.set(x, y, z);
+    isl.rotation.y = rotY;
+    scene.add(isl);
+    return isl;
   });
 
-  /* ── Ambient light ── */
-  scene.add(new THREE.AmbientLight(0x112233, 0.6));
+  /* ── Clouds ── */
+  function makeCloud(size) {
+    const grp = new THREE.Group();
+    const mat = new THREE.MeshBasicMaterial({
+      color: 0xffffff, transparent: true, opacity: 0.055,
+      depthWrite: false, blending: THREE.AdditiveBlending,
+    });
+    // Puff offsets: [x, y, z, scale]
+    const puffs = [
+      [0, 0, 0, 1], [size * 0.65, -size * 0.08, 0, 0.72],
+      [-size * 0.6, 0, 0, 0.78], [size * 0.25, size * 0.22, size * 0.3, 0.6],
+      [-size * 0.3, size * 0.15, -size * 0.25, 0.65], [size * 0.1, -size * 0.12, size * 0.4, 0.5],
+    ];
+    puffs.forEach(([x, y, z, s]) => {
+      const p = new THREE.Mesh(new THREE.SphereGeometry(size * s, 7, 5), mat);
+      p.position.set(x, y, z);
+      grp.add(p);
+    });
+    return grp;
+  }
+
+  // Cloud placements: [x, y, z, size]
+  const CLOUD_DATA = [
+    [  14,  -8,  -30,  8 ],
+    [ -25,  -5,  -70, 10 ],
+    [  30,  18, -120,  7 ],
+    [ -18,  -3, -180,  9 ],
+    [  22, -12, -240,  6 ],
+    [ -35,  15, -290, 11 ],
+    [  10,  -8, -350,  8 ],
+    [ -12,  20, -410,  7 ],
+    [  40,   5, -160,  6 ],
+    [ -30, -18, -320,  9 ],
+  ];
+
+  const cloudGroups = CLOUD_DATA.map(([x, y, z, size]) => {
+    const cl = makeCloud(size);
+    cl.position.set(x, y, z);
+    scene.add(cl);
+    return cl;
+  });
+
+  /* ── Directional light for island shading ── */
+  const dLight = new THREE.DirectionalLight(0x6688aa, 1.2);
+  dLight.position.set(1, 2, 0.5);
+  scene.add(dLight);
+  scene.add(new THREE.AmbientLight(0x112233, 0.8));
 
   /* ── Animate ── */
   const clock = new THREE.Clock();
@@ -318,16 +453,21 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
     nodeGroups.forEach((g, i) => {
       g.children[0].rotation.x += 0.003 + i*0.0005;
       g.children[0].rotation.y += 0.005 + i*0.0005;
-      // Rings counter-rotate
       if(g.children[1]) g.children[1].rotation.y += 0.004;
       if(g.children[2]) g.children[2].rotation.y -= 0.003;
       if(g.children[3]) g.children[3].rotation.z += 0.002;
     });
 
-    /* Slow rotation of far shapes */
-    farObjs.forEach((o, i) => {
-      o.rotation.y += 0.0008 * (i+1);
-      o.rotation.x += 0.0005 * (i+1);
+    /* Islands: gentle bob + slow yaw */
+    islandGroups.forEach((isl, i) => {
+      isl.position.y = ISLAND_DATA[i][1] + Math.sin(t * 0.28 + i * 1.3) * 0.55;
+      isl.rotation.y += 0.0003;
+    });
+
+    /* Clouds: very slow drift */
+    cloudGroups.forEach((cl, i) => {
+      cl.position.x = CLOUD_DATA[i][0] + Math.sin(t * 0.12 + i * 0.9) * 1.2;
+      cl.position.y = CLOUD_DATA[i][1] + Math.sin(t * 0.18 + i * 1.7) * 0.6;
     });
 
     renderer.render(scene, camera);
