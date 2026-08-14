@@ -71,6 +71,146 @@ body{
 
 /* Scroll space */
 #ss{height:650vh}
+
+/* ── Shared section styles ── */
+section{position:relative;z-index:10}
+.s-label{font-size:9px;letter-spacing:.3em;color:rgba(244,240,232,.35);margin-bottom:14px;text-transform:uppercase}
+.s-head{font-family:'Syne',sans-serif;font-size:clamp(36px,5.5vw,80px);font-weight:800;line-height:.92;letter-spacing:-.03em;color:#f4f0e8;margin-bottom:24px}
+.s-head em{font-style:normal;color:transparent;-webkit-text-stroke:1px rgba(244,240,232,.4)}
+.s-sub{font-size:13px;line-height:1.8;color:rgba(244,240,232,.45);max-width:440px;font-style:italic}
+.s-inner{padding:0 10vw}
+
+/* ── Projects ── */
+#work{padding:120px 0 100px;background:rgba(4,2,12,.92);backdrop-filter:blur(0px)}
+#work .s-inner{margin-bottom:72px}
+
+.proj-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:2px;
+  padding:0 2px;
+}
+.proj-card{
+  background:rgba(8,5,20,.8);
+  position:relative;overflow:hidden;
+  cursor:pointer;
+  transition:transform .4s ease;
+}
+.proj-card:hover{transform:translateY(-4px)}
+.proj-card:hover .proj-img{opacity:1}
+.proj-card:hover .proj-num{color:var(--ac)}
+
+.proj-num{
+  position:absolute;top:20px;left:24px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:800;
+  letter-spacing:.2em;color:rgba(244,240,232,.18);
+  transition:color .4s;z-index:2;
+}
+
+.proj-img{
+  width:100%;height:200px;
+  position:relative;overflow:hidden;opacity:.7;
+  transition:opacity .4s;
+  display:flex;align-items:flex-end;padding:16px;
+}
+.proj-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom, transparent 40%, rgba(4,2,12,.9) 100%);
+}
+.proj-tag{
+  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  background:var(--ac);color:#050505;padding:4px 10px;border-radius:2px;
+  font-weight:700;position:relative;z-index:1;
+}
+
+.proj-body{padding:24px 24px 28px}
+.proj-name{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;
+  color:#f4f0e8;line-height:1.1;margin-bottom:12px;
+}
+.proj-replace{font-size:11px;font-family:'DM Mono',monospace;font-weight:400;
+  color:rgba(244,240,232,.25);display:block;margin-top:3px;letter-spacing:0}
+.proj-desc{font-size:11px;line-height:1.9;color:rgba(244,240,232,.4);font-style:italic;margin-bottom:16px}
+.proj-link{
+  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ac);text-decoration:none;
+  border-bottom:1px solid currentColor;padding-bottom:2px;
+  transition:opacity .3s;opacity:.7;
+}
+.proj-link:hover{opacity:1}
+
+/* Left accent bar on hover */
+.proj-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--ac);transform:scaleY(0);transform-origin:bottom;
+  transition:transform .4s ease;
+}
+.proj-card:hover::before{transform:scaleY(1)}
+
+/* ── About ── */
+#about{
+  padding:120px 10vw;
+  background:rgba(8,4,18,.95);
+  border-top:1px solid rgba(244,240,232,.06);
+}
+.about-wrap{display:grid;grid-template-columns:1fr 400px;gap:80px;align-items:start}
+@media(max-width:900px){.about-wrap{grid-template-columns:1fr}}
+
+.about-big{
+  font-family:'Syne',sans-serif;font-size:clamp(18px,2.2vw,28px);font-weight:800;
+  color:#f4f0e8;line-height:1.2;margin-bottom:28px;
+}
+.about-body{font-size:12px;line-height:2;color:rgba(244,240,232,.45);font-style:italic;margin-bottom:16px}
+.about-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
+.about-tags span{
+  font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  border:1px solid rgba(244,240,232,.15);color:rgba(244,240,232,.4);
+  padding:6px 14px;border-radius:2px;
+  transition:all .3s;
+}
+.about-tags span:hover{border-color:rgba(244,240,232,.5);color:#f4f0e8}
+
+.about-photo-frame{
+  aspect-ratio:3/4;background:rgba(255,255,255,.04);
+  border:1px solid rgba(244,240,232,.08);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:32px;
+}
+.about-photo-placeholder{text-align:center;color:rgba(244,240,232,.18);font-size:10px;letter-spacing:.2em}
+
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.stat{text-align:center;padding:20px 0;border-top:1px solid rgba(244,240,232,.08)}
+.stat-n{display:block;font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#f4f0e8;line-height:1}
+.stat-l{display:block;font-size:8px;letter-spacing:.22em;color:rgba(244,240,232,.3);margin-top:6px}
+
+/* ── Contact ── */
+#contact{
+  padding:120px 0 0;
+  background:linear-gradient(to bottom, rgba(8,4,18,.95) 0%, rgba(4,2,10,1) 100%);
+  border-top:1px solid rgba(244,240,232,.06);
+  text-align:center;
+}
+.contact-inner{max-width:640px;margin:0 auto;padding:0 40px}
+.contact-head{margin-bottom:20px}
+.cta-btn{
+  display:inline-block;margin:40px 0 32px;
+  font-size:11px;letter-spacing:.2em;text-decoration:none;
+  color:#f4f0e8;border:1px solid rgba(244,240,232,.35);
+  padding:18px 36px;border-radius:3px;
+  transition:all .4s;background:transparent;
+}
+.cta-btn:hover{background:rgba(244,240,232,.08);border-color:rgba(244,240,232,.7)}
+
+.contact-links{display:flex;gap:32px;justify-content:center;margin-top:8px;margin-bottom:72px}
+.contact-links a{font-size:9px;letter-spacing:.22em;color:rgba(244,240,232,.3);text-decoration:none;transition:color .3s}
+.contact-links a:hover{color:#f4f0e8}
+
+footer{
+  border-top:1px solid rgba(244,240,232,.06);
+  padding:28px 10vw;
+  display:flex;justify-content:space-between;align-items:center;
+}
+footer span{font-size:9px;letter-spacing:.15em;color:rgba(244,240,232,.2)}
 </style>
 </head>
 <body>
@@ -81,9 +221,9 @@ body{
 <nav id="nav">
   <span class="logo">PC</span>
   <div class="links">
-    <a href="#">Work</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
   </div>
 </nav>
 
@@ -139,6 +279,139 @@ body{
 </div>
 
 <div id="ss"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ PROJECTS -->
+<section id="work">
+  <div class="s-inner">
+    <div class="s-label">Selected Work</div>
+    <h2 class="s-head">Things I've<br><em>actually built.</em></h2>
+    <p class="s-sub">Architecture is thinking made physical. Here's mine.</p>
+  </div>
+
+  <div class="proj-grid">
+
+    <article class="proj-card" style="--ac:#00eeff;--n:01">
+      <div class="proj-num">01</div>
+      <div class="proj-img" style="background:#0a1a1f">
+        <span class="proj-tag">Urban Housing</span>
+      </div>
+      <div class="proj-body">
+        <h3 class="proj-name">Project Alpha <span class="proj-replace">[Replace with project name]</span></h3>
+        <p class="proj-desc">A housing complex that questions how density and community coexist in a rapidly growing city. Compact, community-forward, breathable.</p>
+        <a class="proj-link" href="#">View Case Study →</a>
+      </div>
+    </article>
+
+    <article class="proj-card" style="--ac:#ff44cc;--n:02">
+      <div class="proj-num">02</div>
+      <div class="proj-img" style="background:#1a0a18">
+        <span class="proj-tag">Cultural Centre</span>
+      </div>
+      <div class="proj-body">
+        <h3 class="proj-name">Project Beta <span class="proj-replace">[Replace with project name]</span></h3>
+        <p class="proj-desc">A public cultural landmark where programme dissolves into landscape. The building doesn't end — it continues into the ground.</p>
+        <a class="proj-link" href="#">View Case Study →</a>
+      </div>
+    </article>
+
+    <article class="proj-card" style="--ac:#ffd700;--n:03">
+      <div class="proj-num">03</div>
+      <div class="proj-img" style="background:#1a1600">
+        <span class="proj-tag">Spatial Installation</span>
+      </div>
+      <div class="proj-body">
+        <h3 class="proj-name">Project Gamma <span class="proj-replace">[Replace with project name]</span></h3>
+        <p class="proj-desc">A temporary installation exploring the threshold between public solitude and collective presence. Steel, light, and breath.</p>
+        <a class="proj-link" href="#">View Case Study →</a>
+      </div>
+    </article>
+
+    <article class="proj-card" style="--ac:#ff8844;--n:04">
+      <div class="proj-num">04</div>
+      <div class="proj-img" style="background:#1a0c00">
+        <span class="proj-tag">Residential</span>
+      </div>
+      <div class="proj-body">
+        <h3 class="proj-name">Project Delta <span class="proj-replace">[Replace with project name]</span></h3>
+        <p class="proj-desc">Four houses around a shared courtyard. Privacy negotiated not by walls but by geometry, level change, and planted boundary.</p>
+        <a class="proj-link" href="#">View Case Study →</a>
+      </div>
+    </article>
+
+    <article class="proj-card" style="--ac:#88ff44;--n:05">
+      <div class="proj-num">05</div>
+      <div class="proj-img" style="background:#0a1400">
+        <span class="proj-tag">Museum</span>
+      </div>
+      <div class="proj-body">
+        <h3 class="proj-name">Project Epsilon <span class="proj-replace">[Replace with project name]</span></h3>
+        <p class="proj-desc">A museum of living craft. Galleries organised not by object but by process — you see things being made, then see the thing made.</p>
+        <a class="proj-link" href="#">View Case Study →</a>
+      </div>
+    </article>
+
+    <article class="proj-card" style="--ac:#cc44ff;--n:06">
+      <div class="proj-num">06</div>
+      <div class="proj-img" style="background:#0e0018">
+        <span class="proj-tag">Transit + Urban</span>
+      </div>
+      <div class="proj-body">
+        <h3 class="proj-name">Project Zeta <span class="proj-replace">[Replace with project name]</span></h3>
+        <p class="proj-desc">A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one — gallery, market, garden.</p>
+        <a class="proj-link" href="#">View Case Study →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ ABOUT -->
+<section id="about">
+  <div class="about-wrap">
+    <div class="about-left">
+      <div class="s-label">About</div>
+      <h2 class="s-head">Parag<br>Chavhan.</h2>
+      <p class="about-big">Architecture student. Obsessive builder. Pink pagdi guy.</p>
+      <p class="about-body">I'm in my final years at architecture school, where I've spent five studios learning that the best designs come from asking the most uncomfortable questions — about who a space is really for, what it refuses to do, and what it could have been.</p>
+      <p class="about-body">Outside the studio I'm probably fiddling with code, listening to something at an unreasonable volume, or getting passionately lost in a Wikipedia rabbit hole about brutalist housing estates.</p>
+      <div class="about-tags">
+        <span>Architecture</span><span>Urban Design</span><span>Spatial Thinking</span>
+        <span>3D Modelling</span><span>Parametric Design</span><span>Digital Fabrication</span>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="about-photo-frame">
+        <div class="about-photo-placeholder">
+          <span>Photo coming soon</span>
+        </div>
+      </div>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-n">5+</span><span class="stat-l">Studios</span></div>
+        <div class="stat"><span class="stat-n">6</span><span class="stat-l">Projects</span></div>
+        <div class="stat"><span class="stat-n">∞</span><span class="stat-l">Curiosity</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ CONTACT -->
+<section id="contact">
+  <div class="s-inner contact-inner">
+    <div class="s-label">Contact</div>
+    <h2 class="s-head contact-head">Let's make something<br><em>worth talking about.</em></h2>
+    <p class="s-sub">I'm currently open to internships, collaborations, and interesting conversations.</p>
+    <a class="cta-btn" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com</a>
+    <div class="contact-links">
+      <a href="#">Instagram</a>
+      <a href="#">Behance</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </div>
+  <footer>
+    <span>© 2025 Parag Chavhan</span>
+    <span>Designed &amp; built by Parag × Claude</span>
+  </footer>
+</section>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
