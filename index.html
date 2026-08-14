@@ -184,7 +184,7 @@
   #hero {
     min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: flex-end;
-    padding-bottom: 80px; overflow: hidden;
+    padding-bottom: 80px; overflow: visible;
     position: relative;
     background: transparent;
   }
@@ -215,6 +215,7 @@
     position: relative;
     width: clamp(220px, 28vw, 380px);
     flex-shrink: 0;
+    overflow: visible;
   }
   .hero-photo-main {
     width: 100%; aspect-ratio: 3/4;
@@ -223,7 +224,7 @@
   }
   .hero-photo-main img {
     width: 100%; height: 100%;
-    object-fit: cover; object-position: center top;
+    object-fit: cover; object-position: center 10%;
     display: block; position: absolute; inset: 0;
     transition: opacity .35s ease;
   }
@@ -262,23 +263,20 @@
   body.color-burst { background: #0a0a0a; }
   body.color-burst #hero { background: transparent; }
 
-  /* Hit Me Punk font toggle on hero name */
-  .hero-name.punk-font {
-    font-family: 'HitMePunk', 'Syne', sans-serif !important;
-    letter-spacing: .01em;
-  }
+  /* Hit Me Punk — applied per letter via JS */
+  .punk-ltr { display: inline-block; }
 
   .hero-name {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(64px, 10.5vw, 180px);
+    font-size: clamp(36px, 5.6vw, 88px);
     font-weight: 800;
-    line-height: .92;
+    line-height: .9;
     letter-spacing: -.04em;
     margin-bottom: 0;
     overflow: visible;
-    padding: 60px 0 60px 0;
-    margin-top: -60px;
-    transition: font-family .1s step-end, letter-spacing .3s ease;
+    padding: 32px 0 32px 0;
+    margin-top: -32px;
+    transition: letter-spacing .3s ease;
   }
   .hero-name .line { overflow: visible; display: block; }
   .hero-name .word { display: inline-block; transform: translateY(115%); }
@@ -2045,95 +2043,97 @@
 
 
 <script>
-/* ── HERO BLOOM SCROLL SEQUENCE ── */
+/* ── HERO BLOOM SCROLL SEQUENCE v2 ── */
 (function () {
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
 
-  const serious  = document.querySelector('.hero-photo-main img.serious');
-  const tongue   = document.querySelector('.hero-photo-main img.tongue');
-  const petals   = document.querySelectorAll('.bloom-petal');
+  const serious = document.querySelector('.hero-photo-main img.serious');
+  const tongue  = document.querySelector('.hero-photo-main img.tongue');
+  const petals  = document.querySelectorAll('.bloom-petal');
   const heroName = document.getElementById('heroName');
 
-  // Petal bloom destinations: angle + distance from center
+  /* ── Letter split for per-letter punk swap ── */
+  heroName.querySelectorAll('.word').forEach(word => {
+    word.innerHTML = [...word.textContent]
+      .map(ch => `<span class="punk-ltr">${ch}</span>`)
+      .join('');
+  });
+  const punkLetters = [...heroName.querySelectorAll('.punk-ltr')];
+
+  /* ── Sun glow overlay — screen blend creates warm light flood ── */
+  const sunGlow = document.createElement('div');
+  sunGlow.id = 'sun-glow';
+  Object.assign(sunGlow.style, {
+    position: 'fixed', inset: '0', pointerEvents: 'none', zIndex: '0',
+    background: 'radial-gradient(ellipse 60% 85% at 30% 50%, #ffb300 0%, #ff6200 18%, #cc2500 38%, transparent 62%)',
+    opacity: '0', mixBlendMode: 'screen',
+  });
+  document.body.appendChild(sunGlow);
+
+  /* ── Set body bg as inline so GSAP can tween it ── */
+  document.body.style.backgroundColor = '#050505';
+
+  /* ── Petal positions ── */
   const PETALS = [
-    { angle: -80,  dist: 1.4 },
-    { angle: -30,  dist: 1.6 },
-    { angle:  20,  dist: 1.55 },
-    { angle:  70,  dist: 1.5 },
-    { angle: 130,  dist: 1.6 },
-    { angle: 175,  dist: 1.45 },
+    { angle: -80,  dist: 1.5 },
+    { angle: -30,  dist: 1.7 },
+    { angle:  20,  dist: 1.6 },
+    { angle:  75,  dist: 1.55 },
+    { angle: 130,  dist: 1.7 },
+    { angle: 178,  dist: 1.5 },
   ];
-
-  // Crazy color palette for burst
-  const BURST_COLORS = {
-    '--black':   '#0a0005',
-    '--white':   '#f7f0ff',
-    '--red':     '#ff2d00',
-    '--green':   '#39ff14',
-    '--purple':  '#ff00ff',
-    '--cyan':    '#00eeff',
-    '--magenta': '#ff00cc',
-    '--yellow':  '#ffe600',
-    '--muted':   'rgba(247,240,255,0.6)',
-  };
-
-  let burstActive = false;
 
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#hero',
       start: 'top top',
-      end: '+=220%',
-      scrub: 1.2,
+      end: '+=240%',
+      scrub: 1.4,
       pin: true,
     }
   });
 
-  // Step 1 (0–15%): tongue swap
-  tl.to(serious, { opacity: 0, duration: 0.15 }, 0)
-    .to(tongue,  { opacity: 1, duration: 0.15 }, 0);
+  /* Step 1 (0–18%): tongue swap */
+  tl.to(serious, { opacity: 0, duration: 0.18 }, 0)
+    .to(tongue,  { opacity: 1, duration: 0.18 }, 0);
 
-  // Step 2 (15–60%): petals bloom out
+  /* Step 2 (18–58%): petals bloom out */
   petals.forEach((petal, i) => {
-    const cfg = PETALS[i];
-    const rad = cfg.angle * Math.PI / 180;
-    const tx  = Math.cos(rad) * cfg.dist * 100; // % of petal width
-    const ty  = Math.sin(rad) * cfg.dist * 100;
+    const { angle, dist } = PETALS[i];
+    const rad = angle * Math.PI / 180;
+    const tx  = Math.cos(rad) * dist * 100;
+    const ty  = Math.sin(rad) * dist * 100;
     tl.fromTo(petal,
-      { opacity: 0, scale: 0, x: '0%', y: '0%', rotation: cfg.angle * 0.3 },
-      { opacity: 1, scale: 1,
-        x: tx + '%', y: ty + '%',
-        rotation: cfg.angle * 0.15,
-        duration: 0.35,
-        ease: 'back.out(1.4)' },
-      0.15 + i * 0.05
+      { opacity: 0, scale: 0, x: '0%', y: '0%', rotation: angle * 0.35 },
+      { opacity: 1, scale: 1, x: tx + '%', y: ty + '%',
+        rotation: angle * 0.12, duration: 0.32, ease: 'back.out(1.6)' },
+      0.18 + i * 0.06
     );
   });
 
-  // Step 3 (60–75%): color burst
-  tl.add(() => {
-    if (!burstActive) {
-      burstActive = true;
-      const root = document.documentElement;
-      Object.entries(BURST_COLORS).forEach(([k, v]) => root.style.setProperty(k, v));
-      document.body.classList.add('color-burst');
-    }
-  }, 0.60);
+  /* Step 3 (55–80%): sunlight floods in — like clouds parting after rain */
+  tl.to(sunGlow,       { opacity: 0.55, duration: 0.12, ease: 'none' }, 0.55);
+  tl.to(sunGlow,       { opacity: 0.90, duration: 0.12, ease: 'none' }, 0.65);
+  tl.to(document.body, { backgroundColor: '#0e0600', duration: 0.25, ease: 'none' }, 0.55);
+  tl.to('.hero-name .punk-ltr, .hero-tagline .inner, .hero-eyebrow span',
+    { color: '#fff8e0', duration: 0.2, ease: 'none' }, 0.60);
+  tl.to('.hero-counter', { color: 'rgba(255,220,80,0.45)', duration: 0.2, ease: 'none' }, 0.62);
 
-  // Step 3 reverse
-  tl.add(() => {
-    if (burstActive) {
-      burstActive = false;
-      const root = document.documentElement;
-      Object.keys(BURST_COLORS).forEach(k => root.style.removeProperty(k));
-      document.body.classList.remove('color-burst');
-    }
-  }, 0.58); // fires on reverse just before 0.60
-
-  // Step 4 (75–100%): Hit Me Punk font swap
-  tl.add(() => { heroName.classList.add('punk-font'); },    0.75);
-  tl.add(() => { heroName.classList.remove('punk-font'); }, 0.73);
+  /* Step 4 (76–100%): Hit Me Punk — letter by letter like sun hitting each letter */
+  punkLetters.forEach((lt, i) => {
+    tl.to(lt, {
+      duration: 0.022,
+      onStart() {
+        lt.style.fontFamily = "'HitMePunk', sans-serif";
+        lt.style.letterSpacing = '0.04em';
+      },
+      onReverseComplete() {
+        lt.style.fontFamily = '';
+        lt.style.letterSpacing = '';
+      },
+    }, 0.76 + i * 0.009);
+  });
 
 })();
 </script>
