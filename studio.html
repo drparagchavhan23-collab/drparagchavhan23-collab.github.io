@@ -140,11 +140,16 @@ body{
 
 <div id="ss"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script>
-(function () {
+<script type="module">
+import * as THREE from 'three';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
+
   const W = () => window.innerWidth, H = () => window.innerHeight;
 
   /* ── Scene ── */
@@ -669,7 +674,78 @@ body{
     });
   });
 
-})();
+  /* ── Load OBJ models ── */
+  const MODEL_BASE = 'https://drparagchavhan23-collab.github.io/models/';
+
+  function fitModel(obj, targetSize) {
+    const bbox = new THREE.Box3().setFromObject(obj);
+    const size = bbox.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    if (maxDim > 0) {
+      const scale = targetSize / maxDim;
+      obj.scale.setScalar(scale);
+      const center = bbox.getCenter(new THREE.Vector3());
+      // re-center around origin
+      obj.traverse(c => { if (c.isMesh) c.geometry.center(); });
+    }
+    return obj;
+  }
+
+  (async () => {
+    const mtlLoader = new MTLLoader().setPath(MODEL_BASE);
+    const objLoader = new OBJLoader();
+
+    // ── Stone rocks ──────────────────────────────────────────────────────────
+    try {
+      const stoneMtl = await mtlLoader.loadAsync('stone.mtl');
+      stoneMtl.preload();
+      objLoader.setMaterials(stoneMtl);
+      const stoneBase = await new OBJLoader().setPath(MODEL_BASE).setMaterials(stoneMtl).loadAsync('stone.obj');
+      fitModel(stoneBase, 7);
+
+      // Scatter multiple rock instances through the scene
+      [
+        [-38,  8, -90,  1.4, 0.3],
+        [ 45, 18,-170,  1.0, 1.1],
+        [-30,-14,-255,  1.6, 2.0],
+        [ 42, -6,-345,  1.2, 0.7],
+        [-20, 25,-420,  0.9, 1.8],
+      ].forEach(([x, y, z, s, ry]) => {
+        const clone = stoneBase.clone(true);
+        clone.position.set(x, y, z);
+        clone.scale.setScalar(s);
+        clone.rotation.y = ry;
+        scene.add(clone);
+      });
+      console.log('Stone model loaded');
+    } catch(e) { console.warn('stone load failed:', e.message); }
+
+    // ── Medieval boat ─────────────────────────────────────────────────────────
+    try {
+      const medMtl = await mtlLoader.loadAsync('medieval.mtl');
+      medMtl.preload();
+      const medBase = await new OBJLoader().setPath(MODEL_BASE).setMaterials(medMtl).loadAsync('medieval.obj');
+      fitModel(medBase, 14);
+
+      // Cast shadows etc. then place
+      medBase.traverse(c => { if (c.isMesh) c.castShadow = true; });
+
+      // First boat — left side, mid-scene
+      medBase.position.set(-48, 4, -155);
+      medBase.rotation.y = Math.PI * 0.15;
+      scene.add(medBase);
+
+      // Second boat — right side, further in
+      const b2 = medBase.clone(true);
+      b2.position.set(52, -6, -310);
+      b2.rotation.y = -Math.PI * 0.25;
+      b2.scale.setScalar(0.8);
+      scene.add(b2);
+
+      console.log('Medieval boat loaded');
+    } catch(e) { console.warn('medieval boat load failed:', e.message); }
+
+  })();
 </script>
 </body>
 </html>
