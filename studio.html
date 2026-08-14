@@ -8,8 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;overflow-x:hidden;background:#020208}
-body{font-family:'DM Mono',monospace;color:#f4f0e8}
+html,body{width:100%;overflow-x:hidden}
+body{
+  font-family:'DM Mono',monospace;color:#f4f0e8;
+  background: linear-gradient(180deg,
+    #0d0828 0%, #1a0a40 12%,
+    #3a1060 28%, #6a2088 44%,
+    #a03868 58%, #c85030 72%,
+    #e07828 84%, #f0a030 100%
+  );
+  background-attachment:fixed;
+}
 
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
 
@@ -140,17 +149,18 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
 
   /* ── Scene ── */
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x020208);
-  scene.fog = new THREE.FogExp2(0x020208, 0.0042);
+  scene.fog = new THREE.FogExp2(0x6a2088, 0.003);
 
   /* ── Camera ── */
   const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 500);
 
-  /* ── Renderer ── */
+  /* ── Renderer — transparent so CSS gradient shows through ── */
   const renderer = new THREE.WebGLRenderer({
     canvas: document.getElementById('c'),
     antialias: true,
+    alpha: true,
   });
+  renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(W(), H());
 
@@ -171,11 +181,11 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
 
   /* ── Stage definitions ── */
   const STAGES = [
-    { name:'THE SPARK',  num:'01', color:0x00eeff, bg:0x020a0c, pos:new THREE.Vector3( -5, -9, -10), side: 1  },
-    { name:'THE CHAOS',  num:'02', color:0xff00cc, bg:0x0a0208, pos:new THREE.Vector3( 14,  6,-110), side: -1 },
-    { name:'THE WORK',   num:'03', color:0xdddad0, bg:0x050505, pos:new THREE.Vector3(-14, 10,-210), side: 1  },
-    { name:'THE HUMAN',  num:'04', color:0xffb300, bg:0x090600, pos:new THREE.Vector3( 12, -9,-310), side: -1 },
-    { name:'THE INVITE', num:'05', color:0xffe600, bg:0x090800, pos:new THREE.Vector3(  0,  0,-420), side: 0  },
+    { name:'THE SPARK',  num:'01', color:0x00eeff, pos:new THREE.Vector3( -5, -9, -10) },
+    { name:'THE CHAOS',  num:'02', color:0xff44cc, pos:new THREE.Vector3( 14,  6,-110) },
+    { name:'THE WORK',   num:'03', color:0xffd700, pos:new THREE.Vector3(-14, 10,-210) },
+    { name:'THE HUMAN',  num:'04', color:0xff8844, pos:new THREE.Vector3( 12, -9,-310) },
+    { name:'THE INVITE', num:'05', color:0x88ff44, pos:new THREE.Vector3(  0,  0,-420) },
   ];
 
   /* ── Primitive factories ── */
@@ -257,37 +267,53 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
     nodeGroups.push(g);
   });
 
-  /* ── Star field — sphere distribution ── */
-  const SN = 3500;
+  /* ── Colourful star field ── */
+  const STAR_RGBS = [
+    [1.0, 0.9, 0.3],  // gold
+    [1.0, 0.4, 0.8],  // pink
+    [0.3, 1.0, 1.0],  // cyan
+    [0.7, 0.4, 1.0],  // lavender
+    [1.0, 0.6, 0.2],  // orange
+    [1.0, 1.0, 1.0],  // white
+  ];
+  const SN = 4000;
   const spos = new Float32Array(SN * 3);
+  const scol = new Float32Array(SN * 3);
   for(let i=0; i<SN; i++) {
     const theta = Math.random()*Math.PI*2;
     const phi   = Math.acos(2*Math.random()-1);
-    const r     = 60 + Math.random()*280;
+    const r     = 80 + Math.random()*260;
     spos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-    spos[i*3+1] = r*Math.sin(phi)*Math.sin(theta)*0.55;
+    spos[i*3+1] = r*Math.sin(phi)*Math.sin(theta)*0.6;
     spos[i*3+2] = r*Math.cos(phi) - 200;
+    const c = STAR_RGBS[Math.floor(Math.random()*STAR_RGBS.length)];
+    scol[i*3]=c[0]; scol[i*3+1]=c[1]; scol[i*3+2]=c[2];
   }
   const sg = new THREE.BufferGeometry();
   sg.setAttribute('position', new THREE.BufferAttribute(spos, 3));
+  sg.setAttribute('color',    new THREE.BufferAttribute(scol, 3));
   scene.add(new THREE.Points(sg, new THREE.PointsMaterial({
-    color:0xaaccdd, size:0.06, transparent:true, opacity:0.5, sizeAttenuation:true,
+    vertexColors:true, size:0.14, transparent:true, opacity:0.9, sizeAttenuation:true,
   })));
 
-  /* ── Dust particles close to path ── */
-  const DN = 800;
+  /* ── Sparkle dust along path ── */
+  const DN = 1200;
   const dpos = new Float32Array(DN * 3);
+  const dcol = new Float32Array(DN * 3);
   for(let i=0; i<DN; i++) {
     const t = Math.random();
     const pt = PATH.getPointAt(t);
-    dpos[i*3]   = pt.x + (Math.random()-.5)*30;
-    dpos[i*3+1] = pt.y + (Math.random()-.5)*20;
-    dpos[i*3+2] = pt.z + (Math.random()-.5)*25;
+    dpos[i*3]   = pt.x + (Math.random()-.5)*35;
+    dpos[i*3+1] = pt.y + (Math.random()-.5)*25;
+    dpos[i*3+2] = pt.z + (Math.random()-.5)*30;
+    const c = STAR_RGBS[Math.floor(Math.random()*STAR_RGBS.length)];
+    dcol[i*3]=c[0]; dcol[i*3+1]=c[1]; dcol[i*3+2]=c[2];
   }
   const dg = new THREE.BufferGeometry();
   dg.setAttribute('position', new THREE.BufferAttribute(dpos, 3));
+  dg.setAttribute('color',    new THREE.BufferAttribute(dcol, 3));
   scene.add(new THREE.Points(dg, new THREE.PointsMaterial({
-    color:0x446677, size:0.1, transparent:true, opacity:0.35, sizeAttenuation:true,
+    vertexColors:true, size:0.18, transparent:true, opacity:0.6, sizeAttenuation:true,
   })));
 
   /* ── Floating islands ── */
@@ -325,7 +351,7 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
       }
     }
     topGeo.computeVertexNormals();
-    grp.add(new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: 0x7a8fa2 })));
+    grp.add(new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: 0x9aaa88 })));
 
     // ── Grass surface layer that follows the terrain ──
     const gGeo = new THREE.CylinderGeometry(size * 0.8, size * 0.8, size * 0.07, RS, 2);
@@ -335,7 +361,7 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
       if (y > 0) gPos.setY(i, size * 0.28 + terrainY(x, z, size) + size * 0.03);
     }
     gGeo.computeVertexNormals();
-    grp.add(new THREE.Mesh(gGeo, new THREE.MeshBasicMaterial({ color: 0x4d8c40 })));
+    grp.add(new THREE.Mesh(gGeo, new THREE.MeshBasicMaterial({ color: 0x5cb84a })));
 
     // ── Hanging stalactite spires — multiple thin tapered pillars ──
     const spireCount = 4 + Math.floor(Math.random() * 3);
@@ -347,7 +373,7 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
       const spireR = size * (0.06 + Math.random() * 0.1);
       const spire  = new THREE.Mesh(
         new THREE.CylinderGeometry(spireR * 0.05, spireR, spireH, 10, 2),
-        new THREE.MeshBasicMaterial({ color: isCenter ? 0x506878 : 0x5c7080 })
+        new THREE.MeshBasicMaterial({ color: isCenter ? 0x707860 : 0x889070 })
       );
       spire.position.set(
         Math.cos(angle) * radOff,
@@ -419,49 +445,109 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
     return isl;
   });
 
-  /* ── Clouds ── */
-  function makeCloud(size) {
+  /* ── Vibrant clouds ── */
+  // Palettes: each cloud picks one; puffs vary slightly within it
+  const CLOUD_PALS = [
+    [0xe07030, 0xc85820, 0xf08040], // orange / warm
+    [0x8b2daa, 0x6a1880, 0xb050d0], // purple
+    [0x2898c8, 0x1870a0, 0x40b8e0], // teal-blue
+    [0xd030a0, 0xf050b8, 0xa01880], // hot pink
+    [0xe89030, 0xf5b040, 0xd07020], // amber-gold
+    [0x4040c8, 0x2828a0, 0x6060e0], // deep blue
+  ];
+
+  function makeCloud(size, palIdx) {
     const grp = new THREE.Group();
-    const mat = new THREE.MeshBasicMaterial({
-      color: 0xffffff, transparent: true, opacity: 0.055,
-      depthWrite: false, blending: THREE.AdditiveBlending,
-    });
-    // Puff offsets: [x, y, z, scale]
-    const puffs = [
-      [0, 0, 0, 1], [size * 0.65, -size * 0.08, 0, 0.72],
-      [-size * 0.6, 0, 0, 0.78], [size * 0.25, size * 0.22, size * 0.3, 0.6],
-      [-size * 0.3, size * 0.15, -size * 0.25, 0.65], [size * 0.1, -size * 0.12, size * 0.4, 0.5],
+    const pal = CLOUD_PALS[palIdx % CLOUD_PALS.length];
+    const puffDef = [
+      [0,             0,            0,           1.0,  0],
+      [size*.72,     -size*.08,     0,           0.72, 1],
+      [-size*.68,     0,            0,           0.78, 2],
+      [size*.3,       size*.28,     size*.32,    0.62, 0],
+      [-size*.32,     size*.2,     -size*.28,    0.66, 1],
+      [size*.12,     -size*.16,     size*.42,    0.52, 2],
+      [-size*.22,    -size*.14,    -size*.38,    0.56, 0],
+      [size*.5,       size*.22,    -size*.2,     0.5,  1],
     ];
-    puffs.forEach(([x, y, z, s]) => {
-      const p = new THREE.Mesh(new THREE.SphereGeometry(size * s, 7, 5), mat);
+    puffDef.forEach(([x, y, z, s, ci]) => {
+      const p = new THREE.Mesh(
+        new THREE.SphereGeometry(size * s, 10, 8),
+        new THREE.MeshBasicMaterial({ color: pal[ci], transparent:true, opacity: 0.88 })
+      );
       p.position.set(x, y, z);
       grp.add(p);
     });
     return grp;
   }
 
-  // Cloud placements: [x, y, z, size]
+  // Cloud placements: [x, y, z, size, palIdx]
   const CLOUD_DATA = [
-    [  14,  -8,  -30,  8 ],
-    [ -25,  -5,  -70, 10 ],
-    [  30,  18, -120,  7 ],
-    [ -18,  -3, -180,  9 ],
-    [  22, -12, -240,  6 ],
-    [ -35,  15, -290, 11 ],
-    [  10,  -8, -350,  8 ],
-    [ -12,  20, -410,  7 ],
-    [  40,   5, -160,  6 ],
-    [ -30, -18, -320,  9 ],
+    [  16,  -6,  -25, 14, 0],
+    [ -28,  -3,  -65, 16, 1],
+    [  34,  20, -115, 12, 2],
+    [ -20,  -2, -175, 15, 3],
+    [  25, -10, -235, 11, 4],
+    [ -38,  17, -285, 18, 1],
+    [  12,  -7, -345, 13, 0],
+    [ -14,  22, -405, 14, 2],
+    [  44,   6, -155, 10, 3],
+    [ -32, -16, -315, 16, 4],
+    [  20,  30,  -50, 12, 5],
+    [ -10, -22, -130, 14, 0],
+    [  50,  12, -250, 11, 1],
+    [ -45, -10, -370, 15, 2],
   ];
 
-  const cloudGroups = CLOUD_DATA.map(([x, y, z, size]) => {
-    const cl = makeCloud(size);
+  const cloudGroups = CLOUD_DATA.map(([x, y, z, size, pal]) => {
+    const cl = makeCloud(size, pal);
     cl.position.set(x, y, z);
     scene.add(cl);
     return cl;
   });
 
-  scene.add(new THREE.AmbientLight(0x112233, 0.8));
+  /* ── Planets ── */
+  function makePlanet(radius, col, ringCol) {
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 28, 20),
+      new THREE.MeshBasicMaterial({ color: col })));
+    // inner glow halo
+    g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28, 16, 12),
+      new THREE.MeshBasicMaterial({ color: col, transparent:true, opacity:0.1,
+        depthWrite:false, blending:THREE.AdditiveBlending })), {}));
+    // outer glow
+    g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.75, 14, 10),
+      new THREE.MeshBasicMaterial({ color: col, transparent:true, opacity:0.04,
+        depthWrite:false, blending:THREE.AdditiveBlending })), {}));
+    if (ringCol) {
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(radius*1.9, radius*0.18, 4, 48),
+        new THREE.MeshBasicMaterial({ color: ringCol, transparent:true, opacity:0.75, side:THREE.DoubleSide })
+      );
+      ring.rotation.x = Math.PI * 0.32;
+      g.add(ring);
+    }
+    return g;
+  }
+
+  // teal glowing planet
+  const p1 = makePlanet(11, 0x30e8c0, null);
+  p1.position.set(-65, 50, -70); scene.add(p1);
+
+  // purple ringed Saturn
+  const p2 = makePlanet(8.5, 0xaa44ff, 0xcc88ff);
+  p2.position.set(72, 28, -195); scene.add(p2);
+
+  // warm orange mini-planet
+  const p3 = makePlanet(6, 0xff8844, null);
+  p3.position.set(-55, -22, -335); scene.add(p3);
+
+  // small cyan orb
+  const p4 = makePlanet(4.5, 0x44ddff, null);
+  p4.position.set(45, 40, -380); scene.add(p4);
+
+  const planets = [p1, p2, p3, p4];
+
+  scene.add(new THREE.AmbientLight(0x8844cc, 0.9));
 
   /* ── Animate ── */
   const clock = new THREE.Clock();
@@ -488,9 +574,12 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
 
     /* Clouds: very slow drift */
     cloudGroups.forEach((cl, i) => {
-      cl.position.x = CLOUD_DATA[i][0] + Math.sin(t * 0.12 + i * 0.9) * 1.2;
-      cl.position.y = CLOUD_DATA[i][1] + Math.sin(t * 0.18 + i * 1.7) * 0.6;
+      cl.position.x = CLOUD_DATA[i][0] + Math.sin(t * 0.12 + i * 0.9) * 1.4;
+      cl.position.y = CLOUD_DATA[i][1] + Math.sin(t * 0.18 + i * 1.7) * 0.8;
     });
+
+    /* Planets: slow rotation */
+    planets.forEach((p, i) => { p.rotation.y += 0.001 + i * 0.0005; });
 
     renderer.render(scene, camera);
   }
@@ -503,10 +592,6 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
   const contents = [...document.querySelectorAll('.sc')];
   const cnumEl   = document.getElementById('cnum');
   const hintEl   = document.getElementById('hint');
-  const bgCol    = new THREE.Color();
-  const bgC1     = new THREE.Color();
-  const bgC2     = new THREE.Color();
-  const stageBgs = STAGES.map(s => new THREE.Color(s.bg));
   const lookPt   = new THREE.Vector3();
   let lastStage  = 0;
 
@@ -533,15 +618,14 @@ body{font-family:'DM Mono',monospace;color:#f4f0e8}
       lookPt.copy(aheadPt);
       camera.lookAt(lookPt);
 
-      /* Interpolate background & fog color across stages */
-      const raw = p * (STAGES.length - 1);
-      const si  = Math.min(Math.floor(raw), STAGES.length-2);
+      /* Fog hue shifts as you travel — purple → teal → magenta */
+      const fogHues = [0x6a2088, 0x204488, 0x881860, 0xaa4410, 0x884400];
+      const raw = p * (fogHues.length - 1);
+      const si  = Math.min(Math.floor(raw), fogHues.length - 2);
       const sf  = raw - si;
-      bgC1.set(stageBgs[si]);
-      bgC2.set(stageBgs[si+1]);
-      bgCol.lerpColors(bgC1, bgC2, sf);
-      scene.background.copy(bgCol);
-      scene.fog.color.copy(bgCol);
+      const fc  = new THREE.Color();
+      fc.lerpColors(new THREE.Color(fogHues[si]), new THREE.Color(fogHues[si+1]), sf);
+      scene.fog.color.copy(fc);
 
       /* Stage node glow: brighten nearest portal */
       nodeGroups.forEach((g, i) => {
