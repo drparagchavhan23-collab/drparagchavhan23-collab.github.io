@@ -4,18 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parag Chavhan — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 html,body{width:100%;overflow-x:hidden}
 body{
   font-family:'DM Mono',monospace;color:#f4f0e8;
-  background: linear-gradient(180deg,
-    #0d0828 0%, #1a0a40 12%,
-    #3a1060 28%, #6a2088 44%,
-    #a03868 58%, #c85030 72%,
-    #e07828 84%, #f0a030 100%
+  background:linear-gradient(180deg,
+    #0d0828 0%,#1a0a40 12%,#3a1060 28%,#6a2088 44%,
+    #a03868 58%,#c85030 72%,#e07828 84%,#f0a030 100%
   );
   background-attachment:fixed;
 }
@@ -23,395 +21,218 @@ body{
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
 
 /* Nav */
-#nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:20}
-.logo{font-size:12px;letter-spacing:.22em;color:rgba(244,240,232,.4)}
+#nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30;mix-blend-mode:normal}
+.logo{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;color:rgba(244,240,232,.7)}
 .links{display:flex;gap:28px}
-.links a{font-size:10px;letter-spacing:.2em;text-decoration:none;color:rgba(244,240,232,.3);transition:color .3s}
+.links a{font-size:10px;letter-spacing:.2em;text-decoration:none;color:rgba(244,240,232,.35);transition:color .3s}
 .links a:hover{color:#f4f0e8}
 
-/* Progress */
-#progress{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:18px;z-index:20}
-.dot{width:4px;height:4px;border-radius:50%;background:rgba(244,240,232,.15);cursor:pointer;transition:all .6s;position:relative}
-.dot::after{content:attr(data-l);position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:7px;letter-spacing:.18em;white-space:nowrap;color:rgba(244,240,232,.0);transition:color .4s}
-.dot.on{transform:scale(1.8);box-shadow:0 0 12px var(--c,#00eeff)}
-.dot.on{background:var(--c,#00eeff)}
+/* Progress dots */
+#progress{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:30}
+.dot{width:4px;height:4px;border-radius:50%;background:rgba(244,240,232,.15);cursor:pointer;transition:all .5s;position:relative}
+.dot::after{content:attr(data-l);position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:7px;letter-spacing:.16em;white-space:nowrap;color:rgba(244,240,232,.0);transition:color .4s;pointer-events:none}
+.dot.on{transform:scale(2);background:var(--c,#fff)}
 .dot.on::after{color:rgba(244,240,232,.35)}
 
-/* Stage counter */
-#counter{position:fixed;left:40px;bottom:48px;z-index:20;font-size:9px;letter-spacing:.25em;color:rgba(244,240,232,.25)}
-#counter span{color:rgba(244,240,232,.6);font-size:14px;font-family:'Syne',sans-serif;font-weight:800;margin-left:6px;transition:color .5s}
-
-/* Stage content */
-.sc{
-  position:fixed;inset:0;z-index:15;
-  display:flex;align-items:center;justify-content:flex-end;
-  padding:0 8vw;pointer-events:none;
-  opacity:0;transform:translateX(20px);
-  transition:opacity .65s ease, transform .65s ease;
-}
-.sc.on{opacity:1;transform:translateX(0)}
-.sci{max-width:340px;text-align:right}
-.stag{font-size:8px;letter-spacing:.28em;color:var(--a,#00eeff);margin-bottom:16px;display:block}
-.shead{font-family:'Syne',sans-serif;font-size:clamp(22px,3.2vw,44px);font-weight:800;line-height:.95;letter-spacing:-.025em;color:#f4f0e8;margin-bottom:16px}
-.sbody{font-size:11px;line-height:1.9;color:rgba(244,240,232,.42);font-style:italic}
-.scta{display:inline-block;margin-top:20px;font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--a,#00eeff);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px;pointer-events:all;opacity:.8;transition:opacity .3s}
-.scta:hover{opacity:1}
+/* Zone counter */
+#zcnt{position:fixed;left:40px;bottom:48px;z-index:30;font-size:9px;letter-spacing:.25em;color:rgba(244,240,232,.25);pointer-events:none}
+#zcnt b{color:rgba(244,240,232,.7);font-size:15px;font-family:'Syne',sans-serif;font-weight:800;margin-left:6px;display:inline-block;min-width:2ch}
 
 /* Scroll hint */
-#hint{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);text-align:center;z-index:20;transition:opacity .8s}
+#hint{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);text-align:center;z-index:30;transition:opacity .8s;pointer-events:none}
 #hint p{font-size:8px;letter-spacing:.28em;color:rgba(244,240,232,.28);margin-bottom:8px}
 #hint div{animation:bob .9s ease-in-out infinite alternate;font-size:12px;color:rgba(244,240,232,.2)}
 @keyframes bob{from{transform:translateY(0)}to{transform:translateY(6px)}}
 
-/* Crosshair — subtle center reference */
-#xhair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;pointer-events:none;opacity:.06}
+/* Crosshair */
+#xhair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;pointer-events:none;opacity:.05}
 #xhair::before,#xhair::after{content:'';position:absolute;background:rgba(244,240,232,.8)}
-#xhair::before{width:20px;height:1px;top:0;left:-10px}
-#xhair::after{width:1px;height:20px;top:-10px;left:0}
+#xhair::before{width:24px;height:1px;top:0;left:-12px}
+#xhair::after{width:1px;height:24px;top:-12px;left:0}
 
-/* Scroll space */
-#ss{height:650vh}
+/* ── Content overlays ── */
+.zone-overlay{
+  position:fixed;inset:0;z-index:20;
+  display:flex;align-items:center;
+  padding:0 9vw;pointer-events:none;
+  opacity:0;transform:translateX(24px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.zone-overlay.left{justify-content:flex-start}
+.zone-overlay.right{justify-content:flex-end}
+.zone-overlay.center{justify-content:center;text-align:center}
+.zone-overlay.on{opacity:1;transform:translateX(0)}
+.zo-inner{max-width:360px}
+.zo-tag{font-size:8px;letter-spacing:.28em;color:var(--a,#fff);display:block;margin-bottom:14px}
+.zo-head{font-family:'Syne',sans-serif;font-size:clamp(20px,2.8vw,40px);font-weight:800;line-height:.95;letter-spacing:-.025em;color:#f4f0e8;margin-bottom:14px}
+.zo-body{font-size:11px;line-height:1.9;color:rgba(244,240,232,.42);font-style:italic}
+.zo-cta{display:inline-block;margin-top:18px;font-size:8px;letter-spacing:.22em;color:var(--a,#fff);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px;pointer-events:all;opacity:.75;transition:opacity .3s}
+.zo-cta:hover{opacity:1}
 
-/* ── Shared section styles ── */
-section{position:relative;z-index:10}
-.s-label{font-size:9px;letter-spacing:.3em;color:rgba(244,240,232,.35);margin-bottom:14px;text-transform:uppercase}
-.s-head{font-family:'Syne',sans-serif;font-size:clamp(36px,5.5vw,80px);font-weight:800;line-height:.92;letter-spacing:-.03em;color:#f4f0e8;margin-bottom:24px}
-.s-head em{font-style:normal;color:transparent;-webkit-text-stroke:1px rgba(244,240,232,.4)}
-.s-sub{font-size:13px;line-height:1.8;color:rgba(244,240,232,.45);max-width:440px;font-style:italic}
-.s-inner{padding:0 10vw}
+/* project number badge */
+.zo-num{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:.3em;color:rgba(244,240,232,.18);margin-bottom:6px;display:block}
 
-/* ── Projects ── */
-#work{padding:120px 0 100px;background:rgba(4,2,12,.92);backdrop-filter:blur(0px)}
-#work .s-inner{margin-bottom:72px}
+/* about extras */
+.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
+.about-tags span{font-size:7px;letter-spacing:.18em;border:1px solid rgba(244,240,232,.18);color:rgba(244,240,232,.4);padding:5px 11px}
 
-.proj-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:2px;
-  padding:0 2px;
-}
-.proj-card{
-  background:rgba(8,5,20,.8);
-  position:relative;overflow:hidden;
-  cursor:pointer;
-  transition:transform .4s ease;
-}
-.proj-card:hover{transform:translateY(-4px)}
-.proj-card:hover .proj-img{opacity:1}
-.proj-card:hover .proj-num{color:var(--ac)}
-
-.proj-num{
-  position:absolute;top:20px;left:24px;
-  font-family:'Syne',sans-serif;font-size:11px;font-weight:800;
-  letter-spacing:.2em;color:rgba(244,240,232,.18);
-  transition:color .4s;z-index:2;
-}
-
-.proj-img{
-  width:100%;height:200px;
-  position:relative;overflow:hidden;opacity:.7;
-  transition:opacity .4s;
-  display:flex;align-items:flex-end;padding:16px;
-}
-.proj-img::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom, transparent 40%, rgba(4,2,12,.9) 100%);
-}
-.proj-tag{
-  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
-  background:var(--ac);color:#050505;padding:4px 10px;border-radius:2px;
-  font-weight:700;position:relative;z-index:1;
-}
-
-.proj-body{padding:24px 24px 28px}
-.proj-name{
-  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;
-  color:#f4f0e8;line-height:1.1;margin-bottom:12px;
-}
-.proj-replace{font-size:11px;font-family:'DM Mono',monospace;font-weight:400;
-  color:rgba(244,240,232,.25);display:block;margin-top:3px;letter-spacing:0}
-.proj-desc{font-size:11px;line-height:1.9;color:rgba(244,240,232,.4);font-style:italic;margin-bottom:16px}
-.proj-link{
-  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--ac);text-decoration:none;
-  border-bottom:1px solid currentColor;padding-bottom:2px;
-  transition:opacity .3s;opacity:.7;
-}
-.proj-link:hover{opacity:1}
-
-/* Left accent bar on hover */
-.proj-card::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--ac);transform:scaleY(0);transform-origin:bottom;
-  transition:transform .4s ease;
-}
-.proj-card:hover::before{transform:scaleY(1)}
-
-/* ── About ── */
-#about{
-  padding:120px 10vw;
-  background:rgba(8,4,18,.95);
-  border-top:1px solid rgba(244,240,232,.06);
-}
-.about-wrap{display:grid;grid-template-columns:1fr 400px;gap:80px;align-items:start}
-@media(max-width:900px){.about-wrap{grid-template-columns:1fr}}
-
-.about-big{
-  font-family:'Syne',sans-serif;font-size:clamp(18px,2.2vw,28px);font-weight:800;
-  color:#f4f0e8;line-height:1.2;margin-bottom:28px;
-}
-.about-body{font-size:12px;line-height:2;color:rgba(244,240,232,.45);font-style:italic;margin-bottom:16px}
-.about-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
-.about-tags span{
-  font-size:8px;letter-spacing:.2em;text-transform:uppercase;
-  border:1px solid rgba(244,240,232,.15);color:rgba(244,240,232,.4);
-  padding:6px 14px;border-radius:2px;
-  transition:all .3s;
-}
-.about-tags span:hover{border-color:rgba(244,240,232,.5);color:#f4f0e8}
-
-.about-photo-frame{
-  aspect-ratio:3/4;background:rgba(255,255,255,.04);
-  border:1px solid rgba(244,240,232,.08);border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:32px;
-}
-.about-photo-placeholder{text-align:center;color:rgba(244,240,232,.18);font-size:10px;letter-spacing:.2em}
-
-.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.stat{text-align:center;padding:20px 0;border-top:1px solid rgba(244,240,232,.08)}
-.stat-n{display:block;font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#f4f0e8;line-height:1}
-.stat-l{display:block;font-size:8px;letter-spacing:.22em;color:rgba(244,240,232,.3);margin-top:6px}
-
-/* ── Contact ── */
-#contact{
-  padding:120px 0 0;
-  background:linear-gradient(to bottom, rgba(8,4,18,.95) 0%, rgba(4,2,10,1) 100%);
-  border-top:1px solid rgba(244,240,232,.06);
-  text-align:center;
-}
-.contact-inner{max-width:640px;margin:0 auto;padding:0 40px}
-.contact-head{margin-bottom:20px}
-.cta-btn{
-  display:inline-block;margin:40px 0 32px;
-  font-size:11px;letter-spacing:.2em;text-decoration:none;
-  color:#f4f0e8;border:1px solid rgba(244,240,232,.35);
-  padding:18px 36px;border-radius:3px;
-  transition:all .4s;background:transparent;
-}
-.cta-btn:hover{background:rgba(244,240,232,.08);border-color:rgba(244,240,232,.7)}
-
-.contact-links{display:flex;gap:32px;justify-content:center;margin-top:8px;margin-bottom:72px}
-.contact-links a{font-size:9px;letter-spacing:.22em;color:rgba(244,240,232,.3);text-decoration:none;transition:color .3s}
+/* contact extras */
+.contact-links{display:flex;gap:24px;justify-content:center;margin-top:20px}
+.contact-links a{font-size:8px;letter-spacing:.2em;color:rgba(244,240,232,.35);text-decoration:none;transition:color .3s}
 .contact-links a:hover{color:#f4f0e8}
 
-footer{
-  border-top:1px solid rgba(244,240,232,.06);
-  padding:28px 10vw;
-  display:flex;justify-content:space-between;align-items:center;
-}
-footer span{font-size:9px;letter-spacing:.15em;color:rgba(244,240,232,.2)}
+/* CSS2D labels (anchored to 3D objects) */
+.label3d{pointer-events:none;text-align:center;transform:translate(-50%,-50%)}
+.l3-num{font-size:9px;letter-spacing:.3em;color:inherit;opacity:.5;margin-bottom:4px}
+.l3-name{font-family:'Syne',sans-serif;font-size:clamp(13px,1.4vw,20px);font-weight:800;color:inherit;line-height:1}
+.l3-cat{font-size:7px;letter-spacing:.22em;color:inherit;opacity:.55;margin-top:6px}
+
+/* Scroll space */
+#ss{height:1400vh}
 </style>
 </head>
 <body>
-
 <canvas id="c"></canvas>
 <div id="xhair"></div>
 
 <nav id="nav">
   <span class="logo">PC</span>
   <div class="links">
-    <a href="#work">Work</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a href="#" onclick="jumpToZone(0);return false">Intro</a>
+    <a href="#" onclick="jumpToZone(5);return false">Work</a>
+    <a href="#" onclick="jumpToZone(11);return false">About</a>
+    <a href="#" onclick="jumpToZone(12);return false">Contact</a>
   </div>
 </nav>
 
-<div id="progress">
-  <div class="dot" data-i="0" data-l="THE SPARK"  style="--c:#00eeff"></div>
-  <div class="dot" data-i="1" data-l="THE CHAOS"  style="--c:#ff00cc"></div>
-  <div class="dot" data-i="2" data-l="THE WORK"   style="--c:#f4f0e8"></div>
-  <div class="dot" data-i="3" data-l="THE HUMAN"  style="--c:#ffb300"></div>
-  <div class="dot" data-i="4" data-l="THE INVITE" style="--c:#ffe600"></div>
-</div>
-
-<div id="counter">STAGE <span id="cnum">01</span></div>
-
+<div id="progress"></div>
+<div id="zcnt">ZONE <b id="znum">01</b></div>
 <div id="hint"><p>SCROLL TO EXPLORE</p><div>↓</div></div>
 
-<!-- Stage overlays -->
-<div class="sc on" id="s0" style="--a:#00eeff">
-  <div class="sci">
-    <span class="stag">Stage 01 · The Spark</span>
-    <h2 class="shead">A kid who questioned every wall.</h2>
-    <p class="sbody">2021. Architecture school. A pencil, a dream, and a T-square he never quite mastered.</p>
+<!-- ── Zone overlays (all content floats in here) ────────────────────────── -->
+
+<!-- 0 – 4: Story stages (left aligned) -->
+<div class="zone-overlay right on" id="z0" style="--a:#00eeff">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 01 · The Spark</span>
+    <h2 class="zo-head">A kid who questioned every wall.</h2>
+    <p class="zo-body">2021. Architecture school. A pencil, a dream, and a T-square he never quite mastered.</p>
   </div>
 </div>
-<div class="sc" id="s1" style="--a:#ff00cc">
-  <div class="sci">
-    <span class="stag">Stage 02 · The Chaos</span>
-    <h2 class="shead">Order inside the disorder.</h2>
-    <p class="sbody">Five studios deep. The beautiful mess of deadlines, physical models, and 3am epiphanies.</p>
+<div class="zone-overlay left" id="z1" style="--a:#ff44cc">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 02 · The Chaos</span>
+    <h2 class="zo-head">Order inside the disorder.</h2>
+    <p class="zo-body">Five studios deep. The beautiful mess of deadlines, models, and 3am epiphanies.</p>
   </div>
 </div>
-<div class="sc" id="s2" style="--a:#f4f0e8">
-  <div class="sci">
-    <span class="stag">Stage 03 · The Work</span>
-    <h2 class="shead">Projects that ask better questions.</h2>
-    <p class="sbody">Housing, urbanism, spatial installations. Each one a hypothesis about how people want to live.</p>
-    <a class="scta" href="#">View Projects →</a>
+<div class="zone-overlay right" id="z2" style="--a:#ffd700">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 03 · The Work</span>
+    <h2 class="zo-head">Projects that ask better questions.</h2>
+    <p class="zo-body">Housing, urbanism, spatial installations. Each a hypothesis about how people want to live.</p>
   </div>
 </div>
-<div class="sc" id="s3" style="--a:#ffb300">
-  <div class="sci">
-    <span class="stag">Stage 04 · The Human</span>
-    <h2 class="shead">Chaotic. Orderly. Impossibly creative.</h2>
-    <p class="sbody">Pink pagdi at weddings. LED headphones in studio. Floral shirts everywhere. That guy.</p>
+<div class="zone-overlay left" id="z3" style="--a:#ff8844">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 04 · The Human</span>
+    <h2 class="zo-head">Chaotic. Orderly. Impossibly creative.</h2>
+    <p class="zo-body">Pink pagdi at weddings. LED headphones in studio. Floral shirts everywhere.</p>
   </div>
 </div>
-<div class="sc" id="s4" style="--a:#ffe600">
-  <div class="sci">
-    <span class="stag">Stage 05 · The Invite</span>
-    <h2 class="shead">Let's build something worth talking about.</h2>
-    <p class="sbody">Available. Ready. Obsessively curious.</p>
-    <a class="scta" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com →</a>
+<div class="zone-overlay center" id="z4" style="--a:#88ff44">
+  <div class="zo-inner" style="max-width:480px">
+    <span class="zo-tag">Stage 05 · The Invite</span>
+    <h2 class="zo-head">Let's build something worth talking about.</h2>
+    <p class="zo-body">Available. Ready. Obsessively curious.</p>
+    <a class="zo-cta" href="#" onclick="jumpToZone(5);return false">Fly into my work →</a>
+  </div>
+</div>
+
+<!-- 5 – 10: Projects -->
+<div class="zone-overlay right" id="z5" style="--a:#00eeff">
+  <div class="zo-inner">
+    <span class="zo-num">01 / 06</span>
+    <span class="zo-tag">Urban Housing</span>
+    <h2 class="zo-head">Project Alpha</h2>
+    <p class="zo-body">A housing complex that questions how density and community coexist. Compact, breathable, community-forward.</p>
+    <a class="zo-cta" href="#">View Case Study →</a>
+  </div>
+</div>
+<div class="zone-overlay left" id="z6" style="--a:#ff44cc">
+  <div class="zo-inner">
+    <span class="zo-num">02 / 06</span>
+    <span class="zo-tag">Cultural Centre</span>
+    <h2 class="zo-head">Project Beta</h2>
+    <p class="zo-body">A public cultural landmark where programme dissolves into landscape. The building continues into the ground.</p>
+    <a class="zo-cta" href="#">View Case Study →</a>
+  </div>
+</div>
+<div class="zone-overlay right" id="z7" style="--a:#ffd700">
+  <div class="zo-inner">
+    <span class="zo-num">03 / 06</span>
+    <span class="zo-tag">Spatial Installation</span>
+    <h2 class="zo-head">Project Gamma</h2>
+    <p class="zo-body">A temporary installation exploring the threshold between public solitude and collective presence.</p>
+    <a class="zo-cta" href="#">View Case Study →</a>
+  </div>
+</div>
+<div class="zone-overlay left" id="z8" style="--a:#ff8844">
+  <div class="zo-inner">
+    <span class="zo-num">04 / 06</span>
+    <span class="zo-tag">Residential</span>
+    <h2 class="zo-head">Project Delta</h2>
+    <p class="zo-body">Four houses around a shared courtyard. Privacy negotiated not by walls but by geometry and level change.</p>
+    <a class="zo-cta" href="#">View Case Study →</a>
+  </div>
+</div>
+<div class="zone-overlay right" id="z9" style="--a:#88ff44">
+  <div class="zo-inner">
+    <span class="zo-num">05 / 06</span>
+    <span class="zo-tag">Museum</span>
+    <h2 class="zo-head">Project Epsilon</h2>
+    <p class="zo-body">A museum of living craft — organised not by object but by process. You see things being made, then made.</p>
+    <a class="zo-cta" href="#">View Case Study →</a>
+  </div>
+</div>
+<div class="zone-overlay left" id="z10" style="--a:#cc44ff">
+  <div class="zo-inner">
+    <span class="zo-num">06 / 06</span>
+    <span class="zo-tag">Transit + Urban</span>
+    <h2 class="zo-head">Project Zeta</h2>
+    <p class="zo-body">A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one.</p>
+    <a class="zo-cta" href="#">View Case Study →</a>
+  </div>
+</div>
+
+<!-- 11: About -->
+<div class="zone-overlay right" id="z11" style="--a:#f4f0e8">
+  <div class="zo-inner" style="max-width:400px">
+    <span class="zo-tag">About</span>
+    <h2 class="zo-head">Parag Chavhan.</h2>
+    <p class="zo-body">Architecture student. Obsessive builder. I spend studios asking the most uncomfortable questions — about who a space is really for, and what it refuses to do.</p>
+    <p class="zo-body" style="margin-top:10px">Outside the studio I'm probably fiddling with code, listening to something at an unreasonable volume, or wearing a floral shirt.</p>
+    <div class="about-tags">
+      <span>Architecture</span><span>Urban Design</span><span>3D Modelling</span>
+      <span>Parametric</span><span>Digital Fab</span>
+    </div>
+  </div>
+</div>
+
+<!-- 12: Contact -->
+<div class="zone-overlay center" id="z12" style="--a:#ffd700">
+  <div class="zo-inner" style="max-width:520px;text-align:center">
+    <span class="zo-tag">Contact · Let's talk</span>
+    <h2 class="zo-head" style="font-size:clamp(28px,4vw,58px)">Let's make something<br>worth talking about.</h2>
+    <p class="zo-body" style="margin:0 auto">Open to internships, collaborations, and interesting conversations.</p>
+    <a class="zo-cta" style="font-size:11px;margin-top:24px" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com</a>
+    <div class="contact-links">
+      <a href="#">Instagram</a><a href="#">Behance</a><a href="#">LinkedIn</a>
+    </div>
   </div>
 </div>
 
 <div id="ss"></div>
-
-<!-- ═══════════════════════════════════════════════════════════ PROJECTS -->
-<section id="work">
-  <div class="s-inner">
-    <div class="s-label">Selected Work</div>
-    <h2 class="s-head">Things I've<br><em>actually built.</em></h2>
-    <p class="s-sub">Architecture is thinking made physical. Here's mine.</p>
-  </div>
-
-  <div class="proj-grid">
-
-    <article class="proj-card" style="--ac:#00eeff;--n:01">
-      <div class="proj-num">01</div>
-      <div class="proj-img" style="background:#0a1a1f">
-        <span class="proj-tag">Urban Housing</span>
-      </div>
-      <div class="proj-body">
-        <h3 class="proj-name">Project Alpha <span class="proj-replace">[Replace with project name]</span></h3>
-        <p class="proj-desc">A housing complex that questions how density and community coexist in a rapidly growing city. Compact, community-forward, breathable.</p>
-        <a class="proj-link" href="#">View Case Study →</a>
-      </div>
-    </article>
-
-    <article class="proj-card" style="--ac:#ff44cc;--n:02">
-      <div class="proj-num">02</div>
-      <div class="proj-img" style="background:#1a0a18">
-        <span class="proj-tag">Cultural Centre</span>
-      </div>
-      <div class="proj-body">
-        <h3 class="proj-name">Project Beta <span class="proj-replace">[Replace with project name]</span></h3>
-        <p class="proj-desc">A public cultural landmark where programme dissolves into landscape. The building doesn't end — it continues into the ground.</p>
-        <a class="proj-link" href="#">View Case Study →</a>
-      </div>
-    </article>
-
-    <article class="proj-card" style="--ac:#ffd700;--n:03">
-      <div class="proj-num">03</div>
-      <div class="proj-img" style="background:#1a1600">
-        <span class="proj-tag">Spatial Installation</span>
-      </div>
-      <div class="proj-body">
-        <h3 class="proj-name">Project Gamma <span class="proj-replace">[Replace with project name]</span></h3>
-        <p class="proj-desc">A temporary installation exploring the threshold between public solitude and collective presence. Steel, light, and breath.</p>
-        <a class="proj-link" href="#">View Case Study →</a>
-      </div>
-    </article>
-
-    <article class="proj-card" style="--ac:#ff8844;--n:04">
-      <div class="proj-num">04</div>
-      <div class="proj-img" style="background:#1a0c00">
-        <span class="proj-tag">Residential</span>
-      </div>
-      <div class="proj-body">
-        <h3 class="proj-name">Project Delta <span class="proj-replace">[Replace with project name]</span></h3>
-        <p class="proj-desc">Four houses around a shared courtyard. Privacy negotiated not by walls but by geometry, level change, and planted boundary.</p>
-        <a class="proj-link" href="#">View Case Study →</a>
-      </div>
-    </article>
-
-    <article class="proj-card" style="--ac:#88ff44;--n:05">
-      <div class="proj-num">05</div>
-      <div class="proj-img" style="background:#0a1400">
-        <span class="proj-tag">Museum</span>
-      </div>
-      <div class="proj-body">
-        <h3 class="proj-name">Project Epsilon <span class="proj-replace">[Replace with project name]</span></h3>
-        <p class="proj-desc">A museum of living craft. Galleries organised not by object but by process — you see things being made, then see the thing made.</p>
-        <a class="proj-link" href="#">View Case Study →</a>
-      </div>
-    </article>
-
-    <article class="proj-card" style="--ac:#cc44ff;--n:06">
-      <div class="proj-num">06</div>
-      <div class="proj-img" style="background:#0e0018">
-        <span class="proj-tag">Transit + Urban</span>
-      </div>
-      <div class="proj-body">
-        <h3 class="proj-name">Project Zeta <span class="proj-replace">[Replace with project name]</span></h3>
-        <p class="proj-desc">A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one — gallery, market, garden.</p>
-        <a class="proj-link" href="#">View Case Study →</a>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════ ABOUT -->
-<section id="about">
-  <div class="about-wrap">
-    <div class="about-left">
-      <div class="s-label">About</div>
-      <h2 class="s-head">Parag<br>Chavhan.</h2>
-      <p class="about-big">Architecture student. Obsessive builder. Pink pagdi guy.</p>
-      <p class="about-body">I'm in my final years at architecture school, where I've spent five studios learning that the best designs come from asking the most uncomfortable questions — about who a space is really for, what it refuses to do, and what it could have been.</p>
-      <p class="about-body">Outside the studio I'm probably fiddling with code, listening to something at an unreasonable volume, or getting passionately lost in a Wikipedia rabbit hole about brutalist housing estates.</p>
-      <div class="about-tags">
-        <span>Architecture</span><span>Urban Design</span><span>Spatial Thinking</span>
-        <span>3D Modelling</span><span>Parametric Design</span><span>Digital Fabrication</span>
-      </div>
-    </div>
-    <div class="about-right">
-      <div class="about-photo-frame">
-        <div class="about-photo-placeholder">
-          <span>Photo coming soon</span>
-        </div>
-      </div>
-      <div class="about-stats">
-        <div class="stat"><span class="stat-n">5+</span><span class="stat-l">Studios</span></div>
-        <div class="stat"><span class="stat-n">6</span><span class="stat-l">Projects</span></div>
-        <div class="stat"><span class="stat-n">∞</span><span class="stat-l">Curiosity</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════ CONTACT -->
-<section id="contact">
-  <div class="s-inner contact-inner">
-    <div class="s-label">Contact</div>
-    <h2 class="s-head contact-head">Let's make something<br><em>worth talking about.</em></h2>
-    <p class="s-sub">I'm currently open to internships, collaborations, and interesting conversations.</p>
-    <a class="cta-btn" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com</a>
-    <div class="contact-links">
-      <a href="#">Instagram</a>
-      <a href="#">Behance</a>
-      <a href="#">LinkedIn</a>
-    </div>
-  </div>
-  <footer>
-    <span>© 2025 Parag Chavhan</span>
-    <span>Designed &amp; built by Parag × Claude</span>
-  </footer>
-</section>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -420,605 +241,446 @@ footer span{font-size:9px;letter-spacing:.15em;color:rgba(244,240,232,.2)}
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
 
-  const W = () => window.innerWidth, H = () => window.innerHeight;
+const W = () => window.innerWidth, H = () => window.innerHeight;
 
-  /* ── Scene ── */
-  const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x6a2088, 0.003);
+/* ── Scene ── */
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x6a2088, 0.0028);
 
-  /* ── Camera ── */
-  const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 500);
+const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 600);
 
-  /* ── Renderer — transparent so CSS gradient shows through ── */
-  const renderer = new THREE.WebGLRenderer({
-    canvas: document.getElementById('c'),
-    antialias: true,
-    alpha: true,
+const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true, alpha:true });
+renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(W(), H());
+
+/* CSS2D renderer for floating labels */
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(W(), H());
+labelRenderer.domElement.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15;';
+document.body.appendChild(labelRenderer.domElement);
+
+/* ══════════════════════════════════════ CAMERA PATH ══════════════════════ */
+/* Zones:  0-4 → story stages   5-10 → projects   11 → about   12 → contact */
+const PATH = new THREE.CatmullRomCurve3([
+  // ── Story intro ───────────────────────────────────────────────────────────
+  new THREE.Vector3(  0,   0,  70),
+  new THREE.Vector3(-14,   8,  30),
+  new THREE.Vector3(  6,  -6,  -5),   // S0
+  new THREE.Vector3( 22,   5, -55),
+  new THREE.Vector3( -2,  -8,-105),   // S1
+  new THREE.Vector3(-20,   6,-155),
+  new THREE.Vector3(  4,   2,-205),   // S2
+  new THREE.Vector3( 18,  12,-255),
+  new THREE.Vector3( -6,  -5,-305),   // S3
+  new THREE.Vector3(-16,   8,-360),
+  new THREE.Vector3(  0,   0,-415),   // S4
+  // ── Projects gallery ──────────────────────────────────────────────────────
+  new THREE.Vector3( 22,   6,-480),
+  new THREE.Vector3(-18,  -4,-545),   // P1
+  new THREE.Vector3( 24,  10,-610),   // P2
+  new THREE.Vector3(-20,  -8,-675),   // P3
+  new THREE.Vector3( 22,   6,-740),   // P4
+  new THREE.Vector3(-18,  12,-805),   // P5
+  new THREE.Vector3( 16,  -6,-870),   // P6
+  // ── About + Contact ───────────────────────────────────────────────────────
+  new THREE.Vector3(  8,  16,-930),
+  new THREE.Vector3(-10,   6,-980),   // About
+  new THREE.Vector3(  0,   0,-1060),  // Contact
+], false, 'catmullrom', 0.5);
+
+/* Zone thresholds (progress 0→1) mapped to 13 zones */
+const ZONE_COUNT = 13;
+/* Each zone spans 1/13 of the journey */
+const zoneOf = p => Math.min(Math.floor(p * ZONE_COUNT), ZONE_COUNT - 1);
+
+/* ══════════════════════════════════════ STAGE NODES ═════════════════════ */
+const STAGES = [
+  { color:0x00eeff, pos:new THREE.Vector3( -5, -9, -10)  },
+  { color:0xff44cc, pos:new THREE.Vector3( 14,  6,-110)  },
+  { color:0xffd700, pos:new THREE.Vector3(-14, 10,-210)  },
+  { color:0xff8844, pos:new THREE.Vector3( 12, -9,-310)  },
+  { color:0x88ff44, pos:new THREE.Vector3(  0,  0,-420)  },
+];
+
+const lineMat = (col, op) => new THREE.LineBasicMaterial({ color:col, transparent:op<1, opacity:op });
+function wireObj(geo, col, op=0.75) {
+  return new THREE.LineSegments(new THREE.WireframeGeometry(geo), lineMat(col, op));
+}
+function ring(rx, ry, col, op) {
+  const pts = [];
+  for(let i=0;i<=64;i++){const a=(i/64)*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*rx,0,Math.sin(a)*ry));}
+  return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat(col, op));
+}
+const GEOS = [
+  ()=>new THREE.IcosahedronGeometry(2,0), ()=>new THREE.OctahedronGeometry(2,0),
+  ()=>new THREE.TetrahedronGeometry(2.2,0), ()=>new THREE.DodecahedronGeometry(1.8,0),
+  ()=>new THREE.TorusGeometry(1.6,.55,8,18),
+];
+const nodeGroups=[], nodeMats=[];
+STAGES.forEach((s,i)=>{
+  const g=new THREE.Group(); g.position.copy(s.pos);
+  const mat=lineMat(s.color,0.8); nodeMats.push(mat);
+  g.add(new THREE.LineSegments(new THREE.WireframeGeometry(GEOS[i]()),mat));
+  [4,6.5,9].forEach((r,ri)=>{const rl=ring(r,r*.6,s.color,.12-ri*.02);rl.rotation.x=Math.PI/2+ri*.45;rl.rotation.z=ri*.7;g.add(rl);});
+  for(let j=0;j<8;j++){const m=wireObj(new THREE.OctahedronGeometry(.25,0),s.color,.35);m.position.set((Math.random()-.5)*14,(Math.random()-.5)*14,(Math.random()-.5)*10);g.add(m);}
+  scene.add(g); nodeGroups.push(g);
+});
+
+/* ══════════════════════════════════════ PROJECT PORTALS ═════════════════ */
+const PROJECT_COLORS = [0x00eeff,0xff44cc,0xffd700,0xff8844,0x88ff44,0xcc44ff];
+const PROJECT_NUMS   = ['01','02','03','04','05','06'];
+const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
+const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
+
+/* Portals positioned to the SIDE of the path at each project zone */
+const PORTAL_POSITIONS = [
+  new THREE.Vector3(-32,  -2,-548),
+  new THREE.Vector3( 36,  12,-615),
+  new THREE.Vector3(-34,  -6,-678),
+  new THREE.Vector3( 34,   8,-742),
+  new THREE.Vector3(-32,  14,-808),
+  new THREE.Vector3( 30,  -4,-872),
+];
+
+const portalGroups = [];
+PORTAL_POSITIONS.forEach((pos, i) => {
+  const col = PROJECT_COLORS[i];
+  const g = new THREE.Group();
+  g.position.copy(pos);
+
+  const W2 = 14, H2 = 9;
+
+  // Glowing backing panel
+  const panel = new THREE.Mesh(
+    new THREE.PlaneGeometry(W2, H2),
+    new THREE.MeshBasicMaterial({
+      color: new THREE.Color(col).multiplyScalar(0.12),
+      transparent:true, opacity:.7, side:THREE.DoubleSide, depthWrite:false
+    })
+  );
+  g.add(panel);
+
+  // Border frame
+  const hw=W2/2, hh=H2/2;
+  const frame = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-hw,-hh,0),new THREE.Vector3(hw,-hh,0),
+      new THREE.Vector3(hw,hh,0),new THREE.Vector3(-hw,hh,0),
+      new THREE.Vector3(-hw,-hh,0)
+    ]),
+    lineMat(col, 0.7)
+  );
+  g.add(frame);
+
+  // Corner accents
+  const ca = 2.2;
+  [[−hw,−hh],[hw,−hh],[hw,hh],[−hw,hh]].forEach(([cx,cy])=>{
+    const sx=cx>0?-1:1, sy=cy>0?-1:1;
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(cx+sx*ca,cy,0),new THREE.Vector3(cx,cy,0),new THREE.Vector3(cx,cy+sy*ca,0)
+    ]), lineMat(col,.9)));
   });
-  renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(W(), H());
 
-  /* ── Camera spline — curves through all 3 axes ── */
-  const PATH = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(  0,   0,  70),   // entry
-    new THREE.Vector3(-14,   8,  30),   // swoop left & high
-    new THREE.Vector3(  6,  -6,  -5),   // dive right & low  ← S0 near here
-    new THREE.Vector3( 22,   5, -55),   // bank right & rise
-    new THREE.Vector3( -2,  -8,-105),   // swing left & deep  ← S1 near here
-    new THREE.Vector3(-20,   6,-155),   // far left & up
-    new THREE.Vector3(  4,   2,-205),   // center  ← S2 near here
-    new THREE.Vector3( 18,  12,-255),   // high right
-    new THREE.Vector3( -6,  -5,-305),   // swing low left  ← S3 near here
-    new THREE.Vector3(-16,   8,-360),   // far left high
-    new THREE.Vector3(  0,   0,-415),   // final arrival  ← S4
-  ], false, 'catmullrom', 0.5);
+  // CSS2D label anchored to this 3D group
+  const div = document.createElement('div');
+  div.className = 'label3d';
+  div.style.color = '#' + new THREE.Color(col).getHexString();
+  div.innerHTML = `<div class="l3-num">${PROJECT_NUMS[i]}</div><div class="l3-name">PROJECT ${PROJECT_NAMES[i].toUpperCase()}</div><div class="l3-cat">${PROJECT_CATS[i]}</div>`;
+  const lbl = new CSS2DObject(div);
+  g.add(lbl);
 
-  /* ── Stage definitions ── */
-  const STAGES = [
-    { name:'THE SPARK',  num:'01', color:0x00eeff, pos:new THREE.Vector3( -5, -9, -10) },
-    { name:'THE CHAOS',  num:'02', color:0xff44cc, pos:new THREE.Vector3( 14,  6,-110) },
-    { name:'THE WORK',   num:'03', color:0xffd700, pos:new THREE.Vector3(-14, 10,-210) },
-    { name:'THE HUMAN',  num:'04', color:0xff8844, pos:new THREE.Vector3( 12, -9,-310) },
-    { name:'THE INVITE', num:'05', color:0x88ff44, pos:new THREE.Vector3(  0,  0,-420) },
-  ];
+  // Face camera (billboarded on Y only — portals tilt toward path)
+  const toPath = PATH.getPointAt(0.4 + i * 0.07).clone().sub(pos);
+  g.rotation.y = Math.atan2(toPath.x, toPath.z);
 
-  /* ── Primitive factories ── */
-  const lineMat = (col, op) => new THREE.LineBasicMaterial({ color:col, transparent:op<1, opacity:op });
-  function ln(a, b, col, op=1) {
-    return new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([a,b]),
-      lineMat(col, op)
-    );
+  scene.add(g);
+  portalGroups.push(g);
+});
+
+/* ══════════════════════════════════════ ABOUT OBJECT ════════════════════ */
+const aboutGroup = new THREE.Group();
+aboutGroup.position.set(-12, 8, -980);
+// Concentric rings for "person" marker
+[5,8,12].forEach((r,i)=>{
+  const rl=ring(r,r*.5, 0xf4f0e8, .08-i*.02);
+  rl.rotation.x=Math.PI/2+i*.3; rl.rotation.z=i*.5;
+  aboutGroup.add(rl);
+});
+aboutGroup.add(wireObj(new THREE.OctahedronGeometry(2.5,1),0xf4f0e8,.4));
+scene.add(aboutGroup);
+
+/* ══════════════════════════════════════ CONTACT OBJECT ══════════════════ */
+const contactGroup = new THREE.Group();
+contactGroup.position.set(0, 0, -1060);
+// Large glowing ring gate
+const ringPts=[];
+for(let i=0;i<=80;i++){const a=(i/80)*Math.PI*2;ringPts.push(new THREE.Vector3(Math.cos(a)*18,Math.sin(a)*18,0));}
+contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), lineMat(0xffd700,.6)));
+const ringPts2=[];
+for(let i=0;i<=80;i++){const a=(i/80)*Math.PI*2;ringPts2.push(new THREE.Vector3(Math.cos(a)*16,Math.sin(a)*16,0));}
+contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts2), lineMat(0xffd700,.25)));
+// Spoke lines
+for(let i=0;i<12;i++){const a=(i/12)*Math.PI*2;contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(Math.cos(a)*18,Math.sin(a)*18,0)]),lineMat(0xffd700,.06)));}
+scene.add(contactGroup);
+
+/* ══════════════════════════════════════ STARS ═══════════════════════════ */
+const STAR_RGBS=[[1,.9,.3],[1,.4,.8],[.3,1,1],[.7,.4,1],[1,.6,.2],[1,1,1]];
+const SN=5000;
+const spos=new Float32Array(SN*3),scol=new Float32Array(SN*3);
+for(let i=0;i<SN;i++){
+  const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=80+Math.random()*400;
+  spos[i*3]=r*Math.sin(phi)*Math.cos(theta);
+  spos[i*3+1]=r*Math.sin(phi)*Math.sin(theta)*.55;
+  spos[i*3+2]=r*Math.cos(phi)-500;
+  const c=STAR_RGBS[Math.floor(Math.random()*STAR_RGBS.length)];
+  scol[i*3]=c[0];scol[i*3+1]=c[1];scol[i*3+2]=c[2];
+}
+const sg=new THREE.BufferGeometry();
+sg.setAttribute('position',new THREE.BufferAttribute(spos,3));
+sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
+scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.14,transparent:true,opacity:.9,sizeAttenuation:true})));
+
+/* ══════════════════════════════════════ CLOUDS ══════════════════════════ */
+const CLOUD_PALS=[
+  [0xe07030,0xc85820,0xf08040],[0x8b2daa,0x6a1880,0xb050d0],[0x2898c8,0x1870a0,0x40b8e0],
+  [0xd030a0,0xf050b8,0xa01880],[0xe89030,0xf5b040,0xd07020],[0x4040c8,0x2828a0,0x6060e0],
+];
+function makeCloud(size,palIdx){
+  const grp=new THREE.Group(),pal=CLOUD_PALS[palIdx%CLOUD_PALS.length];
+  [[0,0,0,1,0],[size*.72,-size*.08,0,.72,1],[-size*.68,0,0,.78,2],[size*.3,size*.28,size*.32,.62,0],
+   [-size*.32,size*.2,-size*.28,.66,1],[size*.12,-size*.16,size*.42,.52,2],[-size*.22,-size*.14,-size*.38,.56,0],[size*.5,size*.22,-size*.2,.5,1]
+  ].forEach(([x,y,z,s,ci])=>{
+    const p=new THREE.Mesh(new THREE.SphereGeometry(size*s,10,8),new THREE.MeshBasicMaterial({color:pal[ci],transparent:true,opacity:.88}));
+    p.position.set(x,y,z);grp.add(p);
+  });
+  return grp;
+}
+const CLOUD_DATA=[
+  [16,-6,-25,14,0],[-28,-3,-65,16,1],[34,20,-115,12,2],[-20,-2,-175,15,3],[25,-10,-235,11,4],[-38,17,-285,18,1],
+  [12,-7,-345,13,0],[-14,22,-405,14,2],[44,6,-155,10,3],[-32,-16,-315,16,4],[20,30,-50,12,5],[-10,-22,-130,14,0],
+  [50,12,-480,11,1],[-45,-10,-555,15,2],[38,8,-620,13,0],[-30,18,-690,16,1],[42,-12,-755,12,3],[-35,6,-820,14,4],
+  [20,25,-880,11,5],[-15,-8,-940,15,0],[30,10,-1000,12,1],[-20,-5,-1040,14,2],
+];
+const cloudGroups=CLOUD_DATA.map(([x,y,z,size,pal])=>{const cl=makeCloud(size,pal);cl.position.set(x,y,z);scene.add(cl);return cl;});
+
+/* ══════════════════════════════════════ ISLANDS ════════════════════════ */
+function terrainY(x,z,size){
+  const r=Math.sqrt(x*x+z*z);
+  return(Math.sin(x*.85+z*.6)*.30+Math.sin(x*1.9-z*1.3)*.16+Math.sin(z*.7-x*.45)*.22-(r/size)*.45)*size*.38;
+}
+function makeIsland(size,hasTree){
+  const grp=new THREE.Group(),RS=24;
+  const topGeo=new THREE.CylinderGeometry(size,size*.82,size*.55,RS,6);
+  const tPos=topGeo.attributes.position;
+  for(let i=0;i<tPos.count;i++){
+    const x=tPos.getX(i),y=tPos.getY(i),z=tPos.getZ(i);
+    if(y>size*.05){tPos.setY(i,y+terrainY(x,z,size));}
+    else{const e=.82+Math.random()*.22;tPos.setX(i,x*e+(Math.random()-.5)*size*.08);tPos.setZ(i,z*e+(Math.random()-.5)*size*.08);tPos.setY(i,y+(Math.random()-.5)*size*.12);}
   }
-  function wireObj(geo, col, op=0.75) {
-    return new THREE.LineSegments(
-      new THREE.WireframeGeometry(geo),
-      lineMat(col, op)
-    );
+  topGeo.computeVertexNormals();
+  grp.add(new THREE.Mesh(topGeo,new THREE.MeshBasicMaterial({color:0x9aaa88})));
+  const gGeo=new THREE.CylinderGeometry(size*.8,size*.8,size*.07,RS,2);
+  const gPos=gGeo.attributes.position;
+  for(let i=0;i<gPos.count;i++){const x=gPos.getX(i),y=gPos.getY(i),z=gPos.getZ(i);if(y>0)gPos.setY(i,size*.28+terrainY(x,z,size)+size*.03);}
+  gGeo.computeVertexNormals();
+  grp.add(new THREE.Mesh(gGeo,new THREE.MeshBasicMaterial({color:0x5cb84a})));
+  const sc=4+Math.floor(Math.random()*3);
+  for(let s=0;s<sc;s++){
+    const ic=s===0,a=ic?0:(s/(sc-1))*Math.PI*2+Math.random()*.6,ro=ic?0:(.15+Math.random()*.4)*size;
+    const sh=size*(.55+Math.random()*.75),sr=size*(.06+Math.random()*.1);
+    const sp=new THREE.Mesh(new THREE.CylinderGeometry(sr*.05,sr,sh,10,2),new THREE.MeshBasicMaterial({color:ic?0x707860:0x889070}));
+    sp.position.set(Math.cos(a)*ro,-(size*.1+sh*.5),Math.sin(a)*ro);
+    sp.rotation.z=(Math.random()-.5)*.18;sp.rotation.x=(Math.random()-.5)*.18;grp.add(sp);
   }
-  function ring(rx, ry, col, op) {
-    const pts = [];
-    for(let i=0;i<=64;i++) {
-      const a = (i/64)*Math.PI*2;
-      pts.push(new THREE.Vector3(Math.cos(a)*rx, 0, Math.sin(a)*ry));
+  if(hasTree){
+    const tx=(Math.random()-.5)*size*.35,tz=(Math.random()-.5)*size*.35;
+    const baseY=size*.28+terrainY(tx,tz,size),trH=size*(.75+Math.random()*.45);
+    const tr=new THREE.Mesh(new THREE.CylinderGeometry(size*.035,size*.075,trH,10),new THREE.MeshBasicMaterial({color:0x7a5535}));
+    tr.position.set(tx,baseY+trH*.5,tz);tr.rotation.z=(Math.random()-.5)*.16;grp.add(tr);
+    const cY=baseY+trH,cR=size*.55;
+    for(let p=0;p<12;p++){
+      const pa=(p/12)*Math.PI*2+Math.random()*.7,pr=Math.random()*cR*(p<3?.3:1),ps=cR*(.3+Math.random()*.4);
+      const pf=new THREE.Mesh(new THREE.SphereGeometry(ps,9,7),new THREE.MeshBasicMaterial({color:0x2d6830+Math.floor(Math.random()*0x15)*0x010100}));
+      pf.position.set(tx+Math.cos(pa)*pr,cY+Math.random()*cR*.65,tz+Math.sin(pa)*pr);grp.add(pf);
     }
-    return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat(col, op));
   }
+  return grp;
+}
+const ISLAND_DATA=[
+  [28,14,-45,5.5,true,.4],[−32,−12,−95,4.2,false,1.1],[38,8,−155,6,true,2.2],[−22,22,−210,3.8,true,.9],
+  [18,−20,−270,5,false,1.7],[−40,10,−330,4.5,true,2.8],[30,18,−385,3.5,false,.3],[−15,−16,−130,3.2,true,1.5],
+  [35,−8,−520,4.8,true,.6],[−28,14,−600,5.2,false,1.9],[40,−12,−680,4,true,2.4],[−35,8,−760,5,false,.8],
+  [25,20,−840,3.8,true,1.4],[−30,−10,−920,4.5,false,2.1],[20,12,−1000,4,true,.5],
+];
+const islandGroups=ISLAND_DATA.map(([x,y,z,size,hasTree,rotY])=>{
+  const isl=makeIsland(size,hasTree);isl.position.set(x,y,z);isl.rotation.y=rotY;scene.add(isl);return isl;
+});
 
-  /* ── Stage node geometries ── */
-  const GEOS = [
-    () => new THREE.IcosahedronGeometry(2, 0),
-    () => new THREE.OctahedronGeometry(2, 0),
-    () => new THREE.TetrahedronGeometry(2.2, 0),
-    () => new THREE.DodecahedronGeometry(1.8, 0),
-    () => new THREE.TorusGeometry(1.6, 0.55, 8, 18),
-  ];
+/* ══════════════════════════════════════ PLANETS ════════════════════════ */
+function makePlanet(radius,col,ringCol){
+  const g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,28,20),new THREE.MeshBasicMaterial({color:col})));
+  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28,16,12),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
+  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.75,14,10),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.04,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
+  if(ringCol){const r=new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.18,4,48),new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:.75,side:THREE.DoubleSide}));r.rotation.x=Math.PI*.32;g.add(r);}
+  return g;
+}
+const p1=makePlanet(11,0x30e8c0,null); p1.position.set(-65,50,-70);   scene.add(p1);
+const p2=makePlanet(8.5,0xaa44ff,0xcc88ff); p2.position.set(72,28,-350);  scene.add(p2);
+const p3=makePlanet(7,0xff8844,null);    p3.position.set(-55,-22,-600); scene.add(p3);
+const p4=makePlanet(9,0x44ddff,null);   p4.position.set(60,35,-850);  scene.add(p4);
+const p5=makePlanet(6,0xffdd44,null);   p5.position.set(-40,10,-1020); scene.add(p5);
+const planets=[p1,p2,p3,p4,p5];
 
-  const nodeGroups = [];
-  const nodeMats  = [];
+scene.add(new THREE.AmbientLight(0x8844cc,0.9));
 
-  STAGES.forEach((s, i) => {
-    const g = new THREE.Group();
-    g.position.copy(s.pos);
+/* ══════════════════════════════════════ PROGRESS DOTS ══════════════════ */
+const ZONE_LABELS=['Spark','Chaos','Work','Human','Invite','P.01','P.02','P.03','P.04','P.05','P.06','About','Contact'];
+const ZONE_COLORS=['#00eeff','#ff44cc','#ffd700','#ff8844','#88ff44','#00eeff','#ff44cc','#ffd700','#ff8844','#88ff44','#cc44ff','#f4f0e8','#ffd700'];
+const progressEl=document.getElementById('progress');
+ZONE_LABELS.forEach((l,i)=>{
+  const d=document.createElement('div');
+  d.className='dot';d.dataset.l=l;d.dataset.i=i;
+  d.style.setProperty('--c',ZONE_COLORS[i]);
+  d.addEventListener('click',()=>jumpToZone(i));
+  progressEl.appendChild(d);
+});
+const dots=[...document.querySelectorAll('.dot')];
 
-    /* Central wireframe polyhedron */
-    const mat = lineMat(s.color, 0.8);
-    nodeMats.push(mat);
-    const core = new THREE.LineSegments(new THREE.WireframeGeometry(GEOS[i]()), mat);
-    g.add(core);
+/* ══════════════════════════════════════ JUMP TO ZONE ═══════════════════ */
+window.jumpToZone = function(i) {
+  const frac = i / (ZONE_COUNT - 1);
+  const scrollH = document.getElementById('ss').offsetHeight;
+  window.scrollTo({ top: scrollH * frac, behavior:'smooth' });
+};
 
-    /* Orbital rings at tilted angles */
-    const ringSizes = [4, 6.5, 9];
-    ringSizes.forEach((r, ri) => {
-      const rl = ring(r, r * 0.6, s.color, 0.12 - ri*0.02);
-      rl.rotation.x = Math.PI/2 + ri * 0.45;
-      rl.rotation.z = ri * 0.7;
-      g.add(rl);
+/* ══════════════════════════════════════ ANIMATE ════════════════════════ */
+const clock = new THREE.Clock();
+const camUp = new THREE.Vector3(0,1,0);
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  nodeGroups.forEach((g,i)=>{
+    g.children[0].rotation.x+=.003+i*.0005;g.children[0].rotation.y+=.005+i*.0005;
+    if(g.children[1])g.children[1].rotation.y+=.004;
+    if(g.children[2])g.children[2].rotation.y-=.003;
+    if(g.children[3])g.children[3].rotation.z+=.002;
+  });
+
+  islandGroups.forEach((isl,i)=>{
+    isl.position.y=ISLAND_DATA[i][1]+Math.sin(t*.28+i*1.3)*.55;
+    isl.rotation.y+=.0003;
+  });
+
+  cloudGroups.forEach((cl,i)=>{
+    cl.position.x=CLOUD_DATA[i][0]+Math.sin(t*.12+i*.9)*1.4;
+    cl.position.y=CLOUD_DATA[i][1]+Math.sin(t*.18+i*1.7)*.8;
+  });
+
+  planets.forEach((p,i)=>{ p.rotation.y+=.001+i*.0005; });
+
+  aboutGroup.rotation.y+=.004;
+  contactGroup.rotation.z+=.0015;
+
+  renderer.render(scene,camera);
+  labelRenderer.render(scene,camera);
+}
+animate();
+
+/* ══════════════════════════════════════ SCROLL ═════════════════════════ */
+gsap.registerPlugin(ScrollTrigger);
+
+const overlays  = [...document.querySelectorAll('.zone-overlay')];
+const znumEl    = document.getElementById('znum');
+const hintEl    = document.getElementById('hint');
+const lookPt    = new THREE.Vector3();
+let   lastZone  = 0;
+
+const FOG_COLORS=[0x6a2088,0x204488,0x881860,0xaa4410,0x554400,0x005544,0x551155,0x003355,0x553300,0x005544,0x330055,0x444444,0x665500];
+
+ScrollTrigger.create({
+  trigger:'#ss', start:'top top', end:'bottom bottom', scrub:2.2,
+  onUpdate(self){
+    const p=self.progress;
+    const camPt=PATH.getPointAt(p);
+    const aheadPt=PATH.getPointAt(Math.min(p+.012,1));
+    camera.position.copy(camPt);
+
+    const fwd=aheadPt.clone().sub(camPt).normalize();
+    const bank=fwd.x*.22;
+    camUp.set(Math.sin(-bank),Math.cos(bank),0);
+    camera.up.copy(camUp);
+    lookPt.copy(aheadPt);
+    camera.lookAt(lookPt);
+
+    /* Fog shift */
+    const ri=Math.floor(p*(FOG_COLORS.length-1));
+    const rf=p*(FOG_COLORS.length-1)-ri;
+    const fc=new THREE.Color();
+    fc.lerpColors(new THREE.Color(FOG_COLORS[Math.min(ri,FOG_COLORS.length-1)]),new THREE.Color(FOG_COLORS[Math.min(ri+1,FOG_COLORS.length-1)]),rf);
+    scene.fog.color.copy(fc);
+
+    /* Stage node opacity */
+    STAGES.forEach((s,i)=>{
+      const d=camPt.distanceTo(s.pos);
+      nodeMats[i].opacity=d<35?THREE.MathUtils.mapLinear(d,0,35,1,.55):.55;
     });
 
-    /* Scattered satellite fragments */
-    for(let j=0; j<8; j++) {
-      const mini = wireObj(new THREE.OctahedronGeometry(0.25, 0), s.color, 0.35);
-      mini.position.set(
-        (Math.random()-.5)*14,
-        (Math.random()-.5)*14,
-        (Math.random()-.5)*10
-      );
-      g.add(mini);
+    /* Zone detection */
+    const zone=zoneOf(p);
+    if(zone!==lastZone){
+      lastZone=zone;
+      dots.forEach((d,i)=>d.classList.toggle('on',i===zone));
+      znumEl.textContent=String(zone+1).padStart(2,'0');
+      overlays.forEach((o,i)=>o.classList.toggle('on',i===zone));
     }
 
-    /* Connection lines from center to satellites */
-    for(let j=0; j<4; j++) {
-      const tip = new THREE.Vector3(
-        (Math.random()-.5)*12,
-        (Math.random()-.5)*12,
-        (Math.random()-.5)*8
-      );
-      g.add(ln(new THREE.Vector3(0,0,0), tip, s.color, 0.06));
-    }
-
-    scene.add(g);
-    nodeGroups.push(g);
-  });
-
-  /* ── Colourful star field ── */
-  const STAR_RGBS = [
-    [1.0, 0.9, 0.3],  // gold
-    [1.0, 0.4, 0.8],  // pink
-    [0.3, 1.0, 1.0],  // cyan
-    [0.7, 0.4, 1.0],  // lavender
-    [1.0, 0.6, 0.2],  // orange
-    [1.0, 1.0, 1.0],  // white
-  ];
-  const SN = 4000;
-  const spos = new Float32Array(SN * 3);
-  const scol = new Float32Array(SN * 3);
-  for(let i=0; i<SN; i++) {
-    const theta = Math.random()*Math.PI*2;
-    const phi   = Math.acos(2*Math.random()-1);
-    const r     = 80 + Math.random()*260;
-    spos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-    spos[i*3+1] = r*Math.sin(phi)*Math.sin(theta)*0.6;
-    spos[i*3+2] = r*Math.cos(phi) - 200;
-    const c = STAR_RGBS[Math.floor(Math.random()*STAR_RGBS.length)];
-    scol[i*3]=c[0]; scol[i*3+1]=c[1]; scol[i*3+2]=c[2];
+    hintEl.style.opacity=p>.02?'0':'1';
   }
-  const sg = new THREE.BufferGeometry();
-  sg.setAttribute('position', new THREE.BufferAttribute(spos, 3));
-  sg.setAttribute('color',    new THREE.BufferAttribute(scol, 3));
-  scene.add(new THREE.Points(sg, new THREE.PointsMaterial({
-    vertexColors:true, size:0.14, transparent:true, opacity:0.9, sizeAttenuation:true,
-  })));
+});
 
-  /* ── Sparkle dust along path ── */
-  const DN = 1200;
-  const dpos = new Float32Array(DN * 3);
-  const dcol = new Float32Array(DN * 3);
-  for(let i=0; i<DN; i++) {
-    const t = Math.random();
-    const pt = PATH.getPointAt(t);
-    dpos[i*3]   = pt.x + (Math.random()-.5)*35;
-    dpos[i*3+1] = pt.y + (Math.random()-.5)*25;
-    dpos[i*3+2] = pt.z + (Math.random()-.5)*30;
-    const c = STAR_RGBS[Math.floor(Math.random()*STAR_RGBS.length)];
-    dcol[i*3]=c[0]; dcol[i*3+1]=c[1]; dcol[i*3+2]=c[2];
-  }
-  const dg = new THREE.BufferGeometry();
-  dg.setAttribute('position', new THREE.BufferAttribute(dpos, 3));
-  dg.setAttribute('color',    new THREE.BufferAttribute(dcol, 3));
-  scene.add(new THREE.Points(dg, new THREE.PointsMaterial({
-    vertexColors:true, size:0.18, transparent:true, opacity:0.6, sizeAttenuation:true,
-  })));
+/* ══════════════════════════════════════ RESIZE ═════════════════════════ */
+window.addEventListener('resize',()=>{
+  camera.aspect=W()/H();camera.updateProjectionMatrix();
+  renderer.setSize(W(),H());labelRenderer.setSize(W(),H());
+});
 
-  /* ── Floating islands ── */
-  // Layered sine waves give organic terrain without a noise library
-  function terrainY(x, z, size) {
-    const r = Math.sqrt(x*x + z*z);
-    return (
-      Math.sin(x * 0.85 + z * 0.6)  * 0.30 +
-      Math.sin(x * 1.9  - z * 1.3)  * 0.16 +
-      Math.sin(z * 0.7  - x * 0.45) * 0.22 -
-      (r / size) * 0.45              // edges dip below center
-    ) * size * 0.38;
-  }
-
-  function makeIsland(size, hasTree) {
-    const grp = new THREE.Group();
-    const RS = 24; // radial segments — smooth silhouette
-
-    // ── Rock body: high-segment cylinder with eroded sides + terrain top ──
-    const topGeo = new THREE.CylinderGeometry(size, size * 0.82, size * 0.55, RS, 6);
-    const tPos = topGeo.attributes.position;
-    for (let i = 0; i < tPos.count; i++) {
-      const x = tPos.getX(i), y = tPos.getY(i), z = tPos.getZ(i);
-      const r = Math.sqrt(x*x + z*z);
-      if (y > size * 0.05) {
-        // Top surface: organic terrain displacement
-        tPos.setY(i, y + terrainY(x, z, size));
-      } else {
-        // Side + bottom: erode outward for cliff-face look
-        const erosion = 0.82 + Math.random() * 0.22;
-        const lean = (Math.random() - 0.5) * size * 0.08;
-        tPos.setX(i, x * erosion + lean);
-        tPos.setZ(i, z * erosion + lean);
-        tPos.setY(i, y + (Math.random() - 0.5) * size * 0.12);
-      }
-    }
-    topGeo.computeVertexNormals();
-    grp.add(new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: 0x9aaa88 })));
-
-    // ── Grass surface layer that follows the terrain ──
-    const gGeo = new THREE.CylinderGeometry(size * 0.8, size * 0.8, size * 0.07, RS, 2);
-    const gPos = gGeo.attributes.position;
-    for (let i = 0; i < gPos.count; i++) {
-      const x = gPos.getX(i), y = gPos.getY(i), z = gPos.getZ(i);
-      if (y > 0) gPos.setY(i, size * 0.28 + terrainY(x, z, size) + size * 0.03);
-    }
-    gGeo.computeVertexNormals();
-    grp.add(new THREE.Mesh(gGeo, new THREE.MeshBasicMaterial({ color: 0x5cb84a })));
-
-    // ── Hanging stalactite spires — multiple thin tapered pillars ──
-    const spireCount = 4 + Math.floor(Math.random() * 3);
-    for (let s = 0; s < spireCount; s++) {
-      const isCenter = s === 0;
-      const angle  = isCenter ? 0 : (s / (spireCount - 1)) * Math.PI * 2 + Math.random() * 0.6;
-      const radOff = isCenter ? 0 : (0.15 + Math.random() * 0.4) * size;
-      const spireH = size * (0.55 + Math.random() * 0.75);
-      const spireR = size * (0.06 + Math.random() * 0.1);
-      const spire  = new THREE.Mesh(
-        new THREE.CylinderGeometry(spireR * 0.05, spireR, spireH, 10, 2),
-        new THREE.MeshBasicMaterial({ color: isCenter ? 0x707860 : 0x889070 })
-      );
-      spire.position.set(
-        Math.cos(angle) * radOff,
-        -(size * 0.1 + spireH * 0.5),
-        Math.sin(angle) * radOff
-      );
-      spire.rotation.z = (Math.random() - 0.5) * 0.18;
-      spire.rotation.x = (Math.random() - 0.5) * 0.18;
-      grp.add(spire);
-    }
-
-    // ── Tree ──
-    if (hasTree) {
-      const tx = (Math.random() - 0.5) * size * 0.35;
-      const tz = (Math.random() - 0.5) * size * 0.35;
-      const baseY = size * 0.28 + terrainY(tx, tz, size);
-      const trunkH = size * (0.75 + Math.random() * 0.45);
-
-      const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(size * 0.035, size * 0.075, trunkH, 10),
-        new THREE.MeshBasicMaterial({ color: 0x7a5535 })
-      );
-      trunk.position.set(tx, baseY + trunkH * 0.5, tz);
-      trunk.rotation.z = (Math.random() - 0.5) * 0.16;
-      grp.add(trunk);
-
-      // Large cloud-like crown — many overlapping puffs spread wide
-      const crownY = baseY + trunkH;
-      const crownR = size * 0.55;
-      const puffN  = 10 + Math.floor(Math.random() * 5);
-      for (let p = 0; p < puffN; p++) {
-        const pa = (p / puffN) * Math.PI * 2 + Math.random() * 0.7;
-        const pr = Math.random() * crownR * (p < 3 ? 0.3 : 1);
-        const ps = crownR * (0.3 + Math.random() * 0.4);
-        const col = 0x2d6830 + Math.floor(Math.random() * 0x15) * 0x010100;
-        const puff = new THREE.Mesh(
-          new THREE.SphereGeometry(ps, 9, 7),
-          new THREE.MeshBasicMaterial({ color: col })
-        );
-        puff.position.set(
-          tx + Math.cos(pa) * pr,
-          crownY + Math.random() * crownR * 0.65,
-          tz + Math.sin(pa) * pr
-        );
-        grp.add(puff);
-      }
-    }
-
-    return grp;
-  }
-
-  // Island placements: [x, y, z, size, hasTree, rotY]
-  const ISLAND_DATA = [
-    [ 28,  14,  -45,  5.5, true,  0.4  ],
-    [-32, -12,  -95,  4.2, false, 1.1  ],
-    [ 38,   8, -155,  6.0, true,  2.2  ],
-    [-22,  22, -210,  3.8, true,  0.9  ],
-    [ 18, -20, -270,  5.0, false, 1.7  ],
-    [-40,  10, -330,  4.5, true,  2.8  ],
-    [ 30,  18, -385,  3.5, false, 0.3  ],
-    [-15, -16, -130,  3.2, true,  1.5  ],
-  ];
-
-  const islandGroups = ISLAND_DATA.map(([x, y, z, size, hasTree, rotY]) => {
-    const isl = makeIsland(size, hasTree);
-    isl.position.set(x, y, z);
-    isl.rotation.y = rotY;
-    scene.add(isl);
-    return isl;
-  });
-
-  /* ── Vibrant clouds ── */
-  // Palettes: each cloud picks one; puffs vary slightly within it
-  const CLOUD_PALS = [
-    [0xe07030, 0xc85820, 0xf08040], // orange / warm
-    [0x8b2daa, 0x6a1880, 0xb050d0], // purple
-    [0x2898c8, 0x1870a0, 0x40b8e0], // teal-blue
-    [0xd030a0, 0xf050b8, 0xa01880], // hot pink
-    [0xe89030, 0xf5b040, 0xd07020], // amber-gold
-    [0x4040c8, 0x2828a0, 0x6060e0], // deep blue
-  ];
-
-  function makeCloud(size, palIdx) {
-    const grp = new THREE.Group();
-    const pal = CLOUD_PALS[palIdx % CLOUD_PALS.length];
-    const puffDef = [
-      [0,             0,            0,           1.0,  0],
-      [size*.72,     -size*.08,     0,           0.72, 1],
-      [-size*.68,     0,            0,           0.78, 2],
-      [size*.3,       size*.28,     size*.32,    0.62, 0],
-      [-size*.32,     size*.2,     -size*.28,    0.66, 1],
-      [size*.12,     -size*.16,     size*.42,    0.52, 2],
-      [-size*.22,    -size*.14,    -size*.38,    0.56, 0],
-      [size*.5,       size*.22,    -size*.2,     0.5,  1],
-    ];
-    puffDef.forEach(([x, y, z, s, ci]) => {
-      const p = new THREE.Mesh(
-        new THREE.SphereGeometry(size * s, 10, 8),
-        new THREE.MeshBasicMaterial({ color: pal[ci], transparent:true, opacity: 0.88 })
-      );
-      p.position.set(x, y, z);
-      grp.add(p);
+/* ══════════════════════════════════════ LOAD MODELS ════════════════════ */
+const MODEL_BASE='https://drparagchavhan23-collab.github.io/models/';
+function fitModel(obj,targetSize){
+  const bbox=new THREE.Box3().setFromObject(obj);
+  const size=bbox.getSize(new THREE.Vector3());
+  const maxDim=Math.max(size.x,size.y,size.z);
+  if(maxDim>0){obj.scale.setScalar(targetSize/maxDim);obj.traverse(c=>{if(c.isMesh)c.geometry.center();});}
+  return obj;
+}
+(async()=>{
+  const mtlLoader=new MTLLoader().setPath(MODEL_BASE);
+  try{
+    const sm=await mtlLoader.loadAsync('stone.mtl');sm.preload();
+    const sb=await new OBJLoader().setPath(MODEL_BASE).setMaterials(sm).loadAsync('stone.obj');
+    fitModel(sb,7);
+    [[-38,8,-90,1.4,.3],[45,18,-620,1.0,1.1],[-30,-14,-720,1.6,2.0],[42,-6,-810,1.2,.7],[-20,25,-900,0.9,1.8]].forEach(([x,y,z,s,ry])=>{
+      const c=sb.clone(true);c.position.set(x,y,z);c.scale.setScalar(s);c.rotation.y=ry;scene.add(c);
     });
-    return grp;
-  }
+  }catch(e){console.warn('stone:',e.message);}
+  try{
+    const mm=await mtlLoader.loadAsync('medieval.mtl');mm.preload();
+    const mb=await new OBJLoader().setPath(MODEL_BASE).setMaterials(mm).loadAsync('medieval.obj');
+    fitModel(mb,14);
+    mb.position.set(-48,4,-500);mb.rotation.y=Math.PI*.15;scene.add(mb);
+    const b2=mb.clone(true);b2.position.set(52,-6,-680);b2.rotation.y=-Math.PI*.25;b2.scale.setScalar(.8);scene.add(b2);
+    const b3=mb.clone(true);b3.position.set(-40,10,-860);b3.rotation.y=Math.PI*.35;b3.scale.setScalar(.9);scene.add(b3);
+  }catch(e){console.warn('medieval:',e.message);}
+})();
 
-  // Cloud placements: [x, y, z, size, palIdx]
-  const CLOUD_DATA = [
-    [  16,  -6,  -25, 14, 0],
-    [ -28,  -3,  -65, 16, 1],
-    [  34,  20, -115, 12, 2],
-    [ -20,  -2, -175, 15, 3],
-    [  25, -10, -235, 11, 4],
-    [ -38,  17, -285, 18, 1],
-    [  12,  -7, -345, 13, 0],
-    [ -14,  22, -405, 14, 2],
-    [  44,   6, -155, 10, 3],
-    [ -32, -16, -315, 16, 4],
-    [  20,  30,  -50, 12, 5],
-    [ -10, -22, -130, 14, 0],
-    [  50,  12, -250, 11, 1],
-    [ -45, -10, -370, 15, 2],
-  ];
-
-  const cloudGroups = CLOUD_DATA.map(([x, y, z, size, pal]) => {
-    const cl = makeCloud(size, pal);
-    cl.position.set(x, y, z);
-    scene.add(cl);
-    return cl;
-  });
-
-  /* ── Planets ── */
-  function makePlanet(radius, col, ringCol) {
-    const g = new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 28, 20),
-      new THREE.MeshBasicMaterial({ color: col })));
-    // inner glow halo
-    g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28, 16, 12),
-      new THREE.MeshBasicMaterial({ color: col, transparent:true, opacity:0.1,
-        depthWrite:false, blending:THREE.AdditiveBlending })), {}));
-    // outer glow
-    g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.75, 14, 10),
-      new THREE.MeshBasicMaterial({ color: col, transparent:true, opacity:0.04,
-        depthWrite:false, blending:THREE.AdditiveBlending })), {}));
-    if (ringCol) {
-      const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(radius*1.9, radius*0.18, 4, 48),
-        new THREE.MeshBasicMaterial({ color: ringCol, transparent:true, opacity:0.75, side:THREE.DoubleSide })
-      );
-      ring.rotation.x = Math.PI * 0.32;
-      g.add(ring);
-    }
-    return g;
-  }
-
-  // teal glowing planet
-  const p1 = makePlanet(11, 0x30e8c0, null);
-  p1.position.set(-65, 50, -70); scene.add(p1);
-
-  // purple ringed Saturn
-  const p2 = makePlanet(8.5, 0xaa44ff, 0xcc88ff);
-  p2.position.set(72, 28, -195); scene.add(p2);
-
-  // warm orange mini-planet
-  const p3 = makePlanet(6, 0xff8844, null);
-  p3.position.set(-55, -22, -335); scene.add(p3);
-
-  // small cyan orb
-  const p4 = makePlanet(4.5, 0x44ddff, null);
-  p4.position.set(45, 40, -380); scene.add(p4);
-
-  const planets = [p1, p2, p3, p4];
-
-  scene.add(new THREE.AmbientLight(0x8844cc, 0.9));
-
-  /* ── Animate ── */
-  const clock = new THREE.Clock();
-  const camUp = new THREE.Vector3(0, 1, 0);
-
-  function animate() {
-    requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
-
-    /* Rotate stage nodes */
-    nodeGroups.forEach((g, i) => {
-      g.children[0].rotation.x += 0.003 + i*0.0005;
-      g.children[0].rotation.y += 0.005 + i*0.0005;
-      if(g.children[1]) g.children[1].rotation.y += 0.004;
-      if(g.children[2]) g.children[2].rotation.y -= 0.003;
-      if(g.children[3]) g.children[3].rotation.z += 0.002;
-    });
-
-    /* Islands: gentle bob + slow yaw */
-    islandGroups.forEach((isl, i) => {
-      isl.position.y = ISLAND_DATA[i][1] + Math.sin(t * 0.28 + i * 1.3) * 0.55;
-      isl.rotation.y += 0.0003;
-    });
-
-    /* Clouds: very slow drift */
-    cloudGroups.forEach((cl, i) => {
-      cl.position.x = CLOUD_DATA[i][0] + Math.sin(t * 0.12 + i * 0.9) * 1.4;
-      cl.position.y = CLOUD_DATA[i][1] + Math.sin(t * 0.18 + i * 1.7) * 0.8;
-    });
-
-    /* Planets: slow rotation */
-    planets.forEach((p, i) => { p.rotation.y += 0.001 + i * 0.0005; });
-
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  /* ── Scroll → camera path ── */
-  gsap.registerPlugin(ScrollTrigger);
-
-  const dots     = [...document.querySelectorAll('.dot')];
-  const contents = [...document.querySelectorAll('.sc')];
-  const cnumEl   = document.getElementById('cnum');
-  const hintEl   = document.getElementById('hint');
-  const lookPt   = new THREE.Vector3();
-  let lastStage  = 0;
-
-  ScrollTrigger.create({
-    trigger: '#ss',
-    start: 'top top',
-    end: 'bottom bottom',
-    scrub: 2.0,
-    onUpdate(self) {
-      const p = self.progress;
-
-      /* Follow the spline */
-      const camPt    = PATH.getPointAt(p);
-      const aheadPt  = PATH.getPointAt(Math.min(p + 0.012, 1));
-      camera.position.copy(camPt);
-
-      /* Calculate roll/bank based on lateral turn direction */
-      const fwd      = aheadPt.clone().sub(camPt).normalize();
-      const bank     = fwd.x * 0.22;          // lean into horizontal turns
-      camUp.set(Math.sin(-bank), Math.cos(bank), 0);
-      camera.up.copy(camUp);
-
-      /* Look ahead on the path */
-      lookPt.copy(aheadPt);
-      camera.lookAt(lookPt);
-
-      /* Fog hue shifts as you travel — purple → teal → magenta */
-      const fogHues = [0x6a2088, 0x204488, 0x881860, 0xaa4410, 0x884400];
-      const raw = p * (fogHues.length - 1);
-      const si  = Math.min(Math.floor(raw), fogHues.length - 2);
-      const sf  = raw - si;
-      const fc  = new THREE.Color();
-      fc.lerpColors(new THREE.Color(fogHues[si]), new THREE.Color(fogHues[si+1]), sf);
-      scene.fog.color.copy(fc);
-
-      /* Stage node glow: brighten nearest portal */
-      nodeGroups.forEach((g, i) => {
-        const d = camPt.distanceTo(STAGES[i].pos);
-        nodeMats[i].opacity = d < 35
-          ? THREE.MathUtils.mapLinear(d, 0, 35, 1.0, 0.55)
-          : 0.55;
-      });
-
-      /* Stage detection by proximity to node */
-      let nearest = 0, minD = Infinity;
-      STAGES.forEach((s, i) => {
-        const d = camPt.distanceTo(s.pos);
-        if(d < minD) { minD = d; nearest = i; }
-      });
-
-      if(nearest !== lastStage) {
-        lastStage = nearest;
-        dots.forEach((d,i) => d.classList.toggle('on', i===nearest));
-        cnumEl.textContent = STAGES[nearest].num;
-        cnumEl.style.color = `#${STAGES[nearest].color.toString(16).padStart(6,'0')}`;
-        contents.forEach((c,i) => c.classList.toggle('on', i===nearest));
-      }
-
-      hintEl.style.opacity = p > 0.025 ? '0' : '1';
-    },
-  });
-
-  /* ── Resize ── */
-  window.addEventListener('resize', () => {
-    camera.aspect = W()/H();
-    camera.updateProjectionMatrix();
-    renderer.setSize(W(), H());
-  });
-
-  /* ── Dot click → scroll to stage ── */
-  dots.forEach((d, i) => {
-    d.addEventListener('click', () => {
-      const frac = i / (STAGES.length - 1);
-      window.scrollTo({ top: document.getElementById('ss').offsetHeight * frac, behavior:'smooth' });
-    });
-  });
-
-  /* ── Load OBJ models ── */
-  const MODEL_BASE = 'https://drparagchavhan23-collab.github.io/models/';
-
-  function fitModel(obj, targetSize) {
-    const bbox = new THREE.Box3().setFromObject(obj);
-    const size = bbox.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    if (maxDim > 0) {
-      const scale = targetSize / maxDim;
-      obj.scale.setScalar(scale);
-      const center = bbox.getCenter(new THREE.Vector3());
-      // re-center around origin
-      obj.traverse(c => { if (c.isMesh) c.geometry.center(); });
-    }
-    return obj;
-  }
-
-  (async () => {
-    const mtlLoader = new MTLLoader().setPath(MODEL_BASE);
-    const objLoader = new OBJLoader();
-
-    // ── Stone rocks ──────────────────────────────────────────────────────────
-    try {
-      const stoneMtl = await mtlLoader.loadAsync('stone.mtl');
-      stoneMtl.preload();
-      objLoader.setMaterials(stoneMtl);
-      const stoneBase = await new OBJLoader().setPath(MODEL_BASE).setMaterials(stoneMtl).loadAsync('stone.obj');
-      fitModel(stoneBase, 7);
-
-      // Scatter multiple rock instances through the scene
-      [
-        [-38,  8, -90,  1.4, 0.3],
-        [ 45, 18,-170,  1.0, 1.1],
-        [-30,-14,-255,  1.6, 2.0],
-        [ 42, -6,-345,  1.2, 0.7],
-        [-20, 25,-420,  0.9, 1.8],
-      ].forEach(([x, y, z, s, ry]) => {
-        const clone = stoneBase.clone(true);
-        clone.position.set(x, y, z);
-        clone.scale.setScalar(s);
-        clone.rotation.y = ry;
-        scene.add(clone);
-      });
-      console.log('Stone model loaded');
-    } catch(e) { console.warn('stone load failed:', e.message); }
-
-    // ── Medieval boat ─────────────────────────────────────────────────────────
-    try {
-      const medMtl = await mtlLoader.loadAsync('medieval.mtl');
-      medMtl.preload();
-      const medBase = await new OBJLoader().setPath(MODEL_BASE).setMaterials(medMtl).loadAsync('medieval.obj');
-      fitModel(medBase, 14);
-
-      // Cast shadows etc. then place
-      medBase.traverse(c => { if (c.isMesh) c.castShadow = true; });
-
-      // First boat — left side, mid-scene
-      medBase.position.set(-48, 4, -155);
-      medBase.rotation.y = Math.PI * 0.15;
-      scene.add(medBase);
-
-      // Second boat — right side, further in
-      const b2 = medBase.clone(true);
-      b2.position.set(52, -6, -310);
-      b2.rotation.y = -Math.PI * 0.25;
-      b2.scale.setScalar(0.8);
-      scene.add(b2);
-
-      console.log('Medieval boat loaded');
-    } catch(e) { console.warn('medieval boat load failed:', e.message); }
-
-  })();
 </script>
 </body>
 </html>
