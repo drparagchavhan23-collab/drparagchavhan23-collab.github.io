@@ -99,10 +99,20 @@ body{
 
 /* Scroll space */
 #ss{height:1600vh}
+#audio-btn{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.35);
+  background:rgba(0,0,0,.35);backdrop-filter:blur(8px);
+  color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .25s,transform .2s;
+}
+#audio-btn:hover{background:rgba(255,255,255,.18);transform:scale(1.1)}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<button id="audio-btn" title="Toggle sound">🔇</button>
+<audio id="bg-audio" src="ambient.mp3" loop preload="none"></audio>
 <div id="xhair"></div>
 
 <nav id="nav">
@@ -748,6 +758,51 @@ function fitModel(obj,targetSize){
     const b2=mb.clone(true);b2.position.set(52,-6,-680);b2.rotation.y=-Math.PI*.25;b2.scale.setScalar(.8);scene.add(b2);
     const b3=mb.clone(true);b3.position.set(-40,10,-860);b3.rotation.y=Math.PI*.35;b3.scale.setScalar(.9);scene.add(b3);
   }catch(e){console.warn('medieval:',e.message);}
+})();
+
+/* ── Audio ──────────────────────────────────────────────────────────────── */
+(()=>{
+  const audio = document.getElementById('bg-audio');
+  const btn   = document.getElementById('audio-btn');
+  let started = false;
+
+  // Web Audio API for UI click sounds
+  let actx;
+  function playClick(){
+    try {
+      if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)();
+      const o = actx.createOscillator();
+      const g = actx.createGain();
+      o.connect(g); g.connect(actx.destination);
+      o.type = 'sine'; o.frequency.setValueAtTime(880, actx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(440, actx.currentTime+0.08);
+      g.gain.setValueAtTime(0.18, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+0.12);
+      o.start(); o.stop(actx.currentTime+0.12);
+    } catch(e){}
+  }
+
+  function startAudio(){
+    if(started) return;
+    started = true;
+    audio.volume = 0.45;
+    audio.play().then(()=>{ btn.textContent='🔊'; }).catch(()=>{});
+  }
+
+  btn.addEventListener('click', ()=>{
+    if(!started){ startAudio(); return; }
+    if(audio.paused){ audio.play(); btn.textContent='🔊'; }
+    else { audio.pause(); btn.textContent='🔇'; }
+  });
+
+  // Start on first scroll interaction
+  window.addEventListener('scroll', ()=>startAudio(), {once:true});
+  window.addEventListener('pointerdown', ()=>startAudio(), {once:true});
+
+  // Play click sound on all CTAs and portal labels
+  document.querySelectorAll('.zo-cta, .label-div').forEach(el=>{
+    el.addEventListener('pointerdown', playClick);
+  });
 })();
 
 </script>
