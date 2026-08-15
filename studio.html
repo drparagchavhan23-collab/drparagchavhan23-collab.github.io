@@ -14,7 +14,6 @@ body{
   background:#0d0828;
 }
 
-#cloud-bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block}
 
 /* Nav */
@@ -110,7 +109,6 @@ body{
 </style>
 </head>
 <body>
-<canvas id="cloud-bg"></canvas>
 <canvas id="c"></canvas>
 <button id="audio-btn" title="Toggle sound">🔇</button>
 <audio id="bg-audio" src="ambient.mp3" loop preload="none"></audio>
@@ -273,10 +271,10 @@ const W = () => window.innerWidth, H = () => window.innerHeight;
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x6a2088, 0.0028);
 
-const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 600);
+const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 2000);
 
-const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true, alpha:true });
-renderer.setClearColor(0x000000, 0);
+const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true });
+renderer.setClearColor(0x0d0828, 1);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(W(), H());
 
@@ -285,6 +283,59 @@ const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(W(), H());
 labelRenderer.domElement.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15;';
 document.body.appendChild(labelRenderer.domElement);
+
+/* ── 3-D Ray-Marched Nebula Skybox ─────────────────────────────────────── */
+const nebulaMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide,
+  depthWrite: false,
+  uniforms: { iTime: { value: 0 } },
+  vertexShader: `
+    varying vec3 vWorldDir;
+    void main(){
+      vWorldDir = normalize((modelMatrix * vec4(position,0.0)).xyz);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+    }
+  `,
+  fragmentShader: `
+    precision mediump float;
+    uniform float iTime;
+    varying vec3 vWorldDir;
+
+    mat2 rot2(float a){ float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
+
+    float map(vec3 p){
+      p.xz *= rot2(iTime*0.25);
+      p.xy *= rot2(iTime*0.18);
+      vec3 q = p*2.0 + iTime*0.4;
+      return length(p + vec3(sin(iTime*0.5)))*log(length(p)+1.0)
+           + sin(q.x+sin(q.z+sin(q.y)))*0.5 - 1.0;
+    }
+
+    void main(){
+      vec3 dir = normalize(vWorldDir);
+      vec3 col = vec3(0.0);
+      float d = 2.5;
+
+      for(int i=0;i<=5;i++){
+        vec3 p = vec3(0.0,0.0,5.0) + dir*d;
+        float rz = map(p);
+        float f  = clamp((rz - map(p+0.1))*0.5,-0.1,1.0);
+        vec3 base = vec3(0.06,0.02,0.18) + vec3(3.2,1.0,4.8)*f;
+        col = col*base + smoothstep(2.5,0.0,rz)*0.7*base;
+        d  += min(rz,1.0);
+      }
+
+      /* warm centre glow echoes amber at scroll end */
+      float warmth = smoothstep(1.0, 0.0, abs(dir.y)) * smoothstep(0.6, 1.0, dir.z) * 0.22;
+      col += vec3(0.9,0.45,0.05)*warmth;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `
+});
+const nebulaSphere = new THREE.Mesh(new THREE.SphereGeometry(500, 32, 32), nebulaMat);
+nebulaSphere.renderOrder = -1;
+scene.add(nebulaSphere);
 
 /* ====================================== CAMERA PATH ====================== */
 /* Zones:  0-4 -> story stages   5-10 -> projects   11 -> about   12 -> contact */
@@ -634,6 +685,10 @@ function animate() {
     .addScaledVector(camUp,  pan.y * 0.7);
   camera.lookAt(_paralaxPt);
 
+  nebulaMat.uniforms.iTime.value = t;
+  /* keep skybox centred on camera so it's always a surrounding shell */
+  nebulaSphere.position.copy(camera.position);
+
   renderer.render(scene,camera);
   labelRenderer.render(scene,camera);
 }
@@ -741,107 +796,6 @@ function fitModel(obj,targetSize){
   }catch(e){console.warn('medieval:',e.message);}
 })();
 
-/* ── GLSL Nebula Background (ray-marched) ───────────────────────────────── */
-(()=>{
-  const canvas = document.getElementById('cloud-bg');
-  const gl = canvas.getContext('webgl',{antialias:true,alpha:false});
-  if(!gl) return;
-
-  const vert = `
-    attribute vec2 position;
-    varying vec2 vUv;
-    void main(){ vUv=(position+1.0)*0.5; gl_Position=vec4(position,0.0,1.0); }
-  `;
-  const frag = `
-    precision mediump float;
-    uniform vec2  iResolution;
-    uniform float iTime;
-    uniform vec2  iMouse;
-    varying vec2  vUv;
-
-    mat2 m(float a){ float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
-
-    float map(vec3 p){
-      p.xz *= m(iTime*0.25);
-      p.xy *= m(iTime*0.18);
-      vec3 q = p*2.0 + iTime*0.4;
-      return length(p + vec3(sin(iTime*0.5)))*log(length(p)+1.0)
-           + sin(q.x+sin(q.z+sin(q.y)))*0.5 - 1.0;
-    }
-
-    void main(){
-      vec2 uv = vUv * iResolution;
-      vec2 coord = uv/min(iResolution.x,iResolution.y) - vec2(0.9,0.5);
-      coord.x += 0.4;
-      vec3 col = vec3(0.0);
-      float d = 2.5;
-
-      for(int i=0;i<=5;i++){
-        vec3 p = vec3(0,0,5.0) + normalize(vec3(coord,-1.0))*d;
-        float rz = map(p);
-        float f  = clamp((rz - map(p+0.1))*0.5,-0.1,1.0);
-
-        // Portfolio palette: deep purple base → magenta mid → amber highlight
-        vec3 base = vec3(0.06,0.02,0.18) + vec3(3.2,1.0,4.8)*f;
-
-        col = col*base + smoothstep(2.5,0.0,rz)*0.7*base;
-        d  += min(rz,1.0);
-      }
-
-      // Warm centre glow to echo the orange-amber at scroll end
-      float dist   = length(uv - iResolution*0.5);
-      float radius = min(iResolution.x,iResolution.y)*0.5;
-      float warmth = smoothstep(radius*0.8,0.0,dist)*0.18;
-      col += vec3(0.9,0.45,0.05)*warmth;
-
-      gl_FragColor = vec4(col,1.0);
-    }
-  `;
-
-  function makeShader(type,src){
-    const s=gl.createShader(type);
-    gl.shaderSource(s,src); gl.compileShader(s);
-    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s));
-    return s;
-  }
-  const prog=gl.createProgram();
-  gl.attachShader(prog,makeShader(gl.VERTEX_SHADER,vert));
-  gl.attachShader(prog,makeShader(gl.FRAGMENT_SHADER,frag));
-  gl.linkProgram(prog); gl.useProgram(prog);
-
-  const buf=gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  const loc=gl.getAttribLocation(prog,'position');
-  gl.enableVertexAttribArray(loc);
-  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-
-  const uRes  =gl.getUniformLocation(prog,'iResolution');
-  const uTime =gl.getUniformLocation(prog,'iTime');
-  const uMouse=gl.getUniformLocation(prog,'iMouse');
-
-  const mouse={x:0,y:0};
-  window.addEventListener('mousemove',e=>{ mouse.x=e.clientX; mouse.y=innerHeight-e.clientY; });
-
-  function resize(){
-    const dpr=Math.min(devicePixelRatio||1,2);
-    canvas.width =Math.max(1,Math.floor(innerWidth*dpr));
-    canvas.height=Math.max(1,Math.floor(innerHeight*dpr));
-    gl.viewport(0,0,canvas.width,canvas.height);
-    gl.uniform2f(uRes,canvas.width,canvas.height);
-  }
-  resize();
-  window.addEventListener('resize',resize);
-
-  const start=performance.now();
-  function render(){
-    gl.uniform1f(uTime,(performance.now()-start)/1000);
-    gl.uniform2f(uMouse,mouse.x,mouse.y);
-    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
-    requestAnimationFrame(render);
-  }
-  render();
-})();
 
 /* ── Audio ──────────────────────────────────────────────────────────────── */
 (()=>{
