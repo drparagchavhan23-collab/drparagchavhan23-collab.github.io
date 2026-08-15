@@ -11,14 +11,11 @@ html{scroll-behavior:smooth}
 html,body{width:100%;overflow-x:hidden}
 body{
   font-family:'DM Mono',monospace;color:#f4f0e8;
-  background:linear-gradient(180deg,
-    #0d0828 0%,#1a0a40 12%,#3a1060 28%,#6a2088 44%,
-    #a03868 58%,#c85030 72%,#e07828 84%,#f0a030 100%
-  );
-  background-attachment:fixed;
+  background:#0d0828;
 }
 
-#c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+#cloud-bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+#c{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block}
 
 /* Nav */
 #nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30;mix-blend-mode:normal}
@@ -111,6 +108,7 @@ body{
 </style>
 </head>
 <body>
+<canvas id="cloud-bg"></canvas>
 <canvas id="c"></canvas>
 <button id="audio-btn" title="Toggle sound">🔇</button>
 <audio id="bg-audio" src="ambient.mp3" loop preload="none"></audio>
@@ -470,42 +468,8 @@ sg.setAttribute('position',new THREE.BufferAttribute(spos,3));
 sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
 scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.14,transparent:true,opacity:.9,sizeAttenuation:true})));
 
-/* ====================================== CLOUDS ========================== */
-/* Billboard sprite clouds — always face the camera, layered for depth */
-const _cloudTextures = [
-  new THREE.TextureLoader().load('cloud1.png'),
-  new THREE.TextureLoader().load('cloud2.png'),
-];
-
-function makeCloud(size, seed) {
-  const grp = new THREE.Group();
-  const rng = (n) => { const x = Math.sin(seed*127.1+n*311.7)*43758.5453; return x-Math.floor(x); };
-  const layers = 3 + Math.floor(rng(0)*3);
-  for (let i = 0; i < layers; i++) {
-    const tex = _cloudTextures[Math.floor(rng(i*3+1)*_cloudTextures.length)];
-    const s = size * (1.1 + rng(i*3+2)*0.9);
-    const sp = new THREE.Sprite(
-      new THREE.SpriteMaterial({ map:tex, transparent:true, opacity:0.55+rng(i)*0.38, depthWrite:false })
-    );
-    sp.scale.set(s, s * (0.48 + rng(i*3)*0.2), 1);
-    sp.position.set(
-      (rng(i*4)*2-1) * size * 0.38,
-      (rng(i*4+1)*2-1) * size * 0.14,
-      (rng(i*4+2)*2-1) * size * 0.22
-    );
-    grp.add(sp);
-  }
-  return grp;
-}
-
-/* Clouds absent from Z -520 to -900 (portal zone) */
-const CLOUD_DATA=[
-  [16,-6,-25,14,0],[-28,-3,-65,18,1],[34,20,-115,11,2],[-20,-2,-175,16,3],[25,-10,-235,10,4],[-38,17,-285,20,5],
-  [12,-7,-345,13,6],[-14,22,-405,15,7],[-32,-16,-460,17,8],[20,30,-50,12,9],[-10,-22,-130,14,10],
-  [50,12,-495,10,11],
-  [-45,8,-910,15,12],[38,-6,-940,13,13],[-30,14,-970,18,14],[42,10,-1000,11,15],[-20,-5,-1040,14,16],
-];
-const cloudGroups=CLOUD_DATA.map(([x,y,z,size,seed])=>{const cl=makeCloud(size,seed);cl.position.set(x,y,z);scene.add(cl);return cl;});
+/* clouds handled by GLSL background canvas — no Three.js cloud objects needed */
+const cloudGroups = [];
 
 /* islands removed */
 
@@ -757,6 +721,102 @@ function fitModel(obj,targetSize){
     const b2=mb.clone(true);b2.position.set(52,-6,-680);b2.rotation.y=-Math.PI*.25;b2.scale.setScalar(.8);scene.add(b2);
     const b3=mb.clone(true);b3.position.set(-40,10,-860);b3.rotation.y=Math.PI*.35;b3.scale.setScalar(.9);scene.add(b3);
   }catch(e){console.warn('medieval:',e.message);}
+})();
+
+/* ── GLSL Cloud Background ──────────────────────────────────────────────── */
+(()=>{
+  const canvas = document.getElementById('cloud-bg');
+  const gl = canvas.getContext('webgl',{antialias:true,alpha:false});
+  if(!gl) return;
+
+  const vert = `
+    attribute vec2 position;
+    void main(){gl_Position=vec4(position,0.0,1.0);}
+  `;
+  const frag = `
+    precision highp float;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform vec3 u_colorBottom;
+    uniform vec3 u_colorMid;
+    uniform vec3 u_colorTop;
+
+    float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+    float noise(vec2 p){
+      vec2 i=floor(p),f=fract(p);
+      float a=hash(i),b=hash(i+vec2(1,0)),c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1));
+      vec2 u=f*f*(3.0-2.0*f);
+      return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+    }
+    float fbm(vec2 p,float t){
+      float v=0.0,a=0.5,fi=0.0;
+      mat2 rot=mat2(0.86,0.51,-0.51,0.86);
+      for(int i=0;i<6;i++){
+        vec2 morph=vec2(sin(t*0.5+fi),cos(t*0.3-fi))*0.05;
+        v+=a*noise(p+morph);
+        p=rot*p*2.0; a*=0.5; fi+=1.0;
+      }
+      return v;
+    }
+    void main(){
+      vec2 uv=gl_FragCoord.xy/u_resolution;
+      float t=u_time*0.18;
+      vec2 aspect=vec2(u_resolution.x/max(u_resolution.y,1.0),1.0);
+      vec2 p=(uv-0.5)*aspect;
+      vec2 wind=vec2(t*0.1,t*0.02);
+      float pattern=fbm(p*2.2-wind,t);
+      float bandLow=smoothstep(0.3,0.65,pattern);
+      float bandHigh=smoothstep(0.7,0.95,pattern);
+      vec3 color=mix(u_colorBottom,u_colorMid,bandLow);
+      color=mix(color,u_colorTop,bandHigh);
+      gl_FragColor=vec4(color,1.0);
+    }
+  `;
+
+  function makeShader(type,src){
+    const s=gl.createShader(type);
+    gl.shaderSource(s,src); gl.compileShader(s); return s;
+  }
+  const prog=gl.createProgram();
+  gl.attachShader(prog,makeShader(gl.VERTEX_SHADER,vert));
+  gl.attachShader(prog,makeShader(gl.FRAGMENT_SHADER,frag));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(prog,'position');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+  const uRes=gl.getUniformLocation(prog,'u_resolution');
+  const uTime=gl.getUniformLocation(prog,'u_time');
+  const uBot=gl.getUniformLocation(prog,'u_colorBottom');
+  const uMid=gl.getUniformLocation(prog,'u_colorMid');
+  const uTop=gl.getUniformLocation(prog,'u_colorTop');
+
+  // Color palette matching the portfolio's purple→orange vibe
+  gl.uniform3f(uBot, 0.05, 0.03, 0.16);  // deep purple
+  gl.uniform3f(uMid, 0.42, 0.13, 0.53);  // mid purple-magenta
+  gl.uniform3f(uTop, 0.94, 0.63, 0.19);  // warm amber
+
+  function resize(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    canvas.width=Math.max(1,Math.floor(innerWidth*dpr));
+    canvas.height=Math.max(1,Math.floor(innerHeight*dpr));
+    gl.viewport(0,0,canvas.width,canvas.height);
+    gl.uniform2f(uRes,canvas.width,canvas.height);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  const start=performance.now();
+  function render(){
+    gl.uniform1f(uTime,(performance.now()-start)/1000);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(render);
+  }
+  render();
 })();
 
 /* ── Audio ──────────────────────────────────────────────────────────────── */
