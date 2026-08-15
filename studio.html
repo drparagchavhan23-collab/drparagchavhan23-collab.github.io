@@ -88,7 +88,7 @@ body{
 .l3-cat{font-size:7px;letter-spacing:.22em;color:inherit;opacity:.55;margin-top:6px}
 
 /* Scroll space */
-#ss{height:1400vh}
+#ss{height:1600vh}
 </style>
 </head>
 <body>
@@ -156,7 +156,7 @@ body{
     <span class="zo-tag">Urban Housing</span>
     <h2 class="zo-head">Project Alpha</h2>
     <p class="zo-body">A housing complex that questions how density and community coexist. Compact, breathable, community-forward.</p>
-    <a class="zo-cta" href="#">View Case Study -></a>
+    <a class="zo-cta" href="project.html?id=1">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay left" id="z6" style="--a:#ff44cc">
@@ -165,7 +165,7 @@ body{
     <span class="zo-tag">Cultural Centre</span>
     <h2 class="zo-head">Project Beta</h2>
     <p class="zo-body">A public cultural landmark where programme dissolves into landscape. The building continues into the ground.</p>
-    <a class="zo-cta" href="#">View Case Study -></a>
+    <a class="zo-cta" href="project.html?id=2">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay right" id="z7" style="--a:#ffd700">
@@ -174,7 +174,7 @@ body{
     <span class="zo-tag">Spatial Installation</span>
     <h2 class="zo-head">Project Gamma</h2>
     <p class="zo-body">A temporary installation exploring the threshold between public solitude and collective presence.</p>
-    <a class="zo-cta" href="#">View Case Study -></a>
+    <a class="zo-cta" href="project.html?id=3">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay left" id="z8" style="--a:#ff8844">
@@ -183,7 +183,7 @@ body{
     <span class="zo-tag">Residential</span>
     <h2 class="zo-head">Project Delta</h2>
     <p class="zo-body">Four houses around a shared courtyard. Privacy negotiated not by walls but by geometry and level change.</p>
-    <a class="zo-cta" href="#">View Case Study -></a>
+    <a class="zo-cta" href="project.html?id=4">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay right" id="z9" style="--a:#88ff44">
@@ -192,7 +192,7 @@ body{
     <span class="zo-tag">Museum</span>
     <h2 class="zo-head">Project Epsilon</h2>
     <p class="zo-body">A museum of living craft -- organised not by object but by process. You see things being made, then made.</p>
-    <a class="zo-cta" href="#">View Case Study -></a>
+    <a class="zo-cta" href="project.html?id=5">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay left" id="z10" style="--a:#cc44ff">
@@ -201,7 +201,7 @@ body{
     <span class="zo-tag">Transit + Urban</span>
     <h2 class="zo-head">Project Zeta</h2>
     <p class="zo-body">A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one.</p>
-    <a class="zo-cta" href="#">View Case Study -></a>
+    <a class="zo-cta" href="project.html?id=6">View Case Study -></a>
   </div>
 </div>
 
@@ -268,9 +268,9 @@ document.body.appendChild(labelRenderer.domElement);
 /* Zones:  0-4 -> story stages   5-10 -> projects   11 -> about   12 -> contact */
 const PATH = new THREE.CatmullRomCurve3([
   // -- Story intro -----------------------------------------------------------
-  new THREE.Vector3(  0,   0,  70),
-  new THREE.Vector3(-14,   8,  30),
-  new THREE.Vector3(  6,  -6,  -5),   // S0
+  new THREE.Vector3(  0,   0,  38),
+  new THREE.Vector3( -8,   4,  12),
+  new THREE.Vector3(  6,  -4,  -5),   // S0
   new THREE.Vector3( 22,   5, -55),
   new THREE.Vector3( -2,  -8,-105),   // S1
   new THREE.Vector3(-20,   6,-155),
@@ -348,6 +348,7 @@ const PORTAL_POSITIONS = [
 ];
 
 const portalGroups = [];
+const labelDivs = [];
 PORTAL_POSITIONS.forEach((pos, i) => {
   const col = PROJECT_COLORS[i];
   const g = new THREE.Group();
@@ -386,11 +387,14 @@ PORTAL_POSITIONS.forEach((pos, i) => {
     ]), lineMat(col,.9)));
   });
 
-  // CSS2D label anchored to this 3D group
+  // CSS2D label anchored to this 3D group — starts invisible, fades in by distance
   const div = document.createElement('div');
   div.className = 'label3d';
   div.style.color = '#' + new THREE.Color(col).getHexString();
+  div.style.opacity = '0';
+  div.style.transition = 'opacity 0.4s';
   div.innerHTML = `<div class="l3-num">${PROJECT_NUMS[i]}</div><div class="l3-name">PROJECT ${PROJECT_NAMES[i].toUpperCase()}</div><div class="l3-cat">${PROJECT_CATS[i]}</div>`;
+  labelDivs.push(div);
   const lbl = new CSS2DObject(div);
   g.add(lbl);
 
@@ -606,7 +610,7 @@ let   lastZone  = 0;
 const FOG_COLORS=[0x6a2088,0x204488,0x881860,0xaa4410,0x554400,0x005544,0x551155,0x003355,0x553300,0x005544,0x330055,0x444444,0x665500];
 
 ScrollTrigger.create({
-  trigger:'#ss', start:'top top', end:'bottom bottom', scrub:2.2,
+  trigger:'#ss', start:'top top', end:'bottom bottom', scrub:4,
   onUpdate(self){
     const p=self.progress;
     const camPt=PATH.getPointAt(p);
@@ -643,6 +647,13 @@ ScrollTrigger.create({
     }
 
     hintEl.style.opacity=p>.02?'0':'1';
+
+    /* Portal label distance fading — only visible when within 55 units */
+    portalGroups.forEach((pg, i) => {
+      const dist = camPt.distanceTo(PORTAL_POSITIONS[i]);
+      const op = THREE.MathUtils.clamp(THREE.MathUtils.mapLinear(dist, 55, 22, 0, 1), 0, 1);
+      labelDivs[i].style.opacity = op.toFixed(3);
+    });
   }
 });
 
