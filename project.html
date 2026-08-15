@@ -177,15 +177,15 @@ document.body.style.backgroundAttachment = 'fixed';
 /* ── Camera path (5 zones, Z 60 -> -720) ─────────────────────────────────── */
 const PATH = new THREE.CatmullRomCurve3([
   new THREE.Vector3(  0,   0,  50),
-  new THREE.Vector3( -6,   1,  20),
-  new THREE.Vector3(  5,  -1,  -5),   // Z0 hero
-  new THREE.Vector3( 16,   2, -90),
-  new THREE.Vector3( -5,  -1,-160),   // Z1 overview
-  new THREE.Vector3(-18,   2,-230),
-  new THREE.Vector3(  7,   0,-290),   // Z2 drawings
-  new THREE.Vector3( 18,  -1,-350),
-  new THREE.Vector3( -7,   2,-410),   // Z3 process
-  new THREE.Vector3(-14,   1,-480),
+  new THREE.Vector3( -8,   2,  20),
+  new THREE.Vector3(  6,  -1,  -5),   // Z0 hero
+  new THREE.Vector3( 18,   3, -90),
+  new THREE.Vector3( -6,  -2,-160),   // Z1 overview
+  new THREE.Vector3(-20,   3,-230),
+  new THREE.Vector3(  8,   1,-290),   // Z2 drawings
+  new THREE.Vector3( 20,  -2,-350),
+  new THREE.Vector3( -8,   3,-410),   // Z3 process
+  new THREE.Vector3(-16,   1,-480),
   new THREE.Vector3(  0,   0,-560),   // Z4 next
 ], false, 'catmullrom', 0.5);
 
