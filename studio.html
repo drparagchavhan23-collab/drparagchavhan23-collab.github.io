@@ -373,40 +373,47 @@ PORTAL_POSITIONS.forEach((pos, i) => {
   const g = new THREE.Group();
   g.position.copy(pos);
 
-  const W2 = 14, H2 = 9;
-
-  // Glowing backing panel
-  const panel = new THREE.Mesh(
-    new THREE.PlaneGeometry(W2, H2),
-    new THREE.MeshBasicMaterial({
-      color: new THREE.Color(col).multiplyScalar(0.12),
-      transparent:true, opacity:.7, side:THREE.DoubleSide, depthWrite:false
-    })
-  );
-  g.add(panel);
-
-  // Border frame
+  const W2 = 10, H2 = 6.5;
   const hw=W2/2, hh=H2/2;
-  const frame = new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-hw,-hh,0),new THREE.Vector3(hw,-hh,0),
-      new THREE.Vector3(hw,hh,0),new THREE.Vector3(-hw,hh,0),
-      new THREE.Vector3(-hw,-hh,0)
-    ]),
-    lineMat(col, 0.7)
-  );
-  g.add(frame);
 
-  // Corner accents
-  const ca = 2.2;
+  // Subtle dark glass backing — very low opacity
+  g.add(new THREE.Mesh(
+    new THREE.PlaneGeometry(W2, H2),
+    new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.22, side:THREE.DoubleSide, depthWrite:false })
+  ));
+
+  // Thin outer border
+  g.add(new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-hw,-hh,0.01),new THREE.Vector3(hw,-hh,0.01),
+      new THREE.Vector3(hw,hh,0.01),new THREE.Vector3(-hw,hh,0.01),
+      new THREE.Vector3(-hw,-hh,0.01)
+    ]),
+    lineMat(col, 0.5)
+  ));
+
+  // Corner brackets only — clean and minimal
+  const ca = 1.6;
   [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].forEach(([cx,cy])=>{
     const sx=cx>0?-1:1, sy=cy>0?-1:1;
     g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(cx+sx*ca,cy,0),new THREE.Vector3(cx,cy,0),new THREE.Vector3(cx,cy+sy*ca,0)
-    ]), lineMat(col,.9)));
+      new THREE.Vector3(cx+sx*ca,cy,0.01),
+      new THREE.Vector3(cx,cy,0.01),
+      new THREE.Vector3(cx,cy+sy*ca,0.01)
+    ]), lineMat(col, 1.0)));
   });
 
-  // CSS2D label anchored to this 3D group — starts invisible, fades in by distance
+  // Small number tag top-left
+  const numLine = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-hw+0.3, hh-0.6, 0.01),
+      new THREE.Vector3(-hw+1.8, hh-0.6, 0.01)
+    ]),
+    lineMat(col, 0.4)
+  );
+  g.add(numLine);
+
+  // CSS2D label
   const div = document.createElement('div');
   div.className = 'label3d';
   div.style.color = '#' + new THREE.Color(col).getHexString();
@@ -417,7 +424,7 @@ PORTAL_POSITIONS.forEach((pos, i) => {
   const lbl = new CSS2DObject(div);
   g.add(lbl);
 
-  // Face camera (billboarded on Y only -- portals tilt toward path)
+  // Initial facing — toward camera path
   const toPath = PATH.getPointAt(0.4 + i * 0.07).clone().sub(pos);
   g.rotation.y = Math.atan2(toPath.x, toPath.z);
 
@@ -484,8 +491,8 @@ function makePlanet(radius,col,ringCol){
 }
 const p1=makePlanet(11,0x30e8c0,null); p1.position.set(-65,50,-70);   scene.add(p1);
 const p2=makePlanet(8.5,0xaa44ff,0xcc88ff); p2.position.set(72,28,-350);  scene.add(p2);
-const p3=makePlanet(7,0xff8844,null);    p3.position.set(-55,-22,-600); scene.add(p3);
-const p4=makePlanet(9,0x44ddff,null);   p4.position.set(60,35,-850);  scene.add(p4);
+const p3=makePlanet(7,0xff8844,null);    p3.position.set(-80,-30,-420); scene.add(p3);
+const p4=makePlanet(9,0x44ddff,null);   p4.position.set(85,40,-480);  scene.add(p4);
 const p5=makePlanet(6,0xffdd44,null);   p5.position.set(-40,10,-1020); scene.add(p5);
 const planets=[p1,p2,p3,p4,p5];
 
@@ -604,6 +611,13 @@ function animate() {
   });
 
   planets.forEach((p,i)=>{ p.rotation.y+=.001+i*.0005; });
+  // Portals softly face the camera on Y axis
+  portalGroups.forEach(pg=>{
+    const dx=camera.position.x-pg.position.x;
+    const dz=camera.position.z-pg.position.z;
+    const target=Math.atan2(dx,dz);
+    pg.rotation.y+=(target-pg.rotation.y)*0.04;
+  });
 
   aboutGroup.rotation.y+=.004;
   contactGroup.rotation.z+=.0015;
