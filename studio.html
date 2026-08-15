@@ -618,7 +618,7 @@ window.jumpToZone = function(i) {
 /* ====================================== MOUSE PAN ====================== */
 const mouse = { x:0, y:0 };          // normalised -1..1
 const pan   = { x:0, y:0 };          // smoothed current offset
-const PAN_STRENGTH = { x:2.8, y:1.4 }; // max world-units of offset
+const PAN_STRENGTH = { x:1.4, y:0.7 }; // max world-units of offset
 window.addEventListener('mousemove', e => {
   mouse.x =  (e.clientX / window.innerWidth  - 0.5) * 2;
   mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
@@ -659,13 +659,15 @@ function animate() {
   aboutGroup.rotation.y+=.004;
   contactGroup.rotation.z+=.0015;
 
-  /* Smooth mouse pan */
+  /* Smooth mouse pan — offset then re-aim so subjects stay in frame */
   pan.x += (mouse.x - pan.x) * 0.04;
   pan.y += (mouse.y - pan.y) * 0.04;
   _fwd.set(0,0,-1).applyQuaternion(camera.quaternion);
   _right.crossVectors(_fwd, camera.up).normalize();
   camera.position.addScaledVector(_right,    pan.x * PAN_STRENGTH.x);
   camera.position.addScaledVector(camera.up, pan.y * PAN_STRENGTH.y);
+  // Re-aim at the stored look target so content stays centered despite pan
+  camera.lookAt(lookPt);
 
   renderer.render(scene,camera);
   labelRenderer.render(scene,camera);
