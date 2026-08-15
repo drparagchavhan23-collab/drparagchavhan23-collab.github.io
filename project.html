@@ -177,15 +177,15 @@ document.body.style.backgroundAttachment = 'fixed';
 /* ── Camera path (5 zones, Z 60 -> -720) ─────────────────────────────────── */
 const PATH = new THREE.CatmullRomCurve3([
   new THREE.Vector3(  0,   0,  50),
-  new THREE.Vector3( -8,   4,  20),
-  new THREE.Vector3(  6,  -4,  -5),   // Z0 hero
-  new THREE.Vector3( 18,   8, -90),
-  new THREE.Vector3( -6,  -6,-160),   // Z1 overview
-  new THREE.Vector3(-20,   8,-230),
-  new THREE.Vector3(  8,   2,-290),   // Z2 drawings
-  new THREE.Vector3( 20, -10,-350),
-  new THREE.Vector3( -8,  14,-410),   // Z3 process
-  new THREE.Vector3(-16,   4,-480),
+  new THREE.Vector3( -6,   1,  20),
+  new THREE.Vector3(  5,  -1,  -5),   // Z0 hero
+  new THREE.Vector3( 16,   2, -90),
+  new THREE.Vector3( -5,  -1,-160),   // Z1 overview
+  new THREE.Vector3(-18,   2,-230),
+  new THREE.Vector3(  7,   0,-290),   // Z2 drawings
+  new THREE.Vector3( 18,  -1,-350),
+  new THREE.Vector3( -7,   2,-410),   // Z3 process
+  new THREE.Vector3(-14,   1,-480),
   new THREE.Vector3(  0,   0,-560),   // Z4 next
 ], false, 'catmullrom', 0.5);
 
@@ -205,10 +205,10 @@ function ring(r, tilt=0){
 
 /* ── Zone stations (floating structure at each content zone) ─────────────── */
 const STATION_POS = [
-  new THREE.Vector3( 14,  4, -30),   // hero
-  new THREE.Vector3(-22,  6,-175),   // overview
-  new THREE.Vector3( 20, -8,-305),   // drawings
-  new THREE.Vector3(-18, 10,-425),   // process
+  new THREE.Vector3( 14,  2, -30),   // hero
+  new THREE.Vector3(-22,  2,-175),   // overview
+  new THREE.Vector3( 20, -2,-305),   // drawings
+  new THREE.Vector3(-18,  2,-425),   // process
   new THREE.Vector3(  0,  0,-560),   // next
 ];
 const STATION_GEOS = [
@@ -322,7 +322,7 @@ function makeIsland(size){
   return grp;
 }
 const ISLAND_DATA=[
-  [30,12,-55,4],[- 28,-8,-130,3.5],[42,-14,-220,5],[-20,18,-320,3.8],[35,8,-430,4.2],[-38,-12,-500,3.2],
+  [30,4,-55,4],[-28,-4,-130,3.5],[42,-4,-220,5],[-20,4,-320,3.8],[35,4,-430,4.2],[-38,-4,-500,3.2],
 ];
 const islandGroups=ISLAND_DATA.map(([x,y,z,size])=>{
   const isl=makeIsland(size); isl.position.set(x,y,z); scene.add(isl); return isl;
