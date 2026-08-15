@@ -460,40 +460,32 @@ sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
 scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.14,transparent:true,opacity:.9,sizeAttenuation:true})));
 
 /* ====================================== CLOUDS ========================== */
-/*
-  Volumetric soft clouds — 20 layered translucent spheres per cloud.
-  Bright white core fading to near-transparent edges. No hard outlines.
-  Seeded RNG keeps each cloud shape unique but deterministic.
-*/
+/* PNG sprite clouds — flat planes with real cloud photo textures */
+const _cloudTextures = [
+  new THREE.TextureLoader().load('cloud1.png'),
+  new THREE.TextureLoader().load('cloud2.png'),
+];
+
 function makeCloud(size, seed) {
   const grp = new THREE.Group();
   const rng = (n) => { const x = Math.sin(seed*127.1+n*311.7)*43758.5453; return x-Math.floor(x); };
-  const count = 20;
-  for (let i = 0; i < count; i++) {
-    const angle  = rng(i*4)   * Math.PI * 2;
-    const rise   = rng(i*4+1);          // 0=bottom 1=top
-    const reach  = rng(i*4+2) * 0.9;   // 0=center 1=edge
-    const jitter = rng(i*4+3);
-
-    const rx = Math.cos(angle) * reach * size;
-    const ry = (rise*0.7 - 0.15) * size * 0.55;
-    const rz = Math.sin(angle) * reach * size * 0.38;
-    const sr = size * (0.25 + (1-reach)*0.42 + rise*0.15) * (0.65 + jitter*0.7);
-
-    // opacity: dense at core, airy at edges
-    const coreness = (1-reach)*0.65 + rise*0.25;
-    const op = Math.min(0.88, 0.06 + coreness * 0.82);
-
-    // color: pure white core, very faint lavender-blue at edges (picks up sky bg)
-    const w  = Math.round(240 + coreness*15);
-    const col = (w<<16)|(w<<8)|Math.min(255, w+Math.round((1-coreness)*18));
-
-    const m = new THREE.Mesh(
-      new THREE.SphereGeometry(sr, 7, 5),
-      new THREE.MeshBasicMaterial({ color:col, transparent:true, opacity:op, depthWrite:false })
+  // 3–5 overlapping sprite layers per cloud for depth
+  const layers = 3 + Math.floor(rng(0)*3);
+  for (let i = 0; i < layers; i++) {
+    const tex = _cloudTextures[Math.floor(rng(i*3)*_cloudTextures.length)];
+    const w = size * (1.2 + rng(i*3+1)*0.8);
+    const h = w * (0.45 + rng(i*3+2)*0.25);
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ map:tex, transparent:true, opacity:0.55+rng(i)*0.35, depthWrite:false, side:THREE.DoubleSide })
     );
-    m.position.set(rx, ry, rz);
-    grp.add(m);
+    plane.position.set(
+      (rng(i*3)*2-1) * size * 0.35,
+      (rng(i*3+1)*2-1) * size * 0.12,
+      (rng(i*3+2)*2-1) * size * 0.2
+    );
+    plane.rotation.z = (rng(i)*2-1) * 0.08;
+    grp.add(plane);
   }
   return grp;
 }
