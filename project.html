@@ -174,19 +174,19 @@ renderer.setSize(W(), H());
 document.body.style.background = `radial-gradient(ellipse at 40% 30%, ${P.bg[1]} 0%, ${P.bg[0]} 55%), linear-gradient(180deg, ${P.bg[2]} 0%, ${P.bg[0]} 100%)`;
 document.body.style.backgroundAttachment = 'fixed';
 
-/* ── Camera path (5 zones, Z 60 -> -720) ─────────────────────────────────── */
+/* ── Camera path — descends along Y, weaves X, Z stays shallow ───────────── */
 const PATH = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(  0,   0,  50),
-  new THREE.Vector3( -8,   2,  20),
-  new THREE.Vector3(  6,  -1,  -5),   // Z0 hero
-  new THREE.Vector3( 18,   3, -90),
-  new THREE.Vector3( -6,  -2,-160),   // Z1 overview
-  new THREE.Vector3(-20,   3,-230),
-  new THREE.Vector3(  8,   1,-290),   // Z2 drawings
-  new THREE.Vector3( 20,  -2,-350),
-  new THREE.Vector3( -8,   3,-410),   // Z3 process
-  new THREE.Vector3(-16,   1,-480),
-  new THREE.Vector3(  0,   0,-560),   // Z4 next
+  new THREE.Vector3(  0,   0,  18),
+  new THREE.Vector3( -8, -30,  14),
+  new THREE.Vector3(  6, -80,  16),   // Z0 hero
+  new THREE.Vector3( 18,-140,  12),
+  new THREE.Vector3( -6,-200,  16),   // Z1 overview
+  new THREE.Vector3(-20,-260,  14),
+  new THREE.Vector3(  8,-320,  16),   // Z2 drawings
+  new THREE.Vector3( 20,-380,  12),
+  new THREE.Vector3( -8,-440,  16),   // Z3 process
+  new THREE.Vector3(-16,-500,  14),
+  new THREE.Vector3(  0,-560,  15),   // Z4 next
 ], false, 'catmullrom', 0.5);
 
 const ZONE_COUNT = 5;
@@ -205,11 +205,11 @@ function ring(r, tilt=0){
 
 /* ── Zone stations (floating structure at each content zone) ─────────────── */
 const STATION_POS = [
-  new THREE.Vector3( 14,  2, -30),   // hero
-  new THREE.Vector3(-22,  2,-175),   // overview
-  new THREE.Vector3( 20, -2,-305),   // drawings
-  new THREE.Vector3(-18,  2,-425),   // process
-  new THREE.Vector3(  0,  0,-560),   // next
+  new THREE.Vector3( 18,  -70, 20),   // hero
+  new THREE.Vector3(-24, -200, 18),   // overview
+  new THREE.Vector3( 22, -330, 20),   // drawings
+  new THREE.Vector3(-20, -455, 18),   // process
+  new THREE.Vector3(  0, -560, 16),   // next
 ];
 const STATION_GEOS = [
   ()=>new THREE.IcosahedronGeometry(4,0),
@@ -233,11 +233,13 @@ STATION_POS.forEach((pos,i)=>{
 });
 
 /* ── Stars ────────────────────────────────────────────────────────────────── */
+/* Stars spread vertically alongside the descent */
 const SN=3000, sp=new Float32Array(SN*3), sc=new Float32Array(SN*3);
 for(let i=0;i<SN;i++){
-  const r=60+Math.random()*300, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
-  sp[i*3]=r*Math.sin(ph)*Math.cos(th); sp[i*3+1]=r*Math.sin(ph)*Math.sin(th)*.5; sp[i*3+2]=r*Math.cos(ph)-300;
-  const b=.5+Math.random()*.5;
+  sp[i*3]  = (Math.random()-.5)*280;
+  sp[i*3+1]= -Math.random()*660 + 20;
+  sp[i*3+2]=  (Math.random()-.5)*120 + 15;
+  const b=.4+Math.random()*.6;
   sc[i*3]=acCol.r*b; sc[i*3+1]=acCol.g*b; sc[i*3+2]=acCol.b*b;
 }
 const sg=new THREE.BufferGeometry();
@@ -278,10 +280,12 @@ function makeCloud(size){
   return grp;
 }
 
+/* Clouds arranged vertically — X wide, Y descends, Z shallow depth */
 const CLOUD_DATA=[
-  [18,-8,-20,10],[-30,5,-65,13],[28,18,-110,9],[-16,-4,-160,12],[35,8,-205,8],
-  [-40,14,-250,14],[22,-12,-295,10],[-24,20,-340,11],[40,6,-385,9],[-18,-8,-435,12],
-  [24,16,-480,8],[-35,-6,-520,13],[16,10,-555,9],[-22,4,-590,10],
+  [ 30,  -15, 22, 10], [-36,  -55, 18, 13], [ 24, -100, 24,  9], [-20, -145, 20, 12],
+  [ 38, -190, 22,  8], [-42, -235, 18, 14], [ 26, -275, 24, 10], [-28, -315, 20, 11],
+  [ 40, -355, 22,  9], [-32, -395, 18, 13], [ 22, -435, 24,  8], [-38, -475, 20, 12],
+  [ 34, -510, 22, 10], [-24, -545, 18, 11],
 ];
 const cloudGroups=CLOUD_DATA.map(([x,y,z,size])=>{
   const cl=makeCloud(size); cl.position.set(x,y,z); scene.add(cl); return cl;
@@ -321,8 +325,10 @@ function makeIsland(size){
   }
   return grp;
 }
+/* Islands stacked vertically */
 const ISLAND_DATA=[
-  [30,4,-55,4],[-28,-4,-130,3.5],[42,-4,-220,5],[-20,4,-320,3.8],[35,4,-430,4.2],[-38,-4,-500,3.2],
+  [ 28, -50, 22, 4], [-30,-130, 18, 3.5], [ 40,-215, 24, 5],
+  [-22,-300, 20, 3.8], [ 32,-385, 22, 4.2], [-36,-465, 18, 3.2],
 ];
 const islandGroups=ISLAND_DATA.map(([x,y,z,size])=>{
   const isl=makeIsland(size); isl.position.set(x,y,z); scene.add(isl); return isl;
@@ -429,12 +435,13 @@ function animate(){
     if(g.children[2])g.children[2].rotation.y-=.003;
   });
   islandGroups.forEach((isl,i)=>{
-    isl.position.y=ISLAND_DATA[i][1]+Math.sin(t*.28+i*1.3)*.5;
+    isl.position.x=ISLAND_DATA[i][0]+Math.sin(t*.18+i*1.1)*.4;
+    isl.position.z=ISLAND_DATA[i][2]+Math.sin(t*.22+i*.9)*.3;
     isl.rotation.y+=.0004;
   });
   cloudGroups.forEach((cl,i)=>{
-    cl.position.x=CLOUD_DATA[i][0]+Math.sin(t*.10+i*.9)*1.1;
-    cl.position.y=CLOUD_DATA[i][1]+Math.sin(t*.14+i*1.7)*.45;
+    cl.position.x=CLOUD_DATA[i][0]+Math.sin(t*.10+i*.9)*1.0;
+    cl.position.z=CLOUD_DATA[i][2]+Math.sin(t*.14+i*1.7)*.5;
   });
   pan.x+=(mouse.x-pan.x)*.04; pan.y+=(mouse.y-pan.y)*.04;
   _fwd.set(0,0,-1).applyQuaternion(camera.quaternion);
