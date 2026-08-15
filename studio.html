@@ -312,9 +312,9 @@ scene.fog = new THREE.FogExp2(0x1a0600, 0.0028);
 
 const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 2000);
 
-const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true });
+const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:false, powerPreference:'high-performance' });
 renderer.setClearColor(0x0a0700, 1);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.0));
 renderer.setSize(W(), H());
 
 /* CSS2D renderer for floating labels */
@@ -355,7 +355,7 @@ const nebulaMat = new THREE.ShaderMaterial({
       vec3 col = vec3(0.0);
       float d = 2.5;
 
-      for(int i=0;i<=5;i++){
+      for(int i=0;i<=3;i++){
         vec3 p = vec3(0.0,0.0,5.0) + dir*d;
         float rz = map(p);
         float f  = clamp((rz - map(p+0.1))*0.5,-0.1,1.0);
@@ -376,7 +376,7 @@ const nebulaMat = new THREE.ShaderMaterial({
     }
   `
 });
-const nebulaSphere = new THREE.Mesh(new THREE.SphereGeometry(500, 32, 32), nebulaMat);
+const nebulaSphere = new THREE.Mesh(new THREE.SphereGeometry(500, 16, 16), nebulaMat);
 nebulaSphere.renderOrder = -1;
 scene.add(nebulaSphere);
 
@@ -741,7 +741,7 @@ function animate() {
   nebulaSphere.position.copy(camera.position);
 
   renderer.render(scene,camera);
-  labelRenderer.render(scene,camera);
+  if(Math.floor(t*30)%2===0) labelRenderer.render(scene,camera);
 }
 animate();
 
