@@ -544,17 +544,55 @@ function playWarp(){
   try {
     if(!window._wactx) window._wactx = new (window.AudioContext||window.webkitAudioContext)();
     const ctx = window._wactx;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.type = 'sawtooth';
-    o.frequency.setValueAtTime(120, ctx.currentTime);
-    o.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.18);
-    o.frequency.exponentialRampToValueAtTime(80,   ctx.currentTime + 0.42);
-    g.gain.setValueAtTime(0.0001, ctx.currentTime);
-    g.gain.linearRampToValueAtTime(0.22,   ctx.currentTime + 0.08);
-    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.44);
-    o.start(); o.stop(ctx.currentTime + 0.45);
+    const now = ctx.currentTime;
+    const dur = 1.1;
+
+    // White noise whoosh through a sweeping bandpass
+    const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1);
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf;
+
+    const bpf = ctx.createBiquadFilter();
+    bpf.type = 'bandpass';
+    bpf.frequency.setValueAtTime(180, now);
+    bpf.frequency.exponentialRampToValueAtTime(4200, now + 0.55);
+    bpf.frequency.exponentialRampToValueAtTime(220,  now + dur);
+    bpf.Q.value = 1.8;
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0, now);
+    noiseGain.gain.linearRampToValueAtTime(0.55, now + 0.12);
+    noiseGain.gain.setValueAtTime(0.55, now + 0.5);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+    noise.connect(bpf); bpf.connect(noiseGain); noiseGain.connect(ctx.destination);
+    noise.start(now); noise.stop(now + dur);
+
+    // Deep sub-bass rumble
+    const sub = ctx.createOscillator();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(38, now);
+    sub.frequency.linearRampToValueAtTime(22, now + dur);
+    const subGain = ctx.createGain();
+    subGain.gain.setValueAtTime(0, now);
+    subGain.gain.linearRampToValueAtTime(0.38, now + 0.1);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+    sub.connect(subGain); subGain.connect(ctx.destination);
+    sub.start(now); sub.stop(now + dur);
+
+    // High shimmer — thin sine that fades fast
+    const shimmer = ctx.createOscillator();
+    shimmer.type = 'sine';
+    shimmer.frequency.setValueAtTime(1200, now);
+    shimmer.frequency.exponentialRampToValueAtTime(400, now + 0.6);
+    const shimGain = ctx.createGain();
+    shimGain.gain.setValueAtTime(0, now);
+    shimGain.gain.linearRampToValueAtTime(0.08, now + 0.05);
+    shimGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+    shimmer.connect(shimGain); shimGain.connect(ctx.destination);
+    shimmer.start(now); shimmer.stop(now + 0.7);
   } catch(e){}
 }
 
