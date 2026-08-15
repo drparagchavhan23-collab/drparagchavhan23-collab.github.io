@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project — Parag Chavhan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{width:100%;overflow-x:hidden}
+body{font-family:'DM Mono',monospace;color:#f4f0e8;background:#080812;}
+
+#c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+
+/* Nav */
+#nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30}
+.back{font-size:9px;letter-spacing:.22em;color:rgba(244,240,232,.4);text-decoration:none;transition:color .3s}
+.back:hover{color:#f4f0e8}
+.proj-id{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--accent)}
+
+/* Gradient bg that shifts based on project */
+#bg{position:fixed;inset:0;z-index:0;transition:opacity 1s}
+
+/* Scroll space */
+#ss{height:500vh;position:relative;z-index:0}
+
+/* Content panels */
+.panel{
+  position:fixed;inset:0;z-index:20;
+  display:flex;align-items:center;
+  padding:0 9vw;
+  opacity:0;pointer-events:none;
+  transition:opacity .7s ease;
+}
+.panel.on{opacity:1;pointer-events:all}
+.panel.left{justify-content:flex-start}
+.panel.right{justify-content:flex-end}
+.panel.center{justify-content:center;text-align:center}
+
+.panel-inner{max-width:500px}
+.p-tag{font-size:8px;letter-spacing:.28em;color:var(--accent);display:block;margin-bottom:14px}
+.p-head{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,56px);font-weight:800;line-height:.92;letter-spacing:-.03em;color:#f4f0e8;margin-bottom:18px}
+.p-body{font-size:11px;line-height:2;color:rgba(244,240,232,.48);font-style:italic}
+.p-body+.p-body{margin-top:12px}
+.p-rule{width:40px;height:1px;background:var(--accent);opacity:.5;margin:22px 0}
+.p-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;margin-top:20px}
+.p-meta-item span:first-child{font-size:7px;letter-spacing:.25em;color:rgba(244,240,232,.25);display:block;margin-bottom:4px}
+.p-meta-item span:last-child{font-size:10px;color:rgba(244,240,232,.65)}
+
+/* Image placeholder blocks */
+.img-block{width:100%;aspect-ratio:16/9;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;margin:20px 0}
+.img-block span{font-size:8px;letter-spacing:.2em;color:rgba(244,240,232,.12)}
+
+/* Full-width section for drawings/images */
+.full-section{
+  position:fixed;inset:0;z-index:20;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 9vw 60px;
+  opacity:0;pointer-events:none;
+  transition:opacity .7s ease;
+}
+.full-section.on{opacity:1}
+.full-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:900px}
+.full-block{aspect-ratio:4/3;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center}
+.full-block span{font-size:7px;letter-spacing:.2em;color:rgba(244,240,232,.1)}
+.full-label{font-size:8px;letter-spacing:.22em;color:var(--accent);opacity:.6;margin-bottom:14px;text-align:center}
+
+/* Progress line */
+#pline{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px;z-index:30}
+.pldot{width:3px;height:3px;border-radius:50%;background:rgba(244,240,232,.12);transition:all .4s;cursor:pointer}
+.pldot.on{background:var(--accent);transform:scale(2.2)}
+
+/* Scroll hint */
+#hint{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);text-align:center;z-index:30;transition:opacity .8s;pointer-events:none}
+#hint p{font-size:8px;letter-spacing:.28em;color:rgba(244,240,232,.22);margin-bottom:8px}
+#hint div{animation:bob .9s ease-in-out infinite alternate;font-size:12px;color:rgba(244,240,232,.16)}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(6px)}}
+
+/* Zone counter */
+#zcnt{position:fixed;left:40px;bottom:48px;z-index:30;font-size:9px;letter-spacing:.25em;color:rgba(244,240,232,.2);pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="bg"></div>
+
+<nav id="nav">
+  <a class="back" href="studio.html">← Back to Portfolio</a>
+  <span class="proj-id" id="proj-id">01 / 06</span>
+</nav>
+
+<div id="pline"></div>
+<div id="hint"><p>SCROLL</p><div>↓</div></div>
+<div id="zcnt" id="zcnt-el"></div>
+
+<!-- Panels populated by JS -->
+<div id="panels"></div>
+
+<div id="ss"></div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
+
+/* ── Project data ─────────────────────────────────────────────────────────── */
+const PROJECTS = [
+  null, // index 0 unused
+  {
+    id: 1, num: '01 / 06',
+    name: 'Project Alpha',
+    category: 'Urban Housing',
+    accent: '#00eeff',
+    bg: ['#030d1a','#051828','#0a2840','#082038'],
+    tagline: 'Density as community.',
+    overview: 'A housing complex that questions how density and community coexist. Compact, breathable, community-forward. Every unit faces a shared court — privacy is negotiated by level, not walls.',
+    detail: 'The project began as a question: what if affordable housing did not mean the erasure of neighbourhood identity? The answer was found in section — a cascading arrangement of units that creates informal public space at every threshold.',
+    year: '2023', site: 'Mumbai', area: '4,200 sqm', brief: 'Affordable Housing',
+    phase: 'Design Development',
+  },
+  {
+    id: 2, num: '02 / 06',
+    name: 'Project Beta',
+    category: 'Cultural Centre',
+    accent: '#ff44cc',
+    bg: ['#1a0318','#280528','#3a0840','#2a0532'],
+    tagline: 'Where programme dissolves into landscape.',
+    overview: 'A public cultural landmark where building and ground are no longer separate. The building continues into the earth, pulling visitors downward through a series of compressed-then-released spatial sequences.',
+    detail: 'The parti: a single continuous surface that folds from horizontal ground plane to vertical civic wall. Exhibition, performance, and gathering are housed in the folds — no hierarchy, no back-of-house.',
+    year: '2024', site: 'Pune', area: '8,600 sqm', brief: 'Cultural + Public',
+    phase: 'Concept',
+  },
+  {
+    id: 3, num: '03 / 06',
+    name: 'Project Gamma',
+    category: 'Spatial Installation',
+    accent: '#ffd700',
+    bg: ['#1a1400','#282000','#3a3000','#282200'],
+    tagline: 'The threshold between solitude and crowd.',
+    overview: 'A temporary installation exploring what it means to be alone inside a public space. A latticed canopy of bent mild steel and string creates shifting shadow geometries that track solar movement.',
+    detail: 'Visitors enter individually through narrow apertures. Inside, the space opens suddenly — an unexpected vertical release. The canopy becomes denser or lighter depending on where you stand, mapping social comfort zones in steel.',
+    year: '2023', site: 'Nashik Art Festival', area: '320 sqm', brief: 'Temporary Installation',
+    phase: 'Built',
+  },
+  {
+    id: 4, num: '04 / 06',
+    name: 'Project Delta',
+    category: 'Residential',
+    accent: '#ff8844',
+    bg: ['#1a0800','#281000','#3a1800','#281000'],
+    tagline: 'Four houses, one courtyard.',
+    overview: 'Four independent houses arranged around a shared courtyard negotiated through geometry and level, not walls. Ownership is clear; territory is ambiguous.',
+    detail: 'Each house steps back from the courtyard at a different height, creating a reading of the shared space that shifts as you move through it. No unit is ever fully visible from another — privacy is achieved through angle, not opacity.',
+    year: '2024', site: 'Nashik', area: '1,200 sqm', brief: 'Residential Cluster',
+    phase: 'Design Development',
+  },
+  {
+    id: 5, num: '05 / 06',
+    name: 'Project Epsilon',
+    category: 'Museum',
+    accent: '#88ff44',
+    bg: ['#041400','#082000','#0e3000','#062000'],
+    tagline: 'You see things being made.',
+    overview: 'A museum of living craft organised not by object but by process. Visitors follow the arc of making — raw material, transformation, finished form — in a continuous spatial loop.',
+    detail: 'The building section is inverted: workshops occupy the top floors with north light, galleries are below, and material storage is visible as a vertical core through the building\'s center. Everything is on display, including the institution itself.',
+    year: '2024', site: 'Ahmedabad', area: '6,800 sqm', brief: 'Cultural + Museum',
+    phase: 'Concept',
+  },
+  {
+    id: 6, num: '06 / 06',
+    name: 'Project Zeta',
+    category: 'Transit + Urban',
+    accent: '#cc44ff',
+    bg: ['#0d0018','#180028','#280040','#180030'],
+    tagline: 'Infrastructure that insists on being civic.',
+    overview: 'A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one — open to the city even when no trains are running.',
+    detail: 'The roof is a public park. The concourse is a covered market. Platform waiting is organized not as passive queuing but as inhabitable landscape. The building earns its footprint by giving it back.',
+    year: '2023', site: 'Nagpur', area: '22,000 sqm', brief: 'Transit Infrastructure',
+    phase: 'Urban Study',
+  },
+];
+
+/* ── Read project from URL ────────────────────────────────────────────────── */
+const params = new URLSearchParams(location.search);
+const id = parseInt(params.get('id')) || 1;
+const P = PROJECTS[Math.max(1, Math.min(6, id))];
+
+document.title = `${P.name} — Parag Chavhan`;
+document.getElementById('proj-id').textContent = P.num;
+document.documentElement.style.setProperty('--accent', P.accent);
+
+/* ── Background gradient ──────────────────────────────────────────────────── */
+document.getElementById('bg').style.background =
+  `radial-gradient(ellipse at 30% 40%, ${P.bg[1]} 0%, ${P.bg[0]} 60%), linear-gradient(180deg, ${P.bg[2]} 0%, ${P.bg[3]} 50%, ${P.bg[0]} 100%)`;
+
+/* ── Three.js ambient scene ──────────────────────────────────────────────── */
+const W = () => window.innerWidth, H = () => window.innerHeight;
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(new THREE.Color(P.accent).multiplyScalar(0.08).getHex(), 0.006);
+const camera = new THREE.PerspectiveCamera(65, W()/H(), 0.1, 400);
+camera.position.set(0, 0, 40);
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true});
+renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(W(), H());
+
+const accentCol = new THREE.Color(P.accent);
+const lineMat = (op=0.6) => new THREE.LineBasicMaterial({color:accentCol,transparent:true,opacity:op});
+
+/* Floating geometry cluster */
+const GEOS = [
+  new THREE.IcosahedronGeometry(3,0), new THREE.OctahedronGeometry(2.5,0),
+  new THREE.TetrahedronGeometry(2.8,0), new THREE.DodecahedronGeometry(2.2,0),
+];
+const meshGroup = new THREE.Group();
+for(let i=0;i<18;i++){
+  const g = GEOS[i%GEOS.length].clone();
+  const m = new THREE.LineSegments(new THREE.WireframeGeometry(g), lineMat(0.08+Math.random()*0.18));
+  m.position.set((Math.random()-.5)*80,(Math.random()-.5)*50,(Math.random()-.5)*60-20);
+  m.rotation.set(Math.random()*6,Math.random()*6,Math.random()*6);
+  meshGroup.add(m);
+}
+scene.add(meshGroup);
+
+/* Large ambient ring */
+const ringPts=[];
+for(let i=0;i<=100;i++){const a=(i/100)*Math.PI*2;ringPts.push(new THREE.Vector3(Math.cos(a)*22,Math.sin(a)*22,0));}
+const bigRing = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), lineMat(0.08));
+bigRing.rotation.x = Math.PI*.3;
+bigRing.position.z = -10;
+scene.add(bigRing);
+
+/* Stars */
+const SN=2000;
+const sp=new Float32Array(SN*3);
+for(let i=0;i<SN;i++){
+  sp[i*3]=(Math.random()-.5)*300;
+  sp[i*3+1]=(Math.random()-.5)*200;
+  sp[i*3+2]=(Math.random()-.5)*300;
+}
+const sg=new THREE.BufferGeometry();
+sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:accentCol,size:.08,transparent:true,opacity:.3,sizeAttenuation:true})));
+
+const clock=new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const t=clock.getElapsedTime();
+  meshGroup.rotation.y=t*.02;
+  meshGroup.rotation.x=Math.sin(t*.015)*.12;
+  bigRing.rotation.z=t*.006;
+  renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener('resize',()=>{
+  camera.aspect=W()/H();camera.updateProjectionMatrix();
+  renderer.setSize(W(),H());
+});
+
+/* ── Panels ──────────────────────────────────────────────────────────────── */
+const PANELS_DEF = [
+  {
+    cls:'panel left', id:'s0',
+    html:`
+      <div class="panel-inner">
+        <span class="p-tag">${P.num} &nbsp;·&nbsp; ${P.category}</span>
+        <h1 class="p-head">${P.name}<br><em style="font-style:normal;color:var(--accent);font-size:.6em">${P.tagline}</em></h1>
+        <div class="p-rule"></div>
+        <div class="p-meta">
+          <div class="p-meta-item"><span>Year</span><span>${P.year}</span></div>
+          <div class="p-meta-item"><span>Site</span><span>${P.site}</span></div>
+          <div class="p-meta-item"><span>Area</span><span>${P.area}</span></div>
+          <div class="p-meta-item"><span>Status</span><span>${P.phase}</span></div>
+        </div>
+      </div>`
+  },
+  {
+    cls:'panel right', id:'s1',
+    html:`
+      <div class="panel-inner">
+        <span class="p-tag">Overview</span>
+        <p class="p-body">${P.overview}</p>
+        <div class="p-rule"></div>
+        <p class="p-body">${P.detail}</p>
+      </div>`
+  },
+  {
+    cls:'full-section', id:'s2',
+    html:`
+      <span class="full-label">Drawings &amp; Models</span>
+      <div class="full-row">
+        <div class="full-block"><span>Site Plan</span></div>
+        <div class="full-block"><span>Ground Floor Plan</span></div>
+        <div class="full-block"><span>Section A-A</span></div>
+        <div class="full-block"><span>Axonometric</span></div>
+      </div>`
+  },
+  {
+    cls:'panel left', id:'s3',
+    html:`
+      <div class="panel-inner">
+        <span class="p-tag">Design Intent</span>
+        <h2 class="p-head" style="font-size:clamp(20px,2.4vw,36px)">Every decision traces back to a single question.</h2>
+        <div class="p-rule"></div>
+        <p class="p-body">The project is structured around one spatial thesis — tested across scale, section, and programme. Drawings are a means of argument, not illustration.</p>
+        <p class="p-body" style="margin-top:12px">Models were built iteratively: cardboard to balsa to final presentation model, each one interrogating a different variable.</p>
+      </div>`
+  },
+  {
+    cls:'full-section', id:'s4',
+    html:`
+      <span class="full-label">Process</span>
+      <div class="full-row" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="full-block" style="aspect-ratio:1"><span>Sketch 01</span></div>
+        <div class="full-block" style="aspect-ratio:1"><span>Study Model</span></div>
+        <div class="full-block" style="aspect-ratio:1"><span>Final Model</span></div>
+      </div>`
+  },
+  {
+    cls:'panel center', id:'s5',
+    html:`
+      <div class="panel-inner" style="text-align:center;max-width:440px">
+        <span class="p-tag">Next</span>
+        <h2 class="p-head" style="font-size:clamp(22px,3vw,44px)">See more work.</h2>
+        <div class="p-rule" style="margin:22px auto"></div>
+        <a href="studio.html#work" style="font-size:8px;letter-spacing:.22em;color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px">Back to Portfolio -></a>
+        &nbsp;&nbsp;
+        <a href="project.html?id=${P.id%6+1}" style="font-size:8px;letter-spacing:.22em;color:rgba(244,240,232,.3);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px">Next Project -></a>
+      </div>`
+  },
+];
+
+const panelsEl = document.getElementById('panels');
+const panelEls = [];
+PANELS_DEF.forEach(def => {
+  const d = document.createElement('div');
+  d.className = def.cls;
+  d.id = def.id;
+  d.innerHTML = def.html;
+  panelsEl.appendChild(d);
+  panelEls.push(d);
+});
+
+/* Progress dots */
+const plEl = document.getElementById('pline');
+const dotEls = [];
+PANELS_DEF.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'pldot';
+  d.addEventListener('click', () => {
+    const frac = i / (PANELS_DEF.length - 1);
+    window.scrollTo({top: document.getElementById('ss').offsetHeight * frac, behavior:'smooth'});
+  });
+  plEl.appendChild(d);
+  dotEls.push(d);
+});
+
+/* Scroll */
+gsap.registerPlugin(ScrollTrigger);
+
+let lastSec = -1;
+ScrollTrigger.create({
+  trigger:'#ss', start:'top top', end:'bottom bottom', scrub:4,
+  onUpdate(self){
+    const p = self.progress;
+    const sec = Math.min(Math.floor(p * PANELS_DEF.length), PANELS_DEF.length-1);
+
+    // Slow camera parallax
+    camera.position.x = Math.sin(p * Math.PI * 1.5) * 8;
+    camera.position.y = Math.cos(p * Math.PI) * 4;
+    camera.position.z = 40 - p * 20;
+    camera.lookAt(0, 0, 0);
+
+    if(sec !== lastSec){
+      lastSec = sec;
+      panelEls.forEach((el,i) => el.classList.toggle('on', i===sec));
+      dotEls.forEach((d,i) => d.classList.toggle('on', i===sec));
+    }
+
+    document.getElementById('hint').style.opacity = p>.03?'0':'1';
+  }
+});
+
+// Show first panel immediately
+panelEls[0].classList.add('on');
+dotEls[0].classList.add('on');
+</script>
+</body>
+</html>
