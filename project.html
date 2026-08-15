@@ -247,36 +247,32 @@ sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
 sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
 scene.add(new THREE.Points(sg, new THREE.PointsMaterial({vertexColors:true,size:.12,transparent:true,opacity:.85,sizeAttenuation:true})));
 
-/* ── Project-colored anime clouds ─────────────────────────────────────────── */
-function makeCloud(size){
+/* ── Volumetric soft clouds ────────────────────────────────────────────────── */
+function makeCloud(size, seed){
+  seed = seed||0;
   const grp=new THREE.Group();
-  const bumps=[
-    [0,      1.0,  0,    1.0],
-    [size*.68, 0.78, size*.05, .72],
-    [-size*.62,0.80, size*.05, .70],
-    [size*.30, 1.22, size*.08, .54],
-    [-size*.26,1.18, size*.06, .50],
-    [size*.55, 0.65,-size*.08, .48],
-    [-size*.50,0.68,-size*.06, .46],
-  ];
-  bumps.forEach(([rx,ryF,rz,rf])=>{
-    const r=size*rf, cy=r*ryF;
-    const m=new THREE.Mesh(
-      new THREE.SphereGeometry(r,16,12),
-      new THREE.MeshBasicMaterial({color:rf>=0.9?P.cloudA:P.cloudB,transparent:true,opacity:.92})
-    );
-    m.scale.y=0.78; m.position.set(rx,cy,rz); grp.add(m);
-    const h=new THREE.Mesh(
-      new THREE.SphereGeometry(r*.5,12,10),
-      new THREE.MeshBasicMaterial({color:P.cloudH,transparent:true,opacity:.75})
-    );
-    h.scale.y=0.62; h.position.set(rx-r*.28,cy+r*.42,rz+r*.2); grp.add(h);
-  });
-  const base=new THREE.Mesh(
-    new THREE.CylinderGeometry(size*.82,size*.82,size*.16,20),
-    new THREE.MeshBasicMaterial({color:P.cloudB,transparent:true,opacity:.45})
-  );
-  base.position.set(0,size*.08,0); grp.add(base);
+  const rng=(n)=>{const x=Math.sin(seed*127.1+n*311.7)*43758.5453;return x-Math.floor(x);};
+  for(let i=0;i<20;i++){
+    const angle =rng(i*4)  *Math.PI*2;
+    const rise  =rng(i*4+1);
+    const reach =rng(i*4+2)*0.9;
+    const jitter=rng(i*4+3);
+    const rx=Math.cos(angle)*reach*size;
+    const ry=(rise*0.7-0.15)*size*0.55;
+    const rz=Math.sin(angle)*reach*size*0.38;
+    const sr=size*(0.25+(1-reach)*0.42+rise*0.15)*(0.65+jitter*0.7);
+    const coreness=(1-reach)*0.65+rise*0.25;
+    const op=Math.min(0.88,0.06+coreness*0.82);
+    const w=Math.round(240+coreness*15);
+    const col=(w<<16)|(w<<8)|Math.min(255,w+Math.round((1-coreness)*18));
+    grp.add(Object.assign(
+      new THREE.Mesh(
+        new THREE.SphereGeometry(sr,7,5),
+        new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op,depthWrite:false})
+      ),
+      {position:new THREE.Vector3(rx,ry,rz)}
+    ));
+  }
   return grp;
 }
 
@@ -287,8 +283,8 @@ const CLOUD_DATA=[
   [ 40, -355, 22,  9], [-32, -395, 18, 13], [ 22, -435, 24,  8], [-38, -475, 20, 12],
   [ 34, -510, 22, 10], [-24, -545, 18, 11],
 ];
-const cloudGroups=CLOUD_DATA.map(([x,y,z,size])=>{
-  const cl=makeCloud(size); cl.position.set(x,y,z); scene.add(cl); return cl;
+const cloudGroups=CLOUD_DATA.map(([x,y,z,size],i)=>{
+  const cl=makeCloud(size,i); cl.position.set(x,y,z); scene.add(cl); return cl;
 });
 
 /* ── Floating islands (light, project-tinted) ─────────────────────────────── */
