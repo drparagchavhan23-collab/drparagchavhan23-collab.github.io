@@ -412,94 +412,270 @@ labelRenderer.setSize(W(), H());
 labelRenderer.domElement.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15;';
 document.body.appendChild(labelRenderer.domElement);
 
-/* ── 3-D Ray-Marched Nebula Skybox ─────────────────────────────────────── */
-const nebulaMat = new THREE.ShaderMaterial({
-  side: THREE.BackSide,
-  depthWrite: false,
-  uniforms: { iTime: { value: 0 } },
-  vertexShader: `
-    varying vec3 vWorldDir;
-    void main(){
-      vWorldDir = normalize((modelMatrix * vec4(position,0.0)).xyz);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-    }
-  `,
-  fragmentShader: `
-    precision mediump float;
-    uniform float iTime;
-    varying vec3 vWorldDir;
-
-    void main(){
-      vec3 d = normalize(vWorldDir);
-      float t = iTime * 0.04;
-
-      /* Pop-art primary palette */
-      vec3 yellow = vec3(1.00, 0.90, 0.00);
-      vec3 red    = vec3(0.91, 0.16, 0.11);
-      vec3 blue   = vec3(0.11, 0.31, 0.75);
-      vec3 blk    = vec3(0.05, 0.04, 0.04);
-
-      /* ── 3-D PERSPECTIVE SPEEDLINES ──
-         Rays around the Z-axis (atan of XY) naturally converge
-         to a vanishing point when looking forward — unlike XZ rays
-         which just slice vertically. perspR=0 is straight ahead.     */
-      float perspR = length(d.xy);
-      /* Square-polar mapping: wrap angle around the perimeter of a square
-         rather than a circle — stripes lie flat on cube faces, not curved */
-      vec2 d2 = d.xy; vec2 a2 = abs(d2);
-      float squareAngle;
-      if(a2.x >= a2.y){
-        squareAngle = d2.x > 0.0
-          ? (1.0 - d2.y / a2.x) * 0.125           /* right face  0.00–0.25 */
-          : 0.5 + (1.0 + d2.y / a2.x) * 0.125;    /* left  face  0.50–0.75 */
-      } else {
-        squareAngle = d2.y < 0.0
-          ? 0.25 + (1.0 - d2.x / a2.y) * 0.125    /* bottom face 0.25–0.50 */
-          : 0.75 + (1.0 + d2.x / a2.y) * 0.125;   /* top   face  0.75–1.00 */
-      }
-      float angle = squareAngle + t * 0.18;
-      float nRays  = 20.0;
-      float rayI   = mod(floor(angle * nRays), 3.0);
-      float rayF   = fract(angle * nRays);
-
-      /* Separator narrows toward vanishing point — the 3-D taper */
-      float sep = mix(0.025, 0.07, perspR);
-
-      vec3 rayCol;
-      if(rayF < sep)       rayCol = blk;
-      else if(rayI < 1.0)  rayCol = yellow;
-      else if(rayI < 2.0)  rayCol = red;
-      else                  rayCol = blue;
-
-      /* Bleach to yellow at the vanishing point (depth cue) */
-      float vanish = smoothstep(0.80, 0.0, perspR);
-      vec3 col = mix(rayCol, yellow, vanish * 0.88);
-
-      /* ── PERSPECTIVE FLOOR GRID below horizon ── */
-      if(d.y < -0.06){
-        float tF  = -8.0 / d.y;
-        vec2  fP  = vec2(d.x, d.z) * tF * 0.13;
-        float gx  = step(0.88, fract(fP.x));
-        float gz  = step(0.88, fract(fP.y));
-        float grd = clamp(gx + gz, 0.0, 1.0);
-        float fade = smoothstep(-0.06, -0.7, d.y);
-        col = mix(col, blk, grd * fade * 0.78);
-      }
-
-      /* ── BEN-DAY HALFTONE (dots shrink toward vanishing point) ── */
-      float hS  = mix(9.0, 22.0, perspR);
-      vec2  hUV = vec2(atan(d.x, d.z) * hS, asin(clamp(d.y,-1.0,1.0)) * hS);
-      vec2  hC  = fract(hUV) - 0.5;
-      float dotR = mix(0.12, 0.30, perspR);
-      col = mix(col, blk, step(length(hC), dotR) * 0.26);
-
-      gl_FragColor = vec4(col, 1.0);
-    }
-  `
-});
-const nebulaSphere = new THREE.Mesh(new THREE.SphereGeometry(500, 16, 16), nebulaMat);
+/* ── Solid yellow background sphere (parallax layers provide depth now) ── */
+const nebulaSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(600,6,6),
+  new THREE.MeshBasicMaterial({color:0xFFE500,side:THREE.BackSide,depthWrite:false})
+);
 nebulaSphere.renderOrder = -1;
 scene.add(nebulaSphere);
+
+/* ══════════════════════════════════════════════════════════════════
+   PARALLAX CUTOUT DIORAMA LAYERS
+   Ten canvas-textured planes spaced along the camera flight path
+   (Z: 0 → -445). DoubleSide + alphaTest = camera flies through them.
+══════════════════════════════════════════════════════════════════ */
+(function(){
+  const BK='#000000', YL='#FFE500', RD='#E8291C', BL='#1B4FBF';
+  const WH='#ffffff', TN='#B8966E', DT='#7B5C38', GN='#3A6B2A';
+
+  /* Offset Ben-Day dot fill clipped to a rect */
+  function dots(cx,col,x0,y0,fw,fh,sz,gap){
+    cx.save();
+    cx.beginPath(); cx.rect(x0,y0,fw,fh); cx.clip();
+    cx.fillStyle=col;
+    for(let r=0;r*gap<fh+gap;r++){
+      const ox=r%2?gap/2:0;
+      for(let c=-1;c*gap<fw+gap;c++){
+        cx.beginPath();
+        cx.arc(x0+c*gap+ox, y0+r*gap, sz/2, 0, Math.PI*2);
+        cx.fill();
+      }
+    }
+    cx.restore();
+  }
+
+  /* Fill + black stroke a polygon path */
+  function poly(cx,pts,col,lw=5){
+    cx.beginPath();
+    pts.forEach(([x,y],i)=>i?cx.lineTo(x,y):cx.moveTo(x,y));
+    cx.closePath();
+    cx.fillStyle=col; cx.fill();
+    cx.strokeStyle=BK; cx.lineWidth=lw; cx.lineJoin='round'; cx.stroke();
+  }
+
+  /* Mountain silhouette: pts are ridge-line coords, fills down to bottom */
+  function mountains(cx,W,H,ridge,col){
+    const pts=[[0,H],...ridge,[W,H]];
+    poly(cx,pts,col,5);
+  }
+
+  /* Single puffy cloud centred at (x,y) radius r */
+  function puff(cx,x,y,r,col=WH){
+    cx.fillStyle=col; cx.strokeStyle=BK; cx.lineWidth=3;
+    const bumps=[[0,0,1],[.55,-.38,.82],[1.3,-.18,.9],[1.9,.05,.75],[2.35,.3,.6]];
+    bumps.forEach(([bx,by,br])=>{
+      cx.beginPath(); cx.arc(x+bx*r,y+by*r,br*r,0,Math.PI*2); cx.fill();
+    });
+    bumps.forEach(([bx,by,br])=>{
+      cx.beginPath(); cx.arc(x+bx*r,y+by*r,br*r,0,Math.PI*2); cx.stroke();
+    });
+  }
+
+  /* Snow cap triangle over a peak */
+  function snowCap(cx,px,py,W,H){
+    poly(cx,[[px-W*.065,py+H*.1],[px,py-.02*H],[px+W*.065,py+H*.1]],WH,2.5);
+  }
+
+  function makeLayer(drawFn, pw=220, ph=120){
+    const CW=1024, CH=Math.round(CW*(ph/pw));
+    const cv=document.createElement('canvas'); cv.width=CW; cv.height=CH;
+    const cx=cv.getContext('2d'); cx.clearRect(0,0,CW,CH);
+    drawFn(cx,CW,CH);
+    const tex=new THREE.CanvasTexture(cv);
+    const mat=new THREE.MeshBasicMaterial({
+      map:tex, transparent:true, side:THREE.DoubleSide,
+      depthWrite:false, alphaTest:0.01
+    });
+    return new THREE.Mesh(new THREE.PlaneGeometry(pw,ph), mat);
+  }
+
+  /* ── LAYER 1: Sky panel with sun ── Z=-18 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      const g=cx.createLinearGradient(0,0,0,H*.78);
+      g.addColorStop(0,'#1B4FBF'); g.addColorStop(.65,'#6BA8E0'); g.addColorStop(1,YL);
+      cx.fillStyle=g; cx.fillRect(0,0,W,H*.8);
+      // Sun
+      cx.beginPath(); cx.arc(W*.78,H*.22,H*.17,0,Math.PI*2);
+      cx.fillStyle=YL; cx.fill(); cx.strokeStyle=BK; cx.lineWidth=6; cx.stroke();
+      // Sun rays
+      for(let i=0;i<12;i++){
+        const a=(i/12)*Math.PI*2, r1=H*.22, r2=H*.35;
+        cx.strokeStyle='rgba(255,229,0,.7)'; cx.lineWidth=3;
+        cx.beginPath();
+        cx.moveTo(W*.78+Math.cos(a)*r1,H*.22+Math.sin(a)*r1);
+        cx.lineTo(W*.78+Math.cos(a)*r2,H*.22+Math.sin(a)*r2);
+        cx.stroke();
+      }
+      // Horizon rule
+      cx.strokeStyle=BK; cx.lineWidth=8;
+      cx.beginPath(); cx.moveTo(0,H*.78); cx.lineTo(W,H*.78); cx.stroke();
+    },240,120);
+    m.position.set(0,16,-18); scene.add(m);
+  }
+
+  /* ── LAYER 2: Distant blue mountains ── Z=-65 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      const ridge=[
+        [0,H*.72],[W*.08,H*.52],[W*.18,H*.36],[W*.28,H*.56],
+        [W*.4,H*.28],[W*.52,H*.46],[W*.63,H*.33],
+        [W*.76,H*.52],[W*.88,H*.4],[W,H*.62]
+      ];
+      mountains(cx,W,H,ridge,'#6B7CA8');
+      dots(cx,'rgba(255,255,255,.12)',0,H*.28,W,H*.72,4,9);
+    });
+    m.position.set(0,6,-65); scene.add(m);
+  }
+
+  /* ── LAYER 3: Cloud band ── Z=-100 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      [[W*.08,H*.38,34],[W*.34,H*.28,48],[W*.62,H*.4,38],[W*.86,H*.22,42]].forEach(
+        ([x,y,r])=>puff(cx,x,y,r)
+      );
+      // Thin horizontal strip cloud
+      cx.fillStyle='rgba(255,255,255,.9)'; cx.strokeStyle=BK; cx.lineWidth=3;
+      cx.beginPath(); cx.ellipse(W*.42,H*.65,W*.3,H*.055,0,0,Math.PI*2);
+      cx.fill(); cx.stroke();
+    });
+    m.position.set(0,12,-100); scene.add(m);
+  }
+
+  /* ── LAYER 4: Tan mid-range mountains ── Z=-150 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      const ridge=[
+        [0,H*.62],[W*.07,H*.46],[W*.17,H*.3],[W*.27,H*.5],
+        [W*.37,H*.22],[W*.5,H*.38],[W*.6,H*.25],
+        [W*.72,H*.44],[W*.84,H*.3],[W*.95,H*.5],[W,H*.58]
+      ];
+      mountains(cx,W,H,ridge,TN);
+      dots(cx,'rgba(0,0,0,.13)',0,H*.22,W,H*.78,4,9);
+      // Snow caps on tallest peaks
+      [[W*.37,H*.22],[W*.6,H*.25],[W*.84,H*.3]].forEach(([px,py])=>snowCap(cx,px,py,W,H));
+    });
+    m.position.set(0,-4,-150); scene.add(m);
+  }
+
+  /* ── LAYER 5: Wispy low clouds ── Z=-195 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      [[W*.18,H*.38,W*.28,H*.06],[W*.55,H*.28,W*.22,H*.05],[W*.38,H*.6,W*.35,H*.06]]
+        .forEach(([x,y,rx,ry])=>{
+          cx.fillStyle='rgba(255,255,255,.92)'; cx.strokeStyle=BK; cx.lineWidth=2.5;
+          cx.beginPath(); cx.ellipse(x,y,rx,ry,0,0,Math.PI*2);
+          cx.fill(); cx.stroke();
+        });
+    });
+    m.position.set(0,6,-195); scene.add(m);
+  }
+
+  /* ── LAYER 6: Comic city skyline ── Z=-245 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      const BLDGS=[
+        [.03,.08,.42,RD,YL],  [.12,.06,.52,BL,WH],  [.19,.09,.38,RD,YL],
+        [.29,.05,.6,BK,RD],   [.36,.08,.46,'#7B3B00',YL],[.44,.1,.55,BL,YL],
+        [.55,.065,.48,RD,WH], [.63,.07,.36,'#444444',YL],[.71,.09,.44,BL,YL],
+        [.81,.055,.5,RD,YL],  [.88,.08,.38,BK,WH],
+      ];
+      const yBase=H*.82;
+      BLDGS.forEach(([fx,fw,fh,fill,winCol])=>{
+        const x=fx*W, w=fw*W, h=fh*H, y=yBase-h;
+        cx.fillStyle=fill; cx.strokeStyle=BK; cx.lineWidth=3;
+        cx.beginPath(); cx.rect(x,y,w,h); cx.fill(); cx.stroke();
+        dots(cx,winCol,x+w*.1,y+h*.1,w*.8,h*.65,4,9);
+      });
+      // Ground
+      cx.fillStyle=BK; cx.fillRect(0,yBase,W,H*.05);
+      cx.fillStyle=YL;
+      for(let i=0;i<W;i+=42){ cx.fillRect(i,yBase+H*.01,22,H*.01); }
+    });
+    m.position.set(0,-6,-245); scene.add(m);
+  }
+
+  /* ── LAYER 7: Cloud scatter ── Z=-292 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      [[W*.12,H*.42,44],[W*.48,H*.3,58],[W*.74,H*.48,40],[W*.28,H*.62,28]].forEach(
+        ([x,y,r])=>puff(cx,x,y,r)
+      );
+    });
+    m.position.set(0,9,-292); scene.add(m);
+  }
+
+  /* ── LAYER 8: Forest tree line ── Z=-340 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      // Ground
+      cx.fillStyle=GN; cx.fillRect(0,H*.72,W,H*.28);
+      cx.strokeStyle=BK; cx.lineWidth=5;
+      cx.beginPath(); cx.moveTo(0,H*.72); cx.lineTo(W,H*.72); cx.stroke();
+      dots(cx,'rgba(0,0,0,.18)',0,H*.72,W,H*.28,3,7);
+      // Triangle trees
+      for(let i=0;i<30;i++){
+        const tx=W*(i/29.5), ty=H*(.58+Math.sin(i*2.3)*.07);
+        const th=H*(.14+Math.cos(i*1.7)*.04);
+        const dark=i%3===0;
+        cx.fillStyle=dark?'#2A5A1A':GN; cx.strokeStyle=BK; cx.lineWidth=2.5;
+        cx.beginPath();
+        cx.moveTo(tx,ty-th); cx.lineTo(tx+th*.7,ty); cx.lineTo(tx-th*.7,ty);
+        cx.closePath(); cx.fill(); cx.stroke();
+        // Inner darker layer
+        cx.fillStyle='#1A3A0A';
+        cx.beginPath();
+        cx.moveTo(tx,ty-th*.8); cx.lineTo(tx+th*.5,ty-th*.2); cx.lineTo(tx-th*.5,ty-th*.2);
+        cx.closePath(); cx.fill();
+      }
+    });
+    m.position.set(0,-9,-340); scene.add(m);
+  }
+
+  /* ── LAYER 9: Rocky ground strip ── Z=-392 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      const ridge=[];
+      for(let i=0;i<=22;i++)
+        ridge.push([W*i/22, H*(.5+Math.sin(i*.82)*.08+Math.cos(i*1.4)*.04)]);
+      mountains(cx,W,H,ridge,DT);
+      dots(cx,'rgba(0,0,0,.18)',0,H*.4,W,H*.6,3,7);
+      // Crack lines
+      cx.strokeStyle='rgba(0,0,0,.3)'; cx.lineWidth=1.5;
+      for(let i=0;i<10;i++){
+        const sx=W*(.05+i/10*.9), sy=H*(.6+Math.random()*.3);
+        cx.beginPath(); cx.moveTo(sx,sy);
+        cx.lineTo(sx+28*(Math.random()-.5), sy+18*Math.random()); cx.stroke();
+      }
+    });
+    m.position.set(0,-9,-392); scene.add(m);
+  }
+
+  /* ── LAYER 10: Final dramatic mountain backdrop ── Z=-448 */
+  {
+    const m=makeLayer((cx,W,H)=>{
+      // Sky
+      const g=cx.createLinearGradient(0,0,0,H*.5);
+      g.addColorStop(0,'#1B4FBF'); g.addColorStop(1,YL);
+      cx.fillStyle=g; cx.fillRect(0,0,W,H*.52);
+      // Big peaks
+      const ridge=[
+        [0,H*.56],[W*.1,H*.27],[W*.2,H*.42],[W*.31,H*.18],
+        [W*.44,H*.36],[W*.52,H*.08],[W*.62,H*.3],[W*.74,H*.2],
+        [W*.86,H*.38],[W,H*.52]
+      ];
+      mountains(cx,W,H,ridge,'#8B7A50');
+      dots(cx,'rgba(0,0,0,.12)',0,H*.08,W,H*.92,4,9);
+      [[W*.31,H*.18],[W*.52,H*.08],[W*.74,H*.2]].forEach(([px,py])=>snowCap(cx,px,py,W,H));
+      // Horizon rule
+      cx.strokeStyle=BK; cx.lineWidth=6;
+      cx.beginPath(); cx.moveTo(0,H*.52); cx.lineTo(W,H*.52); cx.stroke();
+    },260,130);
+    m.position.set(0,0,-448); scene.add(m);
+  }
+
+})();
 
 /* ====================================== CAMERA PATH ====================== */
 /* Zones:  0-4 -> story stages   5-10 -> projects   11 -> about   12 -> contact */
@@ -913,8 +1089,7 @@ function animate() {
     .addScaledVector(camUp,  pan.y * 0.7);
   camera.lookAt(_paralaxPt);
 
-  nebulaMat.uniforms.iTime.value = t;
-  /* keep skybox centred on camera so it's always a surrounding shell */
+  /* keep yellow background sphere centred on camera */
   nebulaSphere.position.copy(camera.position);
 
   renderer.render(scene,camera);
