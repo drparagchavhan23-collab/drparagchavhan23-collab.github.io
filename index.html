@@ -445,12 +445,12 @@ const nebulaMat = new THREE.ShaderMaterial({
          which just slice vertically. perspR=0 is straight ahead.     */
       float perspR = length(d.xy);
       float angle  = atan(d.x, d.y) / (2.0 * 3.14159) + 0.5 + t * 0.18;
-      float nRays  = 26.0;
+      float nRays  = 20.0;
       float rayI   = mod(floor(angle * nRays), 3.0);
       float rayF   = fract(angle * nRays);
 
       /* Separator narrows toward vanishing point — the 3-D taper */
-      float sep = mix(0.04, 0.15, perspR);
+      float sep = mix(0.025, 0.07, perspR);
 
       vec3 rayCol;
       if(rayF < sep)       rayCol = blk;
@@ -459,8 +459,8 @@ const nebulaMat = new THREE.ShaderMaterial({
       else                  rayCol = blue;
 
       /* Bleach to yellow at the vanishing point (depth cue) */
-      float vanish = smoothstep(0.65, 0.0, perspR);
-      vec3 col = mix(rayCol, yellow, vanish * 0.72);
+      float vanish = smoothstep(0.80, 0.0, perspR);
+      vec3 col = mix(rayCol, yellow, vanish * 0.88);
 
       /* ── PERSPECTIVE FLOOR GRID below horizon ── */
       if(d.y < -0.06){
