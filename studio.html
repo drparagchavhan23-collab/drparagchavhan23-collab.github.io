@@ -12,7 +12,7 @@ html{scroll-behavior:smooth}
 html,body{width:100%;overflow-x:hidden}
 body{
   font-family:'Kalam',cursive;color:#f4f0e8;
-  background:#0d0828;
+  background:#0a0700;
 }
 
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block}
@@ -29,7 +29,7 @@ body{
   pointer-events:none;
   background:radial-gradient(circle at 50% 50%,
     transparent var(--ph,0px),
-    rgba(140,100,255,0.6) calc(var(--ph,0px) + 8px),
+    rgba(255,100,20,0.7) calc(var(--ph,0px) + 8px),
     #000 calc(var(--ph,0px) + 24px)
   );
 }
@@ -308,12 +308,12 @@ const W = () => window.innerWidth, H = () => window.innerHeight;
 
 /* -- Scene -- */
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x6a2088, 0.0028);
+scene.fog = new THREE.FogExp2(0x1a0600, 0.0028);
 
 const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 2000);
 
 const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true });
-renderer.setClearColor(0x0d0828, 1);
+renderer.setClearColor(0x0a0700, 1);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(W(), H());
 
@@ -359,18 +359,18 @@ const nebulaMat = new THREE.ShaderMaterial({
         vec3 p = vec3(0.0,0.0,5.0) + dir*d;
         float rz = map(p);
         float f  = clamp((rz - map(p+0.1))*0.5,-0.1,1.0);
-        /* Palette: #0d0828 base → #cc44ff violet → #00eeff cyan at peaks */
-        vec3 palBase = vec3(0.05, 0.01, 0.16);          /* deep purple #0d0828 */
-        vec3 palMid  = vec3(0.80, 0.27, 1.00);          /* violet  #cc44ff     */
-        vec3 palHi   = vec3(0.00, 0.93, 1.00);          /* cyan    #00eeff     */
-        vec3 base = palBase + mix(palMid, palHi, clamp(f*1.8,0.0,1.0)) * f * 3.2;
+        /* Palette: dark charcoal base → orange → red at peaks */
+        vec3 palBase = vec3(0.06, 0.03, 0.01);          /* near-black warm    */
+        vec3 palMid  = vec3(0.92, 0.32, 0.04);          /* orange  #eb5200    */
+        vec3 palHi   = vec3(1.00, 0.12, 0.02);          /* red     #ff1f05    */
+        vec3 base = palBase + mix(palMid, palHi, clamp(f*1.8,0.0,1.0)) * f * 3.0;
         col = col*base + smoothstep(2.5,0.0,rz)*0.7*base;
         d  += min(rz,1.0);
       }
 
-      /* orange-gold centre glow — echoes #ff8844 / #ffd700 */
-      float warmth = smoothstep(1.0, 0.0, abs(dir.y)) * smoothstep(0.6, 1.0, dir.z) * 0.28;
-      col += vec3(1.0, 0.52, 0.10)*warmth;
+      /* bright orange centre glow */
+      float warmth = smoothstep(1.0, 0.0, abs(dir.y)) * smoothstep(0.6, 1.0, dir.z) * 0.35;
+      col += vec3(1.0, 0.45, 0.05)*warmth;
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -449,7 +449,7 @@ STAGES.forEach((s,i)=>{
 });
 
 /* ====================================== PROJECT PORTALS ================= */
-const PROJECT_COLORS = [0x00eeff,0xff44cc,0xffd700,0xff8844,0x88ff44,0xcc44ff];
+const PROJECT_COLORS = [0xff5500,0xff2200,0xffaa00,0xff7700,0xffdd22,0xff3322];
 const PROJECT_NUMS   = ['01','02','03','04','05','06'];
 const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
 const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
@@ -753,7 +753,7 @@ const znumEl    = document.getElementById('znum');
 const hintEl    = document.getElementById('hint');
 let   lastZone  = 0;
 
-const FOG_COLORS=[0x6a2088,0x204488,0x881860,0xaa4410,0x554400,0x005544,0x551155,0x003355,0x553300,0x005544,0x330055,0x444444,0x665500];
+const FOG_COLORS=[0x1a0600,0x2a0a00,0x3a1000,0x4a1800,0x3a1200,0x2a0c00,0x1e0800,0x2e1000,0x3e1800,0x2a0e00,0x1a0800,0x221000,0x301400];
 
 ScrollTrigger.create({
   trigger:'#ss', start:'top top', end:'bottom bottom', scrub:4,
@@ -930,13 +930,13 @@ function fitModel(obj,targetSize){
 
       // Soft violet glow behind crack
       ctx.beginPath(); ctx.moveTo(seg.x0, seg.y0); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(150,80,255,${seg.alpha * 0.18})`;
+      ctx.strokeStyle = `rgba(255,120,20,${seg.alpha * 0.22})`;
       ctx.lineWidth   = seg.lw * 6;
       ctx.stroke();
 
       // Core bright line
       ctx.beginPath(); ctx.moveTo(seg.x0, seg.y0); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(235,215,255,${seg.alpha})`;
+      ctx.strokeStyle = `rgba(255,230,180,${seg.alpha})`;
       ctx.lineWidth   = seg.lw;
       ctx.stroke();
     });
@@ -1020,57 +1020,151 @@ function fitModel(obj,targetSize){
 
 /* ── Audio ──────────────────────────────────────────────────────────────── */
 (()=>{
-  const audio = document.getElementById('bg-audio');
-  const btn   = document.getElementById('audio-btn');
-  let actx;
+  const btn = document.getElementById('audio-btn');
+  let actx, masterGain, beatInterval;
+  let beatRunning = false;
 
   function getCtx(){
-    if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)();
+    if(!actx){
+      actx = new (window.AudioContext||window.webkitAudioContext)();
+      masterGain = actx.createGain();
+      masterGain.gain.value = 0.0;
+      masterGain.connect(actx.destination);
+    }
     if(actx.state==='suspended') actx.resume();
     return actx;
   }
 
-  // Subtle soft tick — noise burst filtered to ~4kHz, very short
-  function playClick(){
-    try {
-      const ctx = getCtx();
-      const now = ctx.currentTime;
-      const buf = ctx.createBuffer(1, ctx.sampleRate*0.04, ctx.sampleRate);
-      const d = buf.getChannelData(0);
-      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      const hpf = ctx.createBiquadFilter();
-      hpf.type='highpass'; hpf.frequency.value=3800;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.12, now);
-      g.gain.exponentialRampToValueAtTime(0.0001, now+0.038);
-      src.connect(hpf); hpf.connect(g); g.connect(ctx.destination);
-      src.start(now);
-    } catch(e){}
+  /* ── Lo-fi Hip Hop Beat ── */
+  function startBeat(){
+    if(beatRunning) return;
+    beatRunning = true;
+    const c = getCtx();
+    const BPM = 87, S = 60/BPM/4; // 16th-note step
+
+    function noise(dur){
+      const n = Math.floor(c.sampleRate*dur);
+      const b = c.createBuffer(1,n,c.sampleRate);
+      const d = b.getChannelData(0);
+      for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+      return b;
+    }
+
+    function kick(t){
+      const o=c.createOscillator(), g=c.createGain();
+      o.connect(g); g.connect(masterGain);
+      o.type='sine';
+      o.frequency.setValueAtTime(185,t);
+      o.frequency.exponentialRampToValueAtTime(38,t+0.42);
+      g.gain.setValueAtTime(1.1,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.48);
+      o.start(t); o.stop(t+0.5);
+    }
+
+    function snare(t){
+      const src=c.createBufferSource(); src.buffer=noise(0.14);
+      const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2600; bp.Q.value=0.6;
+      const g=c.createGain();
+      g.gain.setValueAtTime(0.55,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.13);
+      src.connect(bp); bp.connect(g); g.connect(masterGain);
+      src.start(t); src.stop(t+0.14);
+      // body tone
+      const o=c.createOscillator(), og=c.createGain();
+      o.connect(og); og.connect(masterGain);
+      o.frequency.value=195;
+      og.gain.setValueAtTime(0.28,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.07);
+      o.start(t); o.stop(t+0.08);
+    }
+
+    function hat(t, open=false){
+      const dur=open?0.22:0.04;
+      const src=c.createBufferSource(); src.buffer=noise(dur+0.01);
+      const hp=c.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8500;
+      const g=c.createGain();
+      g.gain.setValueAtTime(open?0.16:0.10,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      src.connect(hp); hp.connect(g); g.connect(masterGain);
+      src.start(t); src.stop(t+dur+0.01);
+    }
+
+    function bass(t, freq, dur){
+      const o=c.createOscillator(), lp=c.createBiquadFilter(), g=c.createGain();
+      o.connect(lp); lp.connect(g); g.connect(masterGain);
+      lp.type='lowpass'; lp.frequency.value=280;
+      o.type='sine'; o.frequency.setValueAtTime(freq,t);
+      g.gain.setValueAtTime(0.65,t);
+      g.gain.setValueAtTime(0.65,t+dur-0.04);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      o.start(t); o.stop(t+dur+0.01);
+    }
+
+    // 16-step patterns — syncopated hip hop feel
+    const kicks  = [0,3,6,8,11,14];
+    const snares = [4,12];
+    const hats   = [1,3,5,7,9,11,13,15];
+    const opens  = [6,14];
+    const bassLine = [
+      {s:0,f:55,d:3*S},{s:4,f:55,d:1.5*S},{s:6,f:41,d:1*S},
+      {s:8,f:44,d:3*S},{s:12,f:49,d:1.5*S},{s:14,f:41,d:2*S}
+    ];
+
+    const BAR = S*16;
+    let nextBar = c.currentTime + 0.05;
+
+    function sched(t){
+      kicks.forEach(s  => kick(t+s*S));
+      snares.forEach(s => snare(t+s*S));
+      hats.forEach(s   => hat(t+s*S, opens.includes(s)));
+      bassLine.forEach(n => bass(t+n.s*S, n.f, n.d));
+    }
+    sched(nextBar); nextBar += BAR;
+    beatInterval = setInterval(()=>{ sched(nextBar); nextBar+=BAR; }, (BAR-0.05)*1000);
   }
 
-  function setMuted(muted){
-    btn.innerHTML = muted
+  function stopBeat(){
+    clearInterval(beatInterval);
+    beatRunning = false;
+  }
+
+  /* ── Click tick ── */
+  function playClick(){
+    try{
+      const c=getCtx(), now=c.currentTime;
+      const src=c.createBufferSource();
+      src.buffer=(()=>{
+        const b=c.createBuffer(1,Math.floor(c.sampleRate*.04),c.sampleRate);
+        const d=b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; return b;
+      })();
+      const hp=c.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3800;
+      const g=c.createGain();
+      g.gain.setValueAtTime(0.10,now); g.gain.exponentialRampToValueAtTime(0.0001,now+0.038);
+      src.connect(hp); hp.connect(g); g.connect(c.destination);
+      src.start(now);
+    }catch(e){}
+  }
+
+  function setMuted(m){
+    if(masterGain) masterGain.gain.setTargetAtTime(m?0:0.55, actx.currentTime, 0.1);
+    btn.innerHTML = m
       ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`
       : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
   }
 
-  audio.volume = 0.4;
-  setMuted(true); // starts muted until portal opens
+  setMuted(true);
 
-  // Called by portal intro when hold completes
   window.__startAudio = function(){
     getCtx();
-    audio.play().then(()=>{ setMuted(false); }).catch(()=>{ setMuted(true); });
+    startBeat();
+    setMuted(false);
   };
 
+  let muted = false;
   btn.addEventListener('click', ()=>{
-    if(audio.paused){ audio.play(); setMuted(false); }
-    else { audio.pause(); setMuted(true); }
+    muted = !muted;
+    if(!muted && !beatRunning){ getCtx(); startBeat(); }
+    setMuted(muted);
   });
 
-  // Subtle tick on CTAs and portal labels
   document.querySelectorAll('.zo-cta, .label-div').forEach(el=>{
     el.addEventListener('pointerdown', playClick);
   });
