@@ -450,27 +450,73 @@ sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
 scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.14,transparent:true,opacity:.9,sizeAttenuation:true})));
 
 /* ====================================== CLOUDS ========================== */
-const CLOUD_PALS=[
-  [0xe07030,0xc85820,0xf08040],[0x8b2daa,0x6a1880,0xb050d0],[0x2898c8,0x1870a0,0x40b8e0],
-  [0xd030a0,0xf050b8,0xa01880],[0xe89030,0xf5b040,0xd07020],[0x4040c8,0x2828a0,0x6060e0],
-];
-function makeCloud(size,palIdx){
-  const grp=new THREE.Group(),pal=CLOUD_PALS[palIdx%CLOUD_PALS.length];
-  [[0,0,0,1,0],[size*.72,-size*.08,0,.72,1],[-size*.68,0,0,.78,2],[size*.3,size*.28,size*.32,.62,0],
-   [-size*.32,size*.2,-size*.28,.66,1],[size*.12,-size*.16,size*.42,.52,2],[-size*.22,-size*.14,-size*.38,.56,0],[size*.5,size*.22,-size*.2,.5,1]
-  ].forEach(([x,y,z,s,ci])=>{
-    const p=new THREE.Mesh(new THREE.SphereGeometry(size*s,10,8),new THREE.MeshBasicMaterial({color:pal[ci],transparent:true,opacity:.88}));
-    p.position.set(x,y,z);grp.add(p);
+/*
+  Anime cumulus style: flat bottom, rounded multi-bump top, blue body + cream highlights.
+  Each cloud is a cluster of flattened spheres whose bottoms align to y=0,
+  with smaller cream spheres offset up-left to simulate the illustrated highlight.
+*/
+const C_BLUE   = 0x7ec8e3;  // sky blue body
+const C_BLUE2  = 0x5ab4d4;  // slightly deeper blue for side puffs
+const C_SHADOW = 0x8ab0cc;  // very subtle shadow tint on base
+const C_CREAM  = 0xf5efe0;  // cream white highlight
+
+function makeCloud(size) {
+  const grp = new THREE.Group();
+
+  // Each bump: [relX, relY_center, relZ, radiusFactor]
+  // Y-center is set so the bottom of each sphere sits at y≈0 (flat bottom)
+  const bumps = [
+    [ 0,        1.0,   0,    1.0  ],   // center main
+    [ size*.68, 0.78,  size*.05, .72],   // right
+    [-size*.62, 0.80,  size*.05, .70],   // left
+    [ size*.30, 1.22,  size*.08, .54],   // inner right up
+    [-size*.26, 1.18,  size*.06, .50],   // inner left up
+    [ size*.55, 0.65, -size*.08, .48],   // far right lower
+    [-size*.50, 0.68, -size*.06, .46],   // far left lower
+  ];
+
+  bumps.forEach(([rx, ryFactor, rz, rf]) => {
+    const r = size * rf;
+    const cy = r * ryFactor; // center Y so bottom = cy - r ≈ 0
+
+    // Main blue sphere (slightly flattened, scaleY 0.78)
+    const m = new THREE.Mesh(
+      new THREE.SphereGeometry(r, 16, 12),
+      new THREE.MeshBasicMaterial({ color: rf >= 0.9 ? C_BLUE : C_BLUE2, transparent:true, opacity:.95 })
+    );
+    m.scale.y = 0.78;
+    m.position.set(rx, cy, rz);
+    grp.add(m);
+
+    // Cream highlight — smaller sphere, offset upper-left, slightly forward
+    const hr = r * 0.52;
+    const h = new THREE.Mesh(
+      new THREE.SphereGeometry(hr, 12, 10),
+      new THREE.MeshBasicMaterial({ color: C_CREAM, transparent:true, opacity:.82 })
+    );
+    h.scale.y = 0.65;
+    h.position.set(rx - r*.28, cy + r*.42, rz + r*.22);
+    grp.add(h);
   });
+
+  // Thin flat base strip to reinforce the flat bottom
+  const base = new THREE.Mesh(
+    new THREE.CylinderGeometry(size*.85, size*.85, size*.18, 20),
+    new THREE.MeshBasicMaterial({ color: C_SHADOW, transparent:true, opacity:.55 })
+  );
+  base.position.set(0, size*.09, 0);
+  grp.add(base);
+
   return grp;
 }
+
 const CLOUD_DATA=[
-  [16,-6,-25,14,0],[-28,-3,-65,16,1],[34,20,-115,12,2],[-20,-2,-175,15,3],[25,-10,-235,11,4],[-38,17,-285,18,1],
-  [12,-7,-345,13,0],[-14,22,-405,14,2],[44,6,-155,10,3],[-32,-16,-315,16,4],[20,30,-50,12,5],[-10,-22,-130,14,0],
-  [50,12,-480,11,1],[-45,-10,-555,15,2],[38,8,-620,13,0],[-30,18,-690,16,1],[42,-12,-755,12,3],[-35,6,-820,14,4],
-  [20,25,-880,11,5],[-15,-8,-940,15,0],[30,10,-1000,12,1],[-20,-5,-1040,14,2],
+  [16,-6,-25,14],[-28,-3,-65,16],[34,20,-115,12],[-20,-2,-175,15],[25,-10,-235,11],[-38,17,-285,18],
+  [12,-7,-345,13],[-14,22,-405,14],[44,6,-155,10],[-32,-16,-315,16],[20,30,-50,12],[-10,-22,-130,14],
+  [50,12,-480,11],[-45,-10,-555,15],[38,8,-620,13],[-30,18,-690,16],[42,-12,-755,12],[-35,6,-820,14],
+  [20,25,-880,11],[-15,-8,-940,15],[30,10,-1000,12],[-20,-5,-1040,14],
 ];
-const cloudGroups=CLOUD_DATA.map(([x,y,z,size,pal])=>{const cl=makeCloud(size,pal);cl.position.set(x,y,z);scene.add(cl);return cl;});
+const cloudGroups=CLOUD_DATA.map(([x,y,z,size])=>{const cl=makeCloud(size);cl.position.set(x,y,z);scene.add(cl);return cl;});
 
 /* ====================================== ISLANDS ======================== */
 function terrainY(x,z,size){
@@ -584,8 +630,8 @@ function animate() {
   });
 
   cloudGroups.forEach((cl,i)=>{
-    cl.position.x=CLOUD_DATA[i][0]+Math.sin(t*.12+i*.9)*1.4;
-    cl.position.y=CLOUD_DATA[i][1]+Math.sin(t*.18+i*1.7)*.8;
+    cl.position.x=CLOUD_DATA[i][0]+Math.sin(t*.10+i*.9)*1.2;
+    cl.position.y=CLOUD_DATA[i][1]+Math.sin(t*.14+i*1.7)*.5;
   });
 
   planets.forEach((p,i)=>{ p.rotation.y+=.001+i*.0005; });
