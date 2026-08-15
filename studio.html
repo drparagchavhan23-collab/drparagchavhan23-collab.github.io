@@ -444,7 +444,20 @@ const nebulaMat = new THREE.ShaderMaterial({
          to a vanishing point when looking forward — unlike XZ rays
          which just slice vertically. perspR=0 is straight ahead.     */
       float perspR = length(d.xy);
-      float angle  = atan(d.x, d.y) / (2.0 * 3.14159) + 0.5 + t * 0.18;
+      /* Square-polar mapping: wrap angle around the perimeter of a square
+         rather than a circle — stripes lie flat on cube faces, not curved */
+      vec2 d2 = d.xy; vec2 a2 = abs(d2);
+      float squareAngle;
+      if(a2.x >= a2.y){
+        squareAngle = d2.x > 0.0
+          ? (1.0 - d2.y / a2.x) * 0.125           /* right face  0.00–0.25 */
+          : 0.5 + (1.0 + d2.y / a2.x) * 0.125;    /* left  face  0.50–0.75 */
+      } else {
+        squareAngle = d2.y < 0.0
+          ? 0.25 + (1.0 - d2.x / a2.y) * 0.125    /* bottom face 0.25–0.50 */
+          : 0.75 + (1.0 + d2.x / a2.y) * 0.125;   /* top   face  0.75–1.00 */
+      }
+      float angle = squareAngle + t * 0.18;
       float nRays  = 20.0;
       float rayI   = mod(floor(angle * nRays), 3.0);
       float rayF   = fract(angle * nRays);
