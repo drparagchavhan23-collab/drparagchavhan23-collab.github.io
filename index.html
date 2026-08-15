@@ -477,6 +477,14 @@ const PROJECT_NUMS   = ['01','02','03','04','05','06'];
 const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
 const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
 
+/* Pre-load all 6 project photos */
+const texLoader = new THREE.TextureLoader();
+const PROJECT_TEXTURES = [1,2,3,4,5,6].map(n => {
+  const t = texLoader.load(`p${n}.jpg`);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+});
+
 /* Portals offset to left (X=-8) so they fill the left half while text sits right */
 const PORTAL_POSITIONS = [
   new THREE.Vector3( -8,   2,-548),
@@ -497,10 +505,10 @@ PORTAL_POSITIONS.forEach((pos, i) => {
   const W2 = 15, H2 = 10;
   const hw=W2/2, hh=H2/2;
 
-  // Subtle dark glass backing — very low opacity
+  // Photo texture filling the frame
   g.add(new THREE.Mesh(
     new THREE.PlaneGeometry(W2, H2),
-    new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.22, side:THREE.DoubleSide, depthWrite:false })
+    new THREE.MeshBasicMaterial({ map: PROJECT_TEXTURES[i], side: THREE.DoubleSide })
   ));
 
   // Thin outer border
