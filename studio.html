@@ -64,6 +64,8 @@ body{
 .zo-head{font-family:'Syne',sans-serif;font-size:clamp(20px,2.8vw,40px);font-weight:800;line-height:.95;letter-spacing:-.025em;color:#f4f0e8;margin-bottom:14px}
 .zo-body{font-size:11px;line-height:1.9;color:rgba(244,240,232,.42);font-style:italic}
 .zone-overlay:not(.on) .zo-cta{pointer-events:none!important}
+/* Project card text pushed to bottom-centre so portal card sits above it */
+.zo-project-inner{position:absolute;bottom:10vh;left:50%;transform:translateX(-50%);text-align:center;width:min(420px,88vw)}
 .zo-cta{
   display:inline-flex;align-items:center;gap:8px;
   margin-top:22px;font-size:9px;letter-spacing:.22em;
@@ -169,8 +171,8 @@ body{
 </div>
 
 <!-- 5 - 10: Projects -->
-<div class="zone-overlay right" id="z5" style="--a:#00eeff">
-  <div class="zo-inner">
+<div class="zone-overlay center" id="z5" style="--a:#00eeff">
+  <div class="zo-inner zo-project-inner">
     <span class="zo-num">01 / 06</span>
     <span class="zo-tag">Urban Housing</span>
     <h2 class="zo-head">Project Alpha</h2>
@@ -178,8 +180,8 @@ body{
     <a class="zo-cta" href="project.html?id=1">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay left" id="z6" style="--a:#ff44cc">
-  <div class="zo-inner">
+<div class="zone-overlay center" id="z6" style="--a:#ff44cc">
+  <div class="zo-inner zo-project-inner">
     <span class="zo-num">02 / 06</span>
     <span class="zo-tag">Cultural Centre</span>
     <h2 class="zo-head">Project Beta</h2>
@@ -187,8 +189,8 @@ body{
     <a class="zo-cta" href="project.html?id=2">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay right" id="z7" style="--a:#ffd700">
-  <div class="zo-inner">
+<div class="zone-overlay center" id="z7" style="--a:#ffd700">
+  <div class="zo-inner zo-project-inner">
     <span class="zo-num">03 / 06</span>
     <span class="zo-tag">Spatial Installation</span>
     <h2 class="zo-head">Project Gamma</h2>
@@ -196,8 +198,8 @@ body{
     <a class="zo-cta" href="project.html?id=3">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay left" id="z8" style="--a:#ff8844">
-  <div class="zo-inner">
+<div class="zone-overlay center" id="z8" style="--a:#ff8844">
+  <div class="zo-inner zo-project-inner">
     <span class="zo-num">04 / 06</span>
     <span class="zo-tag">Residential</span>
     <h2 class="zo-head">Project Delta</h2>
@@ -205,8 +207,8 @@ body{
     <a class="zo-cta" href="project.html?id=4">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay right" id="z9" style="--a:#88ff44">
-  <div class="zo-inner">
+<div class="zone-overlay center" id="z9" style="--a:#88ff44">
+  <div class="zo-inner zo-project-inner">
     <span class="zo-num">05 / 06</span>
     <span class="zo-tag">Museum</span>
     <h2 class="zo-head">Project Epsilon</h2>
@@ -214,8 +216,8 @@ body{
     <a class="zo-cta" href="project.html?id=5">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay left" id="z10" style="--a:#cc44ff">
-  <div class="zo-inner">
+<div class="zone-overlay center" id="z10" style="--a:#cc44ff">
+  <div class="zo-inner zo-project-inner">
     <span class="zo-num">06 / 06</span>
     <span class="zo-tag">Transit + Urban</span>
     <h2 class="zo-head">Project Zeta</h2>
@@ -225,23 +227,24 @@ body{
 </div>
 
 <!-- 11: About -->
-<div class="zone-overlay right" id="z11" style="--a:#f4f0e8">
-  <div class="zo-inner" style="max-width:400px">
+<div class="zone-overlay left" id="z11" style="--a:#f4f0e8">
+  <div class="zo-inner" style="max-width:420px">
     <span class="zo-tag">About</span>
     <h2 class="zo-head">Parag Chavhan.</h2>
-    <p class="zo-body">Architecture student. Obsessive builder. I spend studios asking the most uncomfortable questions -- about who a space is really for, and what it refuses to do.</p>
+    <p class="zo-body">Architecture student. Obsessive builder. I spend studios asking the most uncomfortable questions — about who a space is really for, and what it refuses to do.</p>
     <p class="zo-body" style="margin-top:10px">Outside the studio I'm probably fiddling with code, listening to something at an unreasonable volume, or wearing a floral shirt.</p>
     <div class="about-tags">
       <span>Architecture</span><span>Urban Design</span><span>3D Modelling</span>
       <span>Parametric</span><span>Digital Fab</span>
     </div>
+    <a class="zo-cta" style="margin-top:22px" href="mailto:drparagchavhan23@gmail.com?subject=Hi Parag">Say hello -></a>
   </div>
 </div>
 
 <!-- 12: Contact -->
 <div class="zone-overlay center" id="z12" style="--a:#ffd700">
   <div class="zo-inner" style="max-width:520px;text-align:center">
-    <span class="zo-tag">Contact · Let's talk</span>
+    <span class="zo-tag">Contact · Let's work together</span>
     <h2 class="zo-head" style="font-size:clamp(28px,4vw,58px)">Let's make something<br>worth talking about.</h2>
     <p class="zo-body" style="margin:0 auto">Open to internships, collaborations, and interesting conversations.</p>
     <a class="zo-cta" style="font-size:11px;margin-top:24px" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com</a>
@@ -308,8 +311,9 @@ const PATH = new THREE.CatmullRomCurve3([
   new THREE.Vector3( 16,  -6,-870),   // P6
   // -- About + Contact -------------------------------------------------------
   new THREE.Vector3(  8,  16,-930),
-  new THREE.Vector3(-10,   6,-980),   // About
-  new THREE.Vector3(  0,   0,-1060),  // Contact
+  new THREE.Vector3(-14,   8,-1000),  // About
+  new THREE.Vector3( 10,   4,-1080),
+  new THREE.Vector3(  0,   0,-1160),  // Contact
 ], false, 'catmullrom', 0.5);
 
 /* Zone thresholds (progress 0->1) mapped to 13 zones */
@@ -358,12 +362,12 @@ const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Reside
 
 /* Portals close to the path, clear of cloud positions (clouds avoid this Z range via CLOUD_DATA) */
 const PORTAL_POSITIONS = [
-  new THREE.Vector3(-20,   2,-548),
-  new THREE.Vector3( 22,   8,-615),
-  new THREE.Vector3(-20,  -4,-678),
-  new THREE.Vector3( 22,   4,-742),
-  new THREE.Vector3(-20,  10,-808),
-  new THREE.Vector3( 18,  -2,-872),
+  new THREE.Vector3(  0,   2,-548),
+  new THREE.Vector3(  0,   4,-615),
+  new THREE.Vector3(  0,  -2,-678),
+  new THREE.Vector3(  0,   4,-742),
+  new THREE.Vector3(  0,   6,-808),
+  new THREE.Vector3(  0,  -2,-872),
 ];
 
 const portalGroups = [];
