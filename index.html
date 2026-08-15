@@ -885,8 +885,6 @@ function fitModel(obj,targetSize){
 
   function setProgress(p){
     arc.style.strokeDashoffset = CIRC * (1 - p);
-    // Portal hole grows while holding (0 → 60px)
-    intro.style.setProperty('--ph', (p * 60) + 'px');
   }
 
   function openPortal(){
