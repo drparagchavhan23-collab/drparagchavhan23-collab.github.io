@@ -20,53 +20,31 @@ body{
 /* ── Portal Intro Screen ── */
 #portal-intro{
   position:fixed;inset:0;z-index:5000;
-  display:flex;align-items:center;justify-content:center;
+  background:#000;
   cursor:pointer;user-select:none;-webkit-user-select:none;
-  background:radial-gradient(circle at 50% 50%,
-    transparent var(--ph,0px),
-    rgba(140,100,255,0.6) calc(var(--ph,0px) + 8px),
-    #000000 calc(var(--ph,0px) + 24px)
-  );
-  transition:--ph 0.1s ease-out;
 }
 #portal-intro.portal-open{
   --ph:220vmax;
   transition:--ph 1.1s cubic-bezier(0.16,1,0.3,1);
   pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,
+    transparent var(--ph,0px),
+    rgba(140,100,255,0.6) calc(var(--ph,0px) + 8px),
+    #000 calc(var(--ph,0px) + 24px)
+  );
 }
-#pi-ring{
-  position:absolute;width:180px;height:180px;
-  transform:rotate(-90deg);
-  filter:drop-shadow(0 0 6px rgba(160,120,255,0.6));
-}
-.pi-track{fill:none;stroke:rgba(255,255,255,0.12);stroke-width:1.5}
-.pi-arc{
-  fill:none;stroke:rgba(255,255,255,0.85);stroke-width:1.5;
-  stroke-dasharray:326.73;stroke-dashoffset:326.73;
-  stroke-linecap:round;
-  transition:stroke-dashoffset 0.05s linear;
-}
+#crack-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #pi-label{
-  position:absolute;display:flex;flex-direction:column;
-  align-items:center;gap:8px;pointer-events:none;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;transition:opacity .4s;
 }
 #pi-text{
-  font-family:'Kalam',cursive;font-size:8px;
-  letter-spacing:.28em;color:rgba(255,255,255,0.45);
-  animation:pi-pulse 2s ease-in-out infinite;
+  font-family:'Kalam',cursive;font-size:13px;
+  letter-spacing:.22em;color:rgba(255,255,255,0.35);
+  display:block;text-align:center;
+  animation:pi-pulse 2.5s ease-in-out infinite;
 }
-#pi-sub{
-  font-family:'Kalam',cursive;font-size:6px;
-  letter-spacing:.2em;color:rgba(255,255,255,0.2);
-}
-@keyframes pi-pulse{0%,100%{opacity:.45}50%{opacity:.9}}
-#pi-center-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:rgba(160,120,255,0.7);
-  box-shadow:0 0 12px 4px rgba(140,80,255,0.4);
-  animation:pi-pulse 2s ease-in-out infinite;
-  margin-bottom:14px;
-}
+@keyframes pi-pulse{0%,100%{opacity:.25}50%{opacity:.55}}
 
 /* Nav */
 #nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30;mix-blend-mode:normal}
@@ -164,14 +142,9 @@ body{
 <body>
 <!-- Portal intro screen -->
 <div id="portal-intro">
-  <svg id="pi-ring" viewBox="0 0 120 120">
-    <circle cx="60" cy="60" r="52" class="pi-track"/>
-    <circle cx="60" cy="60" r="52" class="pi-arc" id="pi-arc"/>
-  </svg>
+  <canvas id="crack-canvas"></canvas>
   <div id="pi-label">
-    <div id="pi-center-dot"></div>
-    <span id="pi-text">CLICK &amp; HOLD</span>
-    <span id="pi-sub">TO ENTER</span>
+    <span id="pi-text">hold to enter</span>
   </div>
 </div>
 
@@ -875,60 +848,154 @@ function fitModel(obj,targetSize){
 })();
 
 
-/* ── Portal Intro Hold-to-Enter ─────────────────────────────────────────── */
+/* ── Portal Intro — Organic Glass Cracks ────────────────────────────────── */
 (()=>{
-  const intro  = document.getElementById('portal-intro');
-  const arc    = document.getElementById('pi-arc');
-  const label  = document.getElementById('pi-text');
-  const CIRC   = 326.73;  // 2π × 52
-  const HOLD_MS = 1800;   // ms to hold before portal opens
+  const intro   = document.getElementById('portal-intro');
+  const canvas  = document.getElementById('crack-canvas');
+  const labelEl = document.getElementById('pi-label');
+  const ctx     = canvas.getContext('2d');
+  const HOLD_MS = 1800;
 
-  let holdStart = null;
-  let raf       = null;
-  let opened    = false;
+  let W, H, cx, cy;
+  let holdStart  = null;
+  let raf        = null;
+  let opened     = false;
+  let segments   = [];   // flat list of crack segments to draw
+  let fadeAlpha  = 0;    // for fade-out on cancel
 
-  function setProgress(p){
-    arc.style.strokeDashoffset = CIRC * (1 - p);
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W * 0.5; cy = H * 0.5;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* ── Crack tree builder ── */
+  function addSegments(x0, y0, angle, len, depth, tStart, tEnd){
+    // Organic jitter on angle increases with depth
+    const jitter = (Math.random() - 0.5) * (0.5 + depth * 0.3);
+    const a  = angle + jitter;
+    const x1 = x0 + Math.cos(a) * len;
+    const y1 = y0 + Math.sin(a) * len;
+
+    segments.push({
+      x0, y0, x1, y1,
+      tStart, tEnd,
+      lw:  Math.max(0.25, 1.6 - depth * 0.45),
+      alpha: 0.92 - depth * 0.16,
+    });
+
+    if(depth >= 3) return;
+
+    const numBranches = depth === 0 ? 3 : depth === 1 ? 2 : 1;
+    for(let b = 0; b < numBranches; b++){
+      // Branch point as fraction along THIS segment
+      const frac    = 0.25 + Math.random() * 0.5;
+      const tBranch = tStart + (tEnd - tStart) * frac;
+      const bx      = x0 + Math.cos(a) * len * frac;
+      const by      = y0 + Math.sin(a) * len * frac;
+      // Branch deflects away from parent
+      const side    = b % 2 === 0 ? 1 : -1;
+      const bAngle  = a + side * (0.35 + Math.random() * 0.65);
+      const bLen    = len * (0.42 + Math.random() * 0.32);
+      addSegments(bx, by, bAngle, bLen, depth + 1, tBranch, tEnd);
+    }
   }
 
+  function buildCracks(originX, originY){
+    segments = [];
+    const numMain = 7 + Math.floor(Math.random() * 3);   // 7-9 main cracks
+    const reach   = Math.sqrt(W * W + H * H) * 0.62;
+    for(let i = 0; i < numMain; i++){
+      const angle = (i / numMain) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+      addSegments(originX, originY, angle, reach, 0, 0, 0.9 + Math.random() * 0.1);
+    }
+  }
+
+  /* ── Draw all segments up to progress p ── */
+  function drawCracks(p){
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    segments.forEach(seg => {
+      if(p <= seg.tStart) return;
+      const local = Math.min((p - seg.tStart) / Math.max(seg.tEnd - seg.tStart, 0.001), 1);
+      if(local <= 0) return;
+
+      const ex = seg.x0 + (seg.x1 - seg.x0) * local;
+      const ey = seg.y0 + (seg.y1 - seg.y0) * local;
+
+      // Soft violet glow behind crack
+      ctx.beginPath(); ctx.moveTo(seg.x0, seg.y0); ctx.lineTo(ex, ey);
+      ctx.strokeStyle = `rgba(150,80,255,${seg.alpha * 0.18})`;
+      ctx.lineWidth   = seg.lw * 6;
+      ctx.stroke();
+
+      // Core bright line
+      ctx.beginPath(); ctx.moveTo(seg.x0, seg.y0); ctx.lineTo(ex, ey);
+      ctx.strokeStyle = `rgba(235,215,255,${seg.alpha})`;
+      ctx.lineWidth   = seg.lw;
+      ctx.stroke();
+    });
+
+    ctx.restore();
+  }
+
+  /* ── Fade cracks out on cancel ── */
+  function fadeOut(){
+    if(fadeAlpha <= 0){ ctx.clearRect(0,0,W,H); return; }
+    ctx.clearRect(0,0,W,H);
+    ctx.save();
+    ctx.globalAlpha = fadeAlpha;
+    drawCracks(1); // draw last known state
+    ctx.restore();
+    fadeAlpha -= 0.06;
+    requestAnimationFrame(fadeOut);
+  }
+
+  /* ── Portal open ── */
   function openPortal(){
     if(opened) return;
     opened = true;
     cancelAnimationFrame(raf);
-
-    // Start audio
     if(window.__startAudio) window.__startAudio();
 
-    // Iris opens fully — CSS transitions --ph to 220vmax over 1.1s
-    intro.classList.add('portal-open');
+    // Brief white flash at crack points before iris opens
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    ctx.fillRect(0,0,W,H);
+    ctx.restore();
 
-    // Remove only after the hole has swept fully off-screen
-    intro.addEventListener('transitionend', (e)=>{
-      if(e.propertyName === '--ph') intro.remove();
-    }, {once:true});
-
-    // Fallback in case transitionend doesn't fire (e.g. reduced-motion)
-    setTimeout(()=>{ if(intro.parentNode) intro.remove(); }, 1300);
+    setTimeout(()=>{
+      ctx.clearRect(0,0,W,H);
+      intro.classList.add('portal-open');
+      intro.addEventListener('transitionend', e => {
+        if(e.propertyName === '--ph') intro.remove();
+      }, { once: true });
+      setTimeout(()=>{ if(intro.parentNode) intro.remove(); }, 1400);
+    }, 90);
   }
 
+  /* ── Hold logic ── */
   function tick(){
-    if(!holdStart){ raf=null; return; }
-    const elapsed = performance.now() - holdStart;
-    const p = Math.min(elapsed / HOLD_MS, 1);
-    setProgress(p);
-    if(p < 1){
-      label.textContent = 'HOLD…';
-      raf = requestAnimationFrame(tick);
-    } else {
-      openPortal();
-    }
+    if(!holdStart){ raf = null; return; }
+    const p = Math.min((performance.now() - holdStart) / HOLD_MS, 1);
+    drawCracks(p);
+    if(p >= 1){ openPortal(); } else { raf = requestAnimationFrame(tick); }
   }
 
   function startHold(e){
     if(opened) return;
     e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const ox = (e.touches ? e.touches[0].clientX : e.clientX);
+    const oy = (e.touches ? e.touches[0].clientY : e.clientY);
+    buildCracks(ox, oy);
+    labelEl.style.opacity = '0';
     holdStart = performance.now();
-    label.textContent = 'HOLD…';
     raf = requestAnimationFrame(tick);
   }
 
@@ -937,25 +1004,18 @@ function fitModel(obj,targetSize){
     cancelAnimationFrame(raf);
     holdStart = null;
     raf = null;
-    label.textContent = 'CLICK & HOLD';
-    // Reset ring + hole smoothly
-    let p = parseFloat(arc.style.strokeDashoffset || CIRC);
-    let current = 1 - (p / CIRC);
-    function resetTick(){
-      current = Math.max(0, current - 0.04);
-      setProgress(current);
-      if(current > 0) requestAnimationFrame(resetTick);
-    }
-    requestAnimationFrame(resetTick);
+    labelEl.style.opacity = '1';
+    // Store current draw state then fade it
+    fadeAlpha = 1;
+    fadeOut();
   }
 
-  intro.addEventListener('mousedown',  startHold);
-  intro.addEventListener('touchstart', startHold, {passive:false});
-  window.addEventListener('mouseup',   cancelHold);
-  window.addEventListener('touchend',  cancelHold);
+  intro.addEventListener('mousedown',    startHold);
+  intro.addEventListener('touchstart',   startHold, { passive: false });
+  window.addEventListener('mouseup',     cancelHold);
+  window.addEventListener('touchend',    cancelHold);
   window.addEventListener('touchcancel', cancelHold);
-  // If mouse leaves window while held, cancel
-  window.addEventListener('mouseleave', cancelHold);
+  window.addEventListener('mouseleave',  cancelHold);
 })();
 
 /* ── Audio ──────────────────────────────────────────────────────────────── */
