@@ -11,16 +11,24 @@
 html{scroll-behavior:smooth}
 html,body{width:100%;overflow-x:hidden}
 body{
-  font-family:'Kalam',cursive;color:#2d1a4e;
-  background:#f0ebff;
+  font-family:'Bangers',cursive;color:#000;
+  background:#FFE500;
 }
 
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block}
 
+/* Ben-Day halftone dot overlay */
+#halftone{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  background-image:radial-gradient(circle,rgba(0,0,0,0.18) 1.5px,transparent 1.5px);
+  background-size:7px 7px;
+  mix-blend-mode:multiply;
+}
+
 /* ── Portal Intro Screen ── */
 #portal-intro{
   position:fixed;inset:0;z-index:5000;
-  background:#120828;
+  background:#000;
   cursor:pointer;user-select:none;-webkit-user-select:none;
 }
 #portal-intro.portal-open{
@@ -29,8 +37,8 @@ body{
   pointer-events:none;
   background:radial-gradient(circle at 50% 50%,
     transparent var(--ph,0px),
-    rgba(180,130,255,0.7) calc(var(--ph,0px) + 8px),
-    #120828 calc(var(--ph,0px) + 24px)
+    rgba(255,229,0,0.9) calc(var(--ph,0px) + 8px),
+    #000 calc(var(--ph,0px) + 24px)
   );
 }
 #crack-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -39,104 +47,177 @@ body{
   pointer-events:none;transition:opacity .4s;
 }
 #pi-text{
-  font-family:'Kalam',cursive;font-size:13px;
-  letter-spacing:.22em;color:rgba(255,255,255,0.35);
-  display:block;text-align:center;
+  font-family:'Bangers',cursive;font-size:18px;letter-spacing:.3em;
+  color:rgba(255,229,0,0.7);display:block;text-align:center;
   animation:pi-pulse 2.5s ease-in-out infinite;
+  text-shadow:0 0 20px rgba(255,229,0,0.5);
 }
-@keyframes pi-pulse{0%,100%{opacity:.25}50%{opacity:.55}}
+@keyframes pi-pulse{0%,100%{opacity:.35}50%{opacity:.8}}
 
-/* Nav */
-#nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30;mix-blend-mode:normal}
-.logo{font-family:'Bangers',cursive;font-size:18px;font-weight:400;letter-spacing:.08em;color:rgba(45,26,78,.85)}
+/* Nav — comic panel bar */
+#nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 40px;z-index:30;
+  background:#FFE500;
+  border-bottom:3px solid #000;
+  box-shadow:0 3px 0 #000;
+}
+.logo{
+  font-family:'Bangers',cursive;font-size:26px;font-weight:400;
+  letter-spacing:.1em;color:#E8291C;
+  -webkit-text-stroke:1px #000;
+}
 .links{display:flex;gap:28px}
-.links a{font-size:10px;letter-spacing:.2em;text-decoration:none;color:rgba(45,26,78,.35);transition:color .3s}
-.links a:hover{color:#2d1a4e}
+.links a{
+  font-family:'Bangers',cursive;font-size:14px;letter-spacing:.15em;
+  text-decoration:none;color:#000;
+  padding:2px 10px;
+  transition:background .2s,color .2s;
+}
+.links a:hover{background:#000;color:#FFE500}
 
 /* Progress dots */
-#progress{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:30}
-.dot{width:4px;height:4px;border-radius:50%;background:rgba(45,26,78,.15);cursor:pointer;transition:all .5s;position:relative}
-.dot::after{content:attr(data-l);position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:7px;letter-spacing:.16em;white-space:nowrap;color:rgba(45,26,78,.0);transition:color .4s;pointer-events:none}
-.dot.on{transform:scale(2);background:var(--c,#fff)}
-.dot.on::after{color:rgba(45,26,78,.35)}
+#progress{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:30}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#fff;border:2px solid #000;
+  cursor:pointer;transition:all .3s;position:relative;
+}
+.dot::after{
+  content:attr(data-l);position:absolute;right:18px;top:50%;
+  transform:translateY(-50%);font-size:8px;letter-spacing:.12em;
+  white-space:nowrap;color:rgba(0,0,0,0);transition:color .3s;
+  pointer-events:none;font-family:'Bangers',cursive;
+}
+.dot.on{transform:scale(1.8);background:var(--c,#FFE500);border-color:#000}
+.dot.on::after{color:#000}
 
 /* Zone counter */
-#zcnt{position:fixed;left:40px;bottom:48px;z-index:30;font-size:9px;letter-spacing:.25em;color:rgba(45,26,78,.25);pointer-events:none}
-#zcnt b{color:rgba(45,26,78,.7);font-size:15px;font-family:'Bangers',cursive;font-weight:800;margin-left:6px;display:inline-block;min-width:2ch}
+#zcnt{
+  position:fixed;left:40px;bottom:48px;z-index:30;
+  font-size:10px;letter-spacing:.25em;color:rgba(0,0,0,.5);
+  pointer-events:none;
+  background:#FFE500;border:2px solid #000;
+  padding:4px 10px;box-shadow:2px 2px 0 #000;
+}
+#zcnt b{color:#E8291C;font-size:18px;font-family:'Bangers',cursive;font-weight:400;margin-left:6px;display:inline-block;min-width:2ch}
 
 /* Scroll hint */
 #hint{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);text-align:center;z-index:30;transition:opacity .8s;pointer-events:none}
-#hint p{font-size:8px;letter-spacing:.28em;color:rgba(45,26,78,.28);margin-bottom:8px}
-#hint div{animation:bob .9s ease-in-out infinite alternate;font-size:12px;color:rgba(45,26,78,.2)}
+#hint p{font-size:9px;letter-spacing:.28em;color:#000;margin-bottom:8px;font-family:'Bangers',cursive}
+#hint div{animation:bob .9s ease-in-out infinite alternate;font-size:14px;color:#E8291C;font-weight:900}
 @keyframes bob{from{transform:translateY(0)}to{transform:translateY(6px)}}
 
 /* Crosshair */
-#xhair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;pointer-events:none;opacity:.05}
-#xhair::before,#xhair::after{content:'';position:absolute;background:rgba(45,26,78,.8)}
-#xhair::before{width:24px;height:1px;top:0;left:-12px}
-#xhair::after{width:1px;height:24px;top:-12px;left:0}
+#xhair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;pointer-events:none;opacity:.15}
+#xhair::before,#xhair::after{content:'';position:absolute;background:#000}
+#xhair::before{width:24px;height:2px;top:0;left:-12px}
+#xhair::after{width:2px;height:24px;top:-12px;left:0}
 
-/* -- Content overlays -- */
+/* -- Content overlays — comic book panels -- */
 .zone-overlay{
   position:fixed;inset:0;z-index:20;
   display:flex;align-items:center;
   padding:0 9vw;pointer-events:none;
-  opacity:0;transform:translateX(24px);
-  transition:opacity .6s ease, transform .6s ease;
+  opacity:0;transform:translateX(28px);
+  transition:opacity .5s ease, transform .5s ease;
 }
 .zone-overlay.left{justify-content:flex-start}
 .zone-overlay.right{justify-content:flex-end}
 .zone-overlay.center{justify-content:center;text-align:center}
 .zone-overlay.on{opacity:1;transform:translateX(0);pointer-events:all}
-.zo-inner{max-width:360px}
-.zo-tag{font-size:12px;letter-spacing:.18em;color:var(--a,#fff);display:block;margin-bottom:14px}
-.zo-head{font-family:'Bangers',cursive;font-size:clamp(36px,5vw,72px);font-weight:400;line-height:.9;letter-spacing:.04em;color:#2d1a4e;margin-bottom:14px}
-.zo-body{font-size:14px;line-height:1.7;color:rgba(45,26,78,.55);font-style:normal;font-weight:300}
+.zo-inner{
+  max-width:360px;
+  background:#fff;
+  border:3px solid #000;
+  box-shadow:6px 6px 0 #000;
+  padding:20px 24px;
+  transform:rotate(-1.2deg);
+}
+.zo-tag{
+  font-family:'Bangers',cursive;font-size:12px;letter-spacing:.2em;
+  color:#fff;background:var(--a,#E8291C);
+  display:inline-block;padding:2px 10px;margin-bottom:12px;
+  border:2px solid #000;transform:rotate(.5deg);
+}
+.zo-head{
+  font-family:'Bangers',cursive;
+  font-size:clamp(32px,5vw,68px);font-weight:400;
+  line-height:.9;letter-spacing:.04em;
+  color:#000;margin-bottom:12px;
+  -webkit-text-stroke:1px #000;
+}
+.zo-body{font-family:'Kalam',cursive;font-size:13px;line-height:1.65;color:#222;font-weight:400}
 .zone-overlay:not(.on) .zo-cta{pointer-events:none!important}
-/* Project card text — right half of screen, vertically centred */
-.zo-project-inner{position:absolute;top:50%;right:6%;transform:translateY(-50%);text-align:left;width:min(400px,40vw)}
+
+/* Project card text */
+.zo-project-inner{position:absolute;top:50%;right:6%;transform:translateY(-50%) rotate(.8deg);text-align:left;width:min(380px,40vw)}
 @media(max-width:700px){.zo-project-inner{right:4%;width:min(300px,80vw);top:auto;bottom:8vh;transform:none}}
+
 .zo-cta{
   display:inline-flex;align-items:center;gap:8px;
-  margin-top:22px;font-size:9px;letter-spacing:.22em;
-  color:var(--a,#fff);text-decoration:none;
-  border:1px solid currentColor;
-  padding:11px 22px;
+  margin-top:18px;
+  font-family:'Bangers',cursive;font-size:14px;letter-spacing:.15em;
+  color:#000;text-decoration:none;
+  border:3px solid #000;
+  padding:8px 20px;
   pointer-events:all;
-  background:rgba(255,255,255,.38);
-  backdrop-filter:blur(6px);
-  transition:background .3s, color .3s, transform .2s;
+  background:#FFE500;
+  box-shadow:4px 4px 0 #000;
+  transition:background .2s,color .2s,transform .1s,box-shadow .1s;
 }
-.zo-cta:hover{background:var(--a,#c8a4f8);color:#fff;transform:translateY(-2px)}
+.zo-cta:hover{
+  background:var(--a,#E8291C);color:#fff;
+  transform:translate(-2px,-2px);box-shadow:6px 6px 0 #000;
+}
+.zo-cta:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #000}
 
 /* project number badge */
-.zo-num{font-family:'Bangers',cursive;font-size:10px;letter-spacing:.3em;color:rgba(45,26,78,.18);margin-bottom:6px;display:block}
+.zo-num{
+  font-family:'Bangers',cursive;font-size:11px;letter-spacing:.3em;
+  color:rgba(0,0,0,.35);margin-bottom:4px;display:block;
+}
 
 /* about extras */
-.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
-.about-tags span{font-size:7px;letter-spacing:.18em;border:1px solid rgba(45,26,78,.18);color:rgba(45,26,78,.4);padding:5px 11px}
+.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.about-tags span{
+  font-family:'Kalam',cursive;font-size:8px;letter-spacing:.15em;
+  border:2px solid #000;color:#000;
+  padding:4px 10px;background:#FFE500;
+}
 
 /* contact extras */
-.contact-links{display:flex;gap:24px;justify-content:center;margin-top:20px}
-.contact-links a{font-size:8px;letter-spacing:.2em;color:rgba(45,26,78,.35);text-decoration:none;transition:color .3s}
-.contact-links a:hover{color:#2d1a4e}
+.contact-links{display:flex;gap:20px;justify-content:center;margin-top:16px}
+.contact-links a{
+  font-family:'Bangers',cursive;font-size:12px;letter-spacing:.2em;
+  color:#000;text-decoration:none;
+  border-bottom:2px solid #000;
+  transition:color .2s,border-color .2s;
+}
+.contact-links a:hover{color:#E8291C;border-color:#E8291C}
 
-/* CSS2D labels (anchored to 3D objects) */
-.label3d{pointer-events:none;text-align:center;transform:translate(-50%,-50%)}
-.l3-num{font-size:9px;letter-spacing:.3em;color:inherit;opacity:.5;margin-bottom:4px}
-.l3-name{font-family:'Bangers',cursive;font-size:clamp(13px,1.4vw,20px);font-weight:800;color:inherit;line-height:1}
-.l3-cat{font-size:7px;letter-spacing:.22em;color:inherit;opacity:.55;margin-top:6px}
+/* CSS2D labels */
+.label3d{
+  pointer-events:none;text-align:center;transform:translate(-50%,-50%);
+  background:#fff;border:2px solid #000;padding:4px 8px;
+  box-shadow:3px 3px 0 #000;
+}
+.l3-num{font-size:8px;letter-spacing:.3em;color:#E8291C;margin-bottom:2px;font-family:'Bangers',cursive}
+.l3-name{font-family:'Bangers',cursive;font-size:clamp(13px,1.4vw,20px);font-weight:400;color:#000;line-height:1}
+.l3-cat{font-family:'Kalam',cursive;font-size:7px;letter-spacing:.18em;color:#555;margin-top:4px}
 
 /* Scroll space */
 #ss{height:1600vh}
 #audio-btn{
   position:fixed;bottom:28px;right:28px;z-index:9999;
-  width:36px;height:36px;border-radius:50%;border:1px solid rgba(130,80,200,.3);
-  background:rgba(255,255,255,.45);backdrop-filter:blur(10px);
-  color:rgba(80,40,140,.7);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background .25s,color .25s,transform .2s;padding:0;
+  width:38px;height:38px;border-radius:0;border:3px solid #000;
+  background:#FFE500;box-shadow:3px 3px 0 #000;
+  color:#000;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .1s,box-shadow .1s;padding:0;
 }
-#audio-btn:hover{background:rgba(200,160,255,.5);color:#4a1a8e;transform:scale(1.08)}
+#audio-btn:hover{background:#E8291C;color:#fff;transform:translate(-1px,-1px);box-shadow:4px 4px 0 #000}
+#audio-btn:active{transform:translate(1px,1px);box-shadow:2px 2px 0 #000}
 </style>
 </head>
 <body>
@@ -149,6 +230,7 @@ body{
 </div>
 
 <canvas id="c"></canvas>
+<div id="halftone"></div>
 <button id="audio-btn" title="Toggle sound">🔇</button>
 <audio id="bg-audio" src="ambient.mp3" loop preload="none"></audio>
 <div id="xhair"></div>
@@ -308,12 +390,12 @@ const W = () => window.innerWidth, H = () => window.innerHeight;
 
 /* -- Scene -- */
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0xf0ebff, 0.0010);
+scene.fog = new THREE.FogExp2(0xFFE500, 0.0008);
 
 const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 2000);
 
 const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:false, powerPreference:'high-performance' });
-renderer.setClearColor(0xf0ebff, 1);
+renderer.setClearColor(0xFFE500, 1);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.0));
 renderer.setSize(W(), H());
 
@@ -342,30 +424,40 @@ const nebulaMat = new THREE.ShaderMaterial({
 
     void main(){
       vec3 d = normalize(vWorldDir);
-      float t = iTime * 0.28;
-      float up = clamp(d.y * 0.5 + 0.5, 0.0, 1.0);
+      float t = iTime * 0.04;
 
-      /* Base sky gradient */
-      vec3 skyBot = vec3(0.99, 0.88, 0.93);
-      vec3 skyMid = vec3(0.88, 0.91, 0.99);
-      vec3 skyTop = vec3(0.78, 0.72, 0.97);
-      vec3 col = mix(skyBot, mix(skyMid, skyTop, smoothstep(0.35,1.0,up)), smoothstep(0.0,0.5,up));
+      /* Pop-art primary palette */
+      vec3 yellow = vec3(1.00, 0.90, 0.00);
+      vec3 red    = vec3(0.91, 0.16, 0.11);
+      vec3 blue   = vec3(0.11, 0.31, 0.75);
+      vec3 blk    = vec3(0.05, 0.04, 0.04);
 
-      /* Aurora 1 — soft purple */
-      float w1 = sin(d.x*2.8 + t*0.9) * sin(d.z*2.1 + t*0.6) * 0.5+0.5;
-      col = mix(col, vec3(0.86, 0.70, 0.98), w1 * 0.40 * smoothstep(-0.1,0.7,d.y));
+      /* Sunburst — rays radiating around the vertical axis */
+      float angle = atan(d.x, d.z) / (2.0 * 3.14159) + 0.5 + t;
+      float rayI  = mod(floor(angle * 24.0), 4.0);
+      float rayF  = fract(angle * 24.0);
 
-      /* Aurora 2 — mint */
-      float w2 = sin(d.x*4.6 - t*0.55 + d.y*2.3) * 0.5+0.5;
-      col = mix(col, vec3(0.70, 0.96, 0.84), w2 * 0.28);
+      vec3 rayCol;
+      if(rayF < 0.06)      rayCol = blk;
+      else if(rayI < 1.0)  rayCol = yellow;
+      else if(rayI < 2.0)  rayCol = red;
+      else if(rayI < 3.0)  rayCol = yellow;
+      else                  rayCol = blue;
 
-      /* Aurora 3 — peach near horizon */
-      float w3 = sin(d.z*3.9 + d.y*2.6 + t*0.75) * 0.5+0.5;
-      col = mix(col, vec3(0.99, 0.80, 0.68), w3 * 0.24 * smoothstep(0.45,-0.1,d.y));
+      /* Yellow centre burst toward +Z */
+      float centre = smoothstep(0.3, 0.95, d.z);
+      vec3 col = mix(rayCol, yellow, centre * 0.75);
 
-      /* Pink forward glow */
-      float fwd = smoothstep(0.5,1.0,d.z) * smoothstep(0.35,-0.2,abs(d.y));
-      col += vec3(0.95, 0.78, 0.90) * fwd * 0.14;
+      /* Ben-Day halftone dots */
+      float hS = 14.0;
+      vec2 hUV = vec2(atan(d.x, d.z) * hS, asin(clamp(d.y,-1.0,1.0)) * hS);
+      vec2 hC  = fract(hUV) - 0.5;
+      float inDot = step(length(hC), 0.28);
+      col = mix(col, blk, inDot * 0.30);
+
+      /* Slightly darken top/bottom so it feels like a poster */
+      float edge = smoothstep(0.5, 1.0, abs(d.y));
+      col = mix(col, blk, edge * 0.18);
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -412,11 +504,11 @@ const zoneOf = p => Math.min(Math.floor(p * ZONE_COUNT), ZONE_COUNT - 1);
 
 /* ====================================== STAGE NODES ===================== */
 const STAGES = [
-  { color:0xc8a4f8, pos:new THREE.Vector3(-12, -5, -10)  },
-  { color:0xf8a4c8, pos:new THREE.Vector3(-14,  6,-110)  },
-  { color:0xa4c8f8, pos:new THREE.Vector3(-14, 10,-210)  },
-  { color:0xf8d4a4, pos:new THREE.Vector3(-12, -6,-310)  },
-  { color:0xa4e8c8, pos:new THREE.Vector3(-10,  0,-420)  },
+  { color:0xE8291C, pos:new THREE.Vector3(-12, -5, -10)  },
+  { color:0x1B4FBF, pos:new THREE.Vector3(-14,  6,-110)  },
+  { color:0xFFE500, pos:new THREE.Vector3(-14, 10,-210)  },
+  { color:0xE8291C, pos:new THREE.Vector3(-12, -6,-310)  },
+  { color:0x1B4FBF, pos:new THREE.Vector3(-10,  0,-420)  },
 ];
 
 const lineMat = (col, op) => new THREE.LineBasicMaterial({ color:col, transparent:op<1, opacity:op });
@@ -444,7 +536,7 @@ STAGES.forEach((s,i)=>{
 });
 
 /* ====================================== PROJECT PORTALS ================= */
-const PROJECT_COLORS = [0xc8a4f8,0xf8a4c8,0xa4e8c8,0xf8d4a4,0xa4c8f8,0xf8a4d8];
+const PROJECT_COLORS = [0xE8291C,0x1B4FBF,0xFFE500,0xE8291C,0x1B4FBF,0xFFE500];
 const PROJECT_NUMS   = ['01','02','03','04','05','06'];
 const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
 const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
@@ -560,7 +652,7 @@ for(let i=0;i<12;i++){const a=(i/12)*Math.PI*2;contactGroup.add(new THREE.Line(n
 scene.add(contactGroup);
 
 /* ====================================== STARS =========================== */
-const STAR_RGBS=[[.78,.64,.98],[.98,.64,.78],[.64,.78,.98],[.98,.84,.64],[.64,.98,.84],[.92,.82,.99]];
+const STAR_RGBS=[[1,.90,0],[.91,.16,.11],[.11,.31,.75],[1,.90,0],[.91,.16,.11],[.11,.31,.75]];
 const SN=2800;
 const spos=new Float32Array(SN*3),scol=new Float32Array(SN*3);
 for(let i=0;i<SN;i++){
@@ -590,18 +682,18 @@ function makePlanet(radius,col,ringCol){
   if(ringCol){const r=new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.18,4,48),new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:.75,side:THREE.DoubleSide}));r.rotation.x=Math.PI*.32;g.add(r);}
   return g;
 }
-const p1=makePlanet(11,0xc8a4f8,null);      p1.position.set(-65,50,-70);   scene.add(p1);
-const p2=makePlanet(8.5,0xf8c4d8,0xf4a8c8); p2.position.set(72,28,-350);  scene.add(p2);
-const p3=makePlanet(7,0xa8e8cc,null);        p3.position.set(-80,-30,-420); scene.add(p3);
-const p4=makePlanet(9,0xb8d8f8,null);        p4.position.set(85,40,-480);  scene.add(p4);
-const p5=makePlanet(6,0xf8e4a8,null);        p5.position.set(-40,10,-1020); scene.add(p5);
+const p1=makePlanet(11,0xFFE500,0xE8291C); p1.position.set(-65,50,-70);   scene.add(p1);
+const p2=makePlanet(8.5,0xE8291C,null);    p2.position.set(72,28,-350);   scene.add(p2);
+const p3=makePlanet(7,0x1B4FBF,null);      p3.position.set(-80,-30,-420); scene.add(p3);
+const p4=makePlanet(9,0xFFE500,0x1B4FBF); p4.position.set(85,40,-480);   scene.add(p4);
+const p5=makePlanet(6,0xE8291C,null);      p5.position.set(-40,10,-1020); scene.add(p5);
 const planets=[p1,p2,p3,p4,p5];
 
-scene.add(new THREE.AmbientLight(0xc8b4f8,1.2));
+scene.add(new THREE.AmbientLight(0xFFFFFF,1.4));
 
 /* ====================================== PROGRESS DOTS ================== */
 const ZONE_LABELS=['Spark','Chaos','Work','Human','Invite','P.01','P.02','P.03','P.04','P.05','P.06','About','Contact'];
-const ZONE_COLORS=['#c8a4f8','#f8a4c8','#a4c8f8','#f8d4a4','#a4e8c8','#c8a4f8','#f8a4c8','#a4c8f8','#f8d4a4','#a4e8c8','#d4a4f8','#2d1a4e','#f8d4a4'];
+const ZONE_COLORS=['#E8291C','#1B4FBF','#E8291C','#1B4FBF','#E8291C','#E8291C','#1B4FBF','#E8291C','#1B4FBF','#E8291C','#1B4FBF','#000000','#E8291C'];
 const progressEl=document.getElementById('progress');
 ZONE_LABELS.forEach((l,i)=>{
   const d=document.createElement('div');
@@ -748,7 +840,7 @@ const znumEl    = document.getElementById('znum');
 const hintEl    = document.getElementById('hint');
 let   lastZone  = 0;
 
-const FOG_COLORS=[0xf0ebff,0xeee8ff,0xf4eaff,0xf0f4ff,0xeaf4f8,0xf0f8ee,0xf8f0ee,0xf4eef8,0xeef0f8,0xf8eef4,0xf0eef8,0xf4f0ff,0xeef4f8];
+const FOG_COLORS=[0xFFE500,0xFFEC00,0xFFE000,0xFFEB00,0xFFE300,0xFFED00,0xFFE100,0xFFEA00,0xFFE500,0xFFE800,0xFFE200,0xFFEF00,0xFFE500];
 
 ScrollTrigger.create({
   trigger:'#ss', start:'top top', end:'bottom bottom', scrub:4,
@@ -928,13 +1020,13 @@ function fitModel(obj,targetSize){
 
       // Soft violet glow behind crack
       ctx.beginPath(); ctx.moveTo(seg.x0, seg.y0); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(180,130,255,${seg.alpha * 0.28})`;
+      ctx.strokeStyle = `rgba(232,41,28,${seg.alpha * 0.35})`;
       ctx.lineWidth   = seg.lw * 6;
       ctx.stroke();
 
       // Core bright line
       ctx.beginPath(); ctx.moveTo(seg.x0, seg.y0); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(230,210,255,${seg.alpha})`;
+      ctx.strokeStyle = `rgba(255,229,0,${seg.alpha})`;
       ctx.lineWidth   = seg.lw;
       ctx.stroke();
     });
