@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parag Chavhan — Portfolio</title>
+<title>Parag Chavhan -- Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -50,7 +50,7 @@ body{
 #xhair::before{width:24px;height:1px;top:0;left:-12px}
 #xhair::after{width:1px;height:24px;top:-12px;left:0}
 
-/* ── Content overlays ── */
+/* -- Content overlays -- */
 .zone-overlay{
   position:fixed;inset:0;z-index:20;
   display:flex;align-items:center;
@@ -109,9 +109,9 @@ body{
 <div id="zcnt">ZONE <b id="znum">01</b></div>
 <div id="hint"><p>SCROLL TO EXPLORE</p><div>↓</div></div>
 
-<!-- ── Zone overlays (all content floats in here) ────────────────────────── -->
+<!-- -- Zone overlays (all content floats in here) -------------------------- -->
 
-<!-- 0 – 4: Story stages (left aligned) -->
+<!-- 0 - 4: Story stages (left aligned) -->
 <div class="zone-overlay right on" id="z0" style="--a:#00eeff">
   <div class="zo-inner">
     <span class="zo-tag">Stage 01 · The Spark</span>
@@ -145,18 +145,18 @@ body{
     <span class="zo-tag">Stage 05 · The Invite</span>
     <h2 class="zo-head">Let's build something worth talking about.</h2>
     <p class="zo-body">Available. Ready. Obsessively curious.</p>
-    <a class="zo-cta" href="#" onclick="jumpToZone(5);return false">Fly into my work →</a>
+    <a class="zo-cta" href="#" onclick="jumpToZone(5);return false">Fly into my work -></a>
   </div>
 </div>
 
-<!-- 5 – 10: Projects -->
+<!-- 5 - 10: Projects -->
 <div class="zone-overlay right" id="z5" style="--a:#00eeff">
   <div class="zo-inner">
     <span class="zo-num">01 / 06</span>
     <span class="zo-tag">Urban Housing</span>
     <h2 class="zo-head">Project Alpha</h2>
     <p class="zo-body">A housing complex that questions how density and community coexist. Compact, breathable, community-forward.</p>
-    <a class="zo-cta" href="#">View Case Study →</a>
+    <a class="zo-cta" href="#">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay left" id="z6" style="--a:#ff44cc">
@@ -165,7 +165,7 @@ body{
     <span class="zo-tag">Cultural Centre</span>
     <h2 class="zo-head">Project Beta</h2>
     <p class="zo-body">A public cultural landmark where programme dissolves into landscape. The building continues into the ground.</p>
-    <a class="zo-cta" href="#">View Case Study →</a>
+    <a class="zo-cta" href="#">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay right" id="z7" style="--a:#ffd700">
@@ -174,7 +174,7 @@ body{
     <span class="zo-tag">Spatial Installation</span>
     <h2 class="zo-head">Project Gamma</h2>
     <p class="zo-body">A temporary installation exploring the threshold between public solitude and collective presence.</p>
-    <a class="zo-cta" href="#">View Case Study →</a>
+    <a class="zo-cta" href="#">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay left" id="z8" style="--a:#ff8844">
@@ -183,7 +183,7 @@ body{
     <span class="zo-tag">Residential</span>
     <h2 class="zo-head">Project Delta</h2>
     <p class="zo-body">Four houses around a shared courtyard. Privacy negotiated not by walls but by geometry and level change.</p>
-    <a class="zo-cta" href="#">View Case Study →</a>
+    <a class="zo-cta" href="#">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay right" id="z9" style="--a:#88ff44">
@@ -191,8 +191,8 @@ body{
     <span class="zo-num">05 / 06</span>
     <span class="zo-tag">Museum</span>
     <h2 class="zo-head">Project Epsilon</h2>
-    <p class="zo-body">A museum of living craft — organised not by object but by process. You see things being made, then made.</p>
-    <a class="zo-cta" href="#">View Case Study →</a>
+    <p class="zo-body">A museum of living craft -- organised not by object but by process. You see things being made, then made.</p>
+    <a class="zo-cta" href="#">View Case Study -></a>
   </div>
 </div>
 <div class="zone-overlay left" id="z10" style="--a:#cc44ff">
@@ -201,7 +201,7 @@ body{
     <span class="zo-tag">Transit + Urban</span>
     <h2 class="zo-head">Project Zeta</h2>
     <p class="zo-body">A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one.</p>
-    <a class="zo-cta" href="#">View Case Study →</a>
+    <a class="zo-cta" href="#">View Case Study -></a>
   </div>
 </div>
 
@@ -210,7 +210,7 @@ body{
   <div class="zo-inner" style="max-width:400px">
     <span class="zo-tag">About</span>
     <h2 class="zo-head">Parag Chavhan.</h2>
-    <p class="zo-body">Architecture student. Obsessive builder. I spend studios asking the most uncomfortable questions — about who a space is really for, and what it refuses to do.</p>
+    <p class="zo-body">Architecture student. Obsessive builder. I spend studios asking the most uncomfortable questions -- about who a space is really for, and what it refuses to do.</p>
     <p class="zo-body" style="margin-top:10px">Outside the studio I'm probably fiddling with code, listening to something at an unreasonable volume, or wearing a floral shirt.</p>
     <div class="about-tags">
       <span>Architecture</span><span>Urban Design</span><span>3D Modelling</span>
@@ -247,7 +247,7 @@ const ScrollTrigger = window.ScrollTrigger;
 
 const W = () => window.innerWidth, H = () => window.innerHeight;
 
-/* ── Scene ── */
+/* -- Scene -- */
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x6a2088, 0.0028);
 
@@ -264,10 +264,10 @@ labelRenderer.setSize(W(), H());
 labelRenderer.domElement.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15;';
 document.body.appendChild(labelRenderer.domElement);
 
-/* ══════════════════════════════════════ CAMERA PATH ══════════════════════ */
-/* Zones:  0-4 → story stages   5-10 → projects   11 → about   12 → contact */
+/* ====================================== CAMERA PATH ====================== */
+/* Zones:  0-4 -> story stages   5-10 -> projects   11 -> about   12 -> contact */
 const PATH = new THREE.CatmullRomCurve3([
-  // ── Story intro ───────────────────────────────────────────────────────────
+  // -- Story intro -----------------------------------------------------------
   new THREE.Vector3(  0,   0,  70),
   new THREE.Vector3(-14,   8,  30),
   new THREE.Vector3(  6,  -6,  -5),   // S0
@@ -279,7 +279,7 @@ const PATH = new THREE.CatmullRomCurve3([
   new THREE.Vector3( -6,  -5,-305),   // S3
   new THREE.Vector3(-16,   8,-360),
   new THREE.Vector3(  0,   0,-415),   // S4
-  // ── Projects gallery ──────────────────────────────────────────────────────
+  // -- Projects gallery ------------------------------------------------------
   new THREE.Vector3( 22,   6,-480),
   new THREE.Vector3(-18,  -4,-545),   // P1
   new THREE.Vector3( 24,  10,-610),   // P2
@@ -287,18 +287,18 @@ const PATH = new THREE.CatmullRomCurve3([
   new THREE.Vector3( 22,   6,-740),   // P4
   new THREE.Vector3(-18,  12,-805),   // P5
   new THREE.Vector3( 16,  -6,-870),   // P6
-  // ── About + Contact ───────────────────────────────────────────────────────
+  // -- About + Contact -------------------------------------------------------
   new THREE.Vector3(  8,  16,-930),
   new THREE.Vector3(-10,   6,-980),   // About
   new THREE.Vector3(  0,   0,-1060),  // Contact
 ], false, 'catmullrom', 0.5);
 
-/* Zone thresholds (progress 0→1) mapped to 13 zones */
+/* Zone thresholds (progress 0->1) mapped to 13 zones */
 const ZONE_COUNT = 13;
 /* Each zone spans 1/13 of the journey */
 const zoneOf = p => Math.min(Math.floor(p * ZONE_COUNT), ZONE_COUNT - 1);
 
-/* ══════════════════════════════════════ STAGE NODES ═════════════════════ */
+/* ====================================== STAGE NODES ===================== */
 const STAGES = [
   { color:0x00eeff, pos:new THREE.Vector3( -5, -9, -10)  },
   { color:0xff44cc, pos:new THREE.Vector3( 14,  6,-110)  },
@@ -331,7 +331,7 @@ STAGES.forEach((s,i)=>{
   scene.add(g); nodeGroups.push(g);
 });
 
-/* ══════════════════════════════════════ PROJECT PORTALS ═════════════════ */
+/* ====================================== PROJECT PORTALS ================= */
 const PROJECT_COLORS = [0x00eeff,0xff44cc,0xffd700,0xff8844,0x88ff44,0xcc44ff];
 const PROJECT_NUMS   = ['01','02','03','04','05','06'];
 const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
@@ -379,7 +379,7 @@ PORTAL_POSITIONS.forEach((pos, i) => {
 
   // Corner accents
   const ca = 2.2;
-  [[−hw,−hh],[hw,−hh],[hw,hh],[−hw,hh]].forEach(([cx,cy])=>{
+  [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].forEach(([cx,cy])=>{
     const sx=cx>0?-1:1, sy=cy>0?-1:1;
     g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(cx+sx*ca,cy,0),new THREE.Vector3(cx,cy,0),new THREE.Vector3(cx,cy+sy*ca,0)
@@ -394,7 +394,7 @@ PORTAL_POSITIONS.forEach((pos, i) => {
   const lbl = new CSS2DObject(div);
   g.add(lbl);
 
-  // Face camera (billboarded on Y only — portals tilt toward path)
+  // Face camera (billboarded on Y only -- portals tilt toward path)
   const toPath = PATH.getPointAt(0.4 + i * 0.07).clone().sub(pos);
   g.rotation.y = Math.atan2(toPath.x, toPath.z);
 
@@ -402,7 +402,7 @@ PORTAL_POSITIONS.forEach((pos, i) => {
   portalGroups.push(g);
 });
 
-/* ══════════════════════════════════════ ABOUT OBJECT ════════════════════ */
+/* ====================================== ABOUT OBJECT ==================== */
 const aboutGroup = new THREE.Group();
 aboutGroup.position.set(-12, 8, -980);
 // Concentric rings for "person" marker
@@ -414,7 +414,7 @@ aboutGroup.position.set(-12, 8, -980);
 aboutGroup.add(wireObj(new THREE.OctahedronGeometry(2.5,1),0xf4f0e8,.4));
 scene.add(aboutGroup);
 
-/* ══════════════════════════════════════ CONTACT OBJECT ══════════════════ */
+/* ====================================== CONTACT OBJECT ================== */
 const contactGroup = new THREE.Group();
 contactGroup.position.set(0, 0, -1060);
 // Large glowing ring gate
@@ -428,7 +428,7 @@ contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts
 for(let i=0;i<12;i++){const a=(i/12)*Math.PI*2;contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(Math.cos(a)*18,Math.sin(a)*18,0)]),lineMat(0xffd700,.06)));}
 scene.add(contactGroup);
 
-/* ══════════════════════════════════════ STARS ═══════════════════════════ */
+/* ====================================== STARS =========================== */
 const STAR_RGBS=[[1,.9,.3],[1,.4,.8],[.3,1,1],[.7,.4,1],[1,.6,.2],[1,1,1]];
 const SN=5000;
 const spos=new Float32Array(SN*3),scol=new Float32Array(SN*3);
@@ -445,7 +445,7 @@ sg.setAttribute('position',new THREE.BufferAttribute(spos,3));
 sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
 scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.14,transparent:true,opacity:.9,sizeAttenuation:true})));
 
-/* ══════════════════════════════════════ CLOUDS ══════════════════════════ */
+/* ====================================== CLOUDS ========================== */
 const CLOUD_PALS=[
   [0xe07030,0xc85820,0xf08040],[0x8b2daa,0x6a1880,0xb050d0],[0x2898c8,0x1870a0,0x40b8e0],
   [0xd030a0,0xf050b8,0xa01880],[0xe89030,0xf5b040,0xd07020],[0x4040c8,0x2828a0,0x6060e0],
@@ -468,7 +468,7 @@ const CLOUD_DATA=[
 ];
 const cloudGroups=CLOUD_DATA.map(([x,y,z,size,pal])=>{const cl=makeCloud(size,pal);cl.position.set(x,y,z);scene.add(cl);return cl;});
 
-/* ══════════════════════════════════════ ISLANDS ════════════════════════ */
+/* ====================================== ISLANDS ======================== */
 function terrainY(x,z,size){
   const r=Math.sqrt(x*x+z*z);
   return(Math.sin(x*.85+z*.6)*.30+Math.sin(x*1.9-z*1.3)*.16+Math.sin(z*.7-x*.45)*.22-(r/size)*.45)*size*.38;
@@ -512,16 +512,16 @@ function makeIsland(size,hasTree){
   return grp;
 }
 const ISLAND_DATA=[
-  [28,14,-45,5.5,true,.4],[−32,−12,−95,4.2,false,1.1],[38,8,−155,6,true,2.2],[−22,22,−210,3.8,true,.9],
-  [18,−20,−270,5,false,1.7],[−40,10,−330,4.5,true,2.8],[30,18,−385,3.5,false,.3],[−15,−16,−130,3.2,true,1.5],
-  [35,−8,−520,4.8,true,.6],[−28,14,−600,5.2,false,1.9],[40,−12,−680,4,true,2.4],[−35,8,−760,5,false,.8],
-  [25,20,−840,3.8,true,1.4],[−30,−10,−920,4.5,false,2.1],[20,12,−1000,4,true,.5],
+  [28,14,-45,5.5,true,.4],[-32,-12,-95,4.2,false,1.1],[38,8,-155,6,true,2.2],[-22,22,-210,3.8,true,.9],
+  [18,-20,-270,5,false,1.7],[-40,10,-330,4.5,true,2.8],[30,18,-385,3.5,false,.3],[-15,-16,-130,3.2,true,1.5],
+  [35,-8,-520,4.8,true,.6],[-28,14,-600,5.2,false,1.9],[40,-12,-680,4,true,2.4],[-35,8,-760,5,false,.8],
+  [25,20,-840,3.8,true,1.4],[-30,-10,-920,4.5,false,2.1],[20,12,-1000,4,true,.5],
 ];
 const islandGroups=ISLAND_DATA.map(([x,y,z,size,hasTree,rotY])=>{
   const isl=makeIsland(size,hasTree);isl.position.set(x,y,z);isl.rotation.y=rotY;scene.add(isl);return isl;
 });
 
-/* ══════════════════════════════════════ PLANETS ════════════════════════ */
+/* ====================================== PLANETS ======================== */
 function makePlanet(radius,col,ringCol){
   const g=new THREE.Group();
   g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,28,20),new THREE.MeshBasicMaterial({color:col})));
@@ -539,7 +539,7 @@ const planets=[p1,p2,p3,p4,p5];
 
 scene.add(new THREE.AmbientLight(0x8844cc,0.9));
 
-/* ══════════════════════════════════════ PROGRESS DOTS ══════════════════ */
+/* ====================================== PROGRESS DOTS ================== */
 const ZONE_LABELS=['Spark','Chaos','Work','Human','Invite','P.01','P.02','P.03','P.04','P.05','P.06','About','Contact'];
 const ZONE_COLORS=['#00eeff','#ff44cc','#ffd700','#ff8844','#88ff44','#00eeff','#ff44cc','#ffd700','#ff8844','#88ff44','#cc44ff','#f4f0e8','#ffd700'];
 const progressEl=document.getElementById('progress');
@@ -552,14 +552,14 @@ ZONE_LABELS.forEach((l,i)=>{
 });
 const dots=[...document.querySelectorAll('.dot')];
 
-/* ══════════════════════════════════════ JUMP TO ZONE ═══════════════════ */
+/* ====================================== JUMP TO ZONE =================== */
 window.jumpToZone = function(i) {
   const frac = i / (ZONE_COUNT - 1);
   const scrollH = document.getElementById('ss').offsetHeight;
   window.scrollTo({ top: scrollH * frac, behavior:'smooth' });
 };
 
-/* ══════════════════════════════════════ ANIMATE ════════════════════════ */
+/* ====================================== ANIMATE ======================== */
 const clock = new THREE.Clock();
 const camUp = new THREE.Vector3(0,1,0);
 
@@ -594,7 +594,7 @@ function animate() {
 }
 animate();
 
-/* ══════════════════════════════════════ SCROLL ═════════════════════════ */
+/* ====================================== SCROLL ========================= */
 gsap.registerPlugin(ScrollTrigger);
 
 const overlays  = [...document.querySelectorAll('.zone-overlay')];
@@ -646,13 +646,13 @@ ScrollTrigger.create({
   }
 });
 
-/* ══════════════════════════════════════ RESIZE ═════════════════════════ */
+/* ====================================== RESIZE ========================= */
 window.addEventListener('resize',()=>{
   camera.aspect=W()/H();camera.updateProjectionMatrix();
   renderer.setSize(W(),H());labelRenderer.setSize(W(),H());
 });
 
-/* ══════════════════════════════════════ LOAD MODELS ════════════════════ */
+/* ====================================== LOAD MODELS ==================== */
 const MODEL_BASE='https://drparagchavhan23-collab.github.io/models/';
 function fitModel(obj,targetSize){
   const bbox=new THREE.Box3().setFromObject(obj);
