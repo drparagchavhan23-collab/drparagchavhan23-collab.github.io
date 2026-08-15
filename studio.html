@@ -616,9 +616,8 @@ window.jumpToZone = function(i) {
 };
 
 /* ====================================== MOUSE PAN ====================== */
-const mouse = { x:0, y:0 };          // normalised -1..1
-const pan   = { x:0, y:0 };          // smoothed current offset
-const PAN_STRENGTH = { x:0.35, y:0.18 }; // subtle pan only
+const mouse = { x:0, y:0 };
+const pan   = { x:0, y:0 };
 window.addEventListener('mousemove', e => {
   mouse.x =  (e.clientX / window.innerWidth  - 0.5) * 2;
   mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
@@ -629,10 +628,11 @@ const clock  = new THREE.Clock();
 const camUp  = new THREE.Vector3(0,1,0);
 const lookPt = new THREE.Vector3();   // declared here so animate() can use it
 // Pre-allocated to avoid GC pressure every frame
-const _fwd   = new THREE.Vector3();
-const _right = new THREE.Vector3();
-const _fogA  = new THREE.Color();
-const _fogB  = new THREE.Color();
+const _fwd       = new THREE.Vector3();
+const _right     = new THREE.Vector3();
+const _paralaxPt = new THREE.Vector3();
+const _fogA      = new THREE.Color();
+const _fogB      = new THREE.Color();
 
 function animate() {
   requestAnimationFrame(animate);
@@ -660,15 +660,13 @@ function animate() {
   aboutGroup.rotation.y+=.004;
   contactGroup.rotation.z+=.0015;
 
-  /* Smooth mouse pan — offset then re-aim so subjects stay in frame */
-  pan.x += (mouse.x - pan.x) * 0.04;
-  pan.y += (mouse.y - pan.y) * 0.04;
-  _fwd.set(0,0,-1).applyQuaternion(camera.quaternion);
-  _right.crossVectors(_fwd, camera.up).normalize();
-  camera.position.addScaledVector(_right,    pan.x * PAN_STRENGTH.x);
-  camera.position.addScaledVector(camera.up, pan.y * PAN_STRENGTH.y);
-  // Re-aim at the stored look target so content stays centered despite pan
-  camera.lookAt(lookPt);
+  /* Subtle parallax — nudge the lookAt target slightly, never move the camera */
+  pan.x += (mouse.x - pan.x) * 0.02;
+  pan.y += (mouse.y - pan.y) * 0.02;
+  _paralaxPt.copy(lookPt)
+    .addScaledVector(_right, pan.x * 1.2)
+    .addScaledVector(camUp,  pan.y * 0.7);
+  camera.lookAt(_paralaxPt);
 
   renderer.render(scene,camera);
   labelRenderer.render(scene,camera);
@@ -699,6 +697,8 @@ ScrollTrigger.create({
     camera.up.copy(camUp);
     lookPt.copy(aheadPt);
     camera.lookAt(lookPt);
+    // Keep _right in sync with path direction for parallax
+    _right.crossVectors(fwd, camUp).normalize();
 
     /* Fog shift */
     const ri=Math.floor(p*(FOG_COLORS.length-1));
