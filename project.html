@@ -247,30 +247,31 @@ sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
 sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
 scene.add(new THREE.Points(sg, new THREE.PointsMaterial({vertexColors:true,size:.12,transparent:true,opacity:.85,sizeAttenuation:true})));
 
-/* ── Volumetric soft clouds ────────────────────────────────────────────────── */
-function makeCloud(size, seed){
-  seed = seed||0;
+/* ── PNG sprite clouds ─────────────────────────────────────────────────────── */
+const _cloudTextures=[
+  new THREE.TextureLoader().load('cloud1.png'),
+  new THREE.TextureLoader().load('cloud2.png'),
+];
+function makeCloud(size,seed){
+  seed=seed||0;
   const grp=new THREE.Group();
   const rng=(n)=>{const x=Math.sin(seed*127.1+n*311.7)*43758.5453;return x-Math.floor(x);};
-  for(let i=0;i<20;i++){
-    const angle =rng(i*4)  *Math.PI*2;
-    const rise  =rng(i*4+1);
-    const reach =rng(i*4+2)*0.9;
-    const jitter=rng(i*4+3);
-    const rx=Math.cos(angle)*reach*size;
-    const ry=(rise*0.7-0.15)*size*0.55;
-    const rz=Math.sin(angle)*reach*size*0.38;
-    const sr=size*(0.25+(1-reach)*0.42+rise*0.15)*(0.65+jitter*0.7);
-    const coreness=(1-reach)*0.65+rise*0.25;
-    const op=Math.min(0.88,0.06+coreness*0.82);
-    const w=Math.round(240+coreness*15);
-    const col=(w<<16)|(w<<8)|Math.min(255,w+Math.round((1-coreness)*18));
-    const m=new THREE.Mesh(
-      new THREE.SphereGeometry(sr,7,5),
-      new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op,depthWrite:false})
+  const layers=3+Math.floor(rng(0)*3);
+  for(let i=0;i<layers;i++){
+    const tex=_cloudTextures[Math.floor(rng(i*3)*_cloudTextures.length)];
+    const w=size*(1.2+rng(i*3+1)*0.8);
+    const h=w*(0.45+rng(i*3+2)*0.25);
+    const plane=new THREE.Mesh(
+      new THREE.PlaneGeometry(w,h),
+      new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:0.55+rng(i)*0.35,depthWrite:false,side:THREE.DoubleSide})
     );
-    m.position.set(rx,ry,rz);
-    grp.add(m);
+    plane.position.set(
+      (rng(i*3)*2-1)*size*0.35,
+      (rng(i*3+1)*2-1)*size*0.12,
+      (rng(i*3+2)*2-1)*size*0.2
+    );
+    plane.rotation.z=(rng(i)*2-1)*0.08;
+    grp.add(plane);
   }
   return grp;
 }
