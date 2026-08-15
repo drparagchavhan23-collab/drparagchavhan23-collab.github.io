@@ -1,2151 +1,764 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parag Chavhan — Architect & Designer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<!-- Preload all project images so overlay img tags hit cache instantly -->
-<link rel="preload" as="image" href="projects/p05-aykyata.jpg">
-<link rel="preload" as="image" href="projects/p07-nrityamrit.jpg">
-<link rel="preload" as="image" href="projects/p08-abode.jpg">
-<link rel="preload" as="image" href="projects/p09-abode2.jpg">
-<link rel="preload" as="image" href="projects/p06-mosafiro.jpg">
-<link rel="preload" as="image" href="projects/p11-winkit.jpg">
-<link rel="preload" as="image" href="projects/p10-dhakor.jpg">
-<link rel="preload" as="image" href="projects/ai-aykyata.webp">
-<link rel="preload" as="image" href="projects/ai-nrityamrit.webp">
-<link rel="preload" as="image" href="projects/ai-abode.webp">
-<link rel="preload" as="image" href="projects/ai-mosafiro.webp">
-<link rel="preload" as="image" href="projects/ai-winkit.webp">
-<link rel="preload" as="image" href="projects/ai-dhakor.webp">
+<title>Parag Chavhan -- Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{width:100%;overflow-x:hidden}
+body{
+  font-family:'DM Mono',monospace;color:#f4f0e8;
+  background:linear-gradient(180deg,
+    #0d0828 0%,#1a0a40 12%,#3a1060 28%,#6a2088 44%,
+    #a03868 58%,#c85030 72%,#e07828 84%,#f0a030 100%
+  );
+  background-attachment:fixed;
+}
 
-  :root {
-    --black: #050505;
-    --white: #f4f0e8;
-    --red: #ff2d00;
-    --green: #00ff88;
-    --purple: #a855f7;
-    --muted: rgba(244,240,232,0.35);
-    --border: rgba(244,240,232,0.08);
-    --cyan:    #00eeff;
-    --magenta: #ff00cc;
-    --yellow:  #ffe600;
-  }
+#c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
 
-  html { scroll-behavior: auto; overflow-x: hidden; }
+/* Nav */
+#nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30;mix-blend-mode:normal}
+.logo{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;color:rgba(244,240,232,.7)}
+.links{display:flex;gap:28px}
+.links a{font-size:10px;letter-spacing:.2em;text-decoration:none;color:rgba(244,240,232,.35);transition:color .3s}
+.links a:hover{color:#f4f0e8}
 
-  body {
-    background: #050505;
-    color: var(--white);
-    font-family: 'Space Grotesk', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* Progress dots */
+#progress{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:30}
+.dot{width:4px;height:4px;border-radius:50%;background:rgba(244,240,232,.15);cursor:pointer;transition:all .5s;position:relative}
+.dot::after{content:attr(data-l);position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:7px;letter-spacing:.16em;white-space:nowrap;color:rgba(244,240,232,.0);transition:color .4s;pointer-events:none}
+.dot.on{transform:scale(2);background:var(--c,#fff)}
+.dot.on::after{color:rgba(244,240,232,.35)}
 
-  /* ── CURSOR ── */
-  #cursor {
-    position: fixed; top: 0; left: 0; z-index: 9999;
-    pointer-events: none; mix-blend-mode: difference;
-  }
-  #cursor-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--white);
-    position: absolute; transform: translate(-50%,-50%);
-    transition: width .2s, height .2s;
-  }
-  #cursor-ring {
-    width: 40px; height: 40px; border-radius: 50%;
-    border: 1px solid var(--white);
-    position: absolute; transform: translate(-50%,-50%);
-    transition: width .3s, height .3s, border-color .3s;
-  }
-  body.cursor-hover #cursor-dot { width: 0; height: 0; }
-  body.cursor-hover #cursor-ring { width: 72px; height: 72px; }
+/* Zone counter */
+#zcnt{position:fixed;left:40px;bottom:48px;z-index:30;font-size:9px;letter-spacing:.25em;color:rgba(244,240,232,.25);pointer-events:none}
+#zcnt b{color:rgba(244,240,232,.7);font-size:15px;font-family:'Syne',sans-serif;font-weight:800;margin-left:6px;display:inline-block;min-width:2ch}
 
-  /* ── LOADER ── */
-  #loader {
-    position: fixed; inset: 0; z-index: 9998;
-    background: var(--black);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  #loader-count {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(80px, 15vw, 160px);
-    font-weight: 800;
-    line-height: 1;
-    color: var(--white);
-  }
-  #loader-bar-wrap {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-    background: var(--border);
-  }
-  @keyframes loader-cmyk {
-    0%   { background: var(--cyan); }
-    33%  { background: var(--magenta); }
-    66%  { background: var(--yellow); }
-    100% { background: var(--cyan); }
-  }
-  #loader-bar {
-    height: 100%; width: 0%;
-    background: var(--cyan);
-    animation: loader-cmyk 2s linear infinite;
-    transition: none;
-  }
-  #loader-label {
-    position: absolute; bottom: 24px; left: 32px;
-    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); font-family: 'DM Mono', monospace;
-  }
+/* Scroll hint */
+#hint{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);text-align:center;z-index:30;transition:opacity .8s;pointer-events:none}
+#hint p{font-size:8px;letter-spacing:.28em;color:rgba(244,240,232,.28);margin-bottom:8px}
+#hint div{animation:bob .9s ease-in-out infinite alternate;font-size:12px;color:rgba(244,240,232,.2)}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(6px)}}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 28px 40px;
-    mix-blend-mode: difference;
-  }
-  .nav-logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px; font-weight: 800;
-    letter-spacing: -.02em;
-    color: var(--white);
-    text-decoration: none;
-  }
-  .nav-links { display: flex; gap: 40px; list-style: none; }
-  .nav-links a {
-    font-size: 12px; letter-spacing: .15em; text-transform: uppercase;
-    color: var(--white); text-decoration: none; font-family: 'DM Mono', monospace;
-    position: relative; padding-bottom: 2px;
-  }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: 0; left: 0;
-    width: 0; height: 1px; background: var(--cyan);
-    transition: width .35s cubic-bezier(.76,0,.24,1);
-  }
-  .nav-links a:hover::after { width: 100%; }
+/* Crosshair */
+#xhair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;pointer-events:none;opacity:.05}
+#xhair::before,#xhair::after{content:'';position:absolute;background:rgba(244,240,232,.8)}
+#xhair::before{width:24px;height:1px;top:0;left:-12px}
+#xhair::after{width:1px;height:24px;top:-12px;left:0}
 
-  /* hamburger button */
-  .nav-hamburger {
-    display: none;
-    flex-direction: column; justify-content: center; gap: 5px;
-    width: 40px; height: 40px; background: none; border: none;
-    cursor: pointer; padding: 6px; z-index: 10001;
-  }
-  .nav-hamburger span {
-    display: block; height: 1.5px; background: var(--white);
-    transition: transform .35s cubic-bezier(.76,0,.24,1), opacity .2s;
-    transform-origin: center;
-  }
-  .nav-hamburger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-  .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
-  .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+/* -- Content overlays -- */
+.zone-overlay{
+  position:fixed;inset:0;z-index:20;
+  display:flex;align-items:center;
+  padding:0 9vw;pointer-events:none;
+  opacity:0;transform:translateX(24px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.zone-overlay.left{justify-content:flex-start}
+.zone-overlay.right{justify-content:flex-end}
+.zone-overlay.center{justify-content:center;text-align:center}
+.zone-overlay.on{opacity:1;transform:translateX(0);pointer-events:all}
+.zo-inner{max-width:360px}
+.zo-tag{font-size:8px;letter-spacing:.28em;color:var(--a,#fff);display:block;margin-bottom:14px}
+.zo-head{font-family:'Syne',sans-serif;font-size:clamp(20px,2.8vw,40px);font-weight:800;line-height:.95;letter-spacing:-.025em;color:#f4f0e8;margin-bottom:14px}
+.zo-body{font-size:11px;line-height:1.9;color:rgba(244,240,232,.42);font-style:italic}
+.zo-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:22px;font-size:9px;letter-spacing:.22em;
+  color:var(--a,#fff);text-decoration:none;
+  border:1px solid currentColor;
+  padding:11px 22px;
+  pointer-events:all;
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(6px);
+  transition:background .3s, color .3s, transform .2s;
+}
+.zo-cta:hover{background:var(--a,#fff);color:#0a0a12;transform:translateY(-2px)}
 
-  /* fullscreen mobile menu */
-  #mobile-menu {
-    display: none;
-    position: fixed; inset: 0; z-index: 10000;
-    background: var(--black);
-    flex-direction: column; align-items: flex-start; justify-content: center;
-    padding: 60px 32px;
-    opacity: 0; transition: opacity .3s ease;
-  }
-  #mobile-menu.is-open { opacity: 1; }
-  #mobile-menu a {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(40px, 12vw, 72px); font-weight: 800;
-    color: var(--white); text-decoration: none;
-    letter-spacing: -.03em; line-height: 1.1;
-    display: block; margin-bottom: 12px;
-    opacity: 0; transform: translateY(20px);
-    transition: opacity .35s ease, transform .35s ease;
-  }
-  #mobile-menu.is-open a { opacity: 1; transform: translateY(0); }
-  #mobile-menu.is-open a:nth-child(1) { transition-delay: .05s; }
-  #mobile-menu.is-open a:nth-child(2) { transition-delay: .10s; }
-  #mobile-menu.is-open a:nth-child(3) { transition-delay: .15s; }
-  #mobile-menu .menu-eyebrow {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 40px;
-  }
+/* project number badge */
+.zo-num{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:.3em;color:rgba(244,240,232,.18);margin-bottom:6px;display:block}
 
-  /* ── SECTIONS ── */
-  section { position: relative; }
-  .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+/* about extras */
+.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
+.about-tags span{font-size:7px;letter-spacing:.18em;border:1px solid rgba(244,240,232,.18);color:rgba(244,240,232,.4);padding:5px 11px}
 
-  /* ── HERO ── */
-  #hero {
-    min-height: 100dvh;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 100px 0 80px; overflow: visible;
-    position: relative;
-    background: transparent;
-  }
+/* contact extras */
+.contact-links{display:flex;gap:24px;justify-content:center;margin-top:20px}
+.contact-links a{font-size:8px;letter-spacing:.2em;color:rgba(244,240,232,.35);text-decoration:none;transition:color .3s}
+.contact-links a:hover{color:#f4f0e8}
 
-  /* noise via CSS SVG filter — GPU only, zero JS */
-  #hero::after {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-    opacity: .045; pointer-events: none; z-index: 1;
-  }
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .25em; text-transform: uppercase;
-    color: var(--magenta); margin-bottom: 24px;
-    overflow: hidden;
-  }
-  .hero-eyebrow span { display: block; transform: translateY(120%); }
+/* CSS2D labels (anchored to 3D objects) */
+.label3d{pointer-events:none;text-align:center;transform:translate(-50%,-50%)}
+.l3-num{font-size:9px;letter-spacing:.3em;color:inherit;opacity:.5;margin-bottom:4px}
+.l3-name{font-family:'Syne',sans-serif;font-size:clamp(13px,1.4vw,20px);font-weight:800;color:inherit;line-height:1}
+.l3-cat{font-size:7px;letter-spacing:.22em;color:inherit;opacity:.55;margin-top:6px}
 
-  @font-face {
-    font-family: 'HitMePunk';
-    src: url('hit-me-punk.ttf') format('truetype');
-    font-weight: normal; font-style: normal;
-  }
-
-  /* ── HERO PHOTO STACK ── */
-  .hero-photo-stack {
-    position: relative;
-    width: clamp(200px, 24vw, 340px);
-    flex-shrink: 0;
-    overflow: visible;
-    z-index: 2;
-  }
-  .hero-photo-main {
-    width: 100%; aspect-ratio: 2/3;
-    border-radius: 8px; overflow: hidden;
-    position: relative; z-index: 10;
-    box-shadow: 0 20px 60px rgba(0,0,0,.6);
-  }
-  .hero-photo-main img {
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: center 10%;
-    display: block; position: absolute; inset: 0;
-    transition: opacity .35s ease;
-  }
-  .hero-photo-main img.tongue { opacity: 0; }
-
-  /* bloom petals */
-  .bloom-petal {
-    position: absolute;
-    width: 52%; aspect-ratio: 3/4;
-    border-radius: 6px; overflow: hidden;
-    z-index: 1;
-    transform-origin: center center;
-    transform: translate(-50%, -50%) scale(0) rotate(0deg);
-    opacity: 0;
-    box-shadow: 0 8px 32px rgba(0,0,0,.5);
-    border: 2px solid rgba(255,255,255,.08);
-  }
-  .bloom-petal img { width:100%;height:100%;object-fit:cover;display:block; }
-
-  /* petal positions (top: 50% + left: 50% = center of stack) */
-  .bloom-petal:nth-child(1) { top: 50%; left: 50%; }
-  .bloom-petal:nth-child(2) { top: 50%; left: 50%; }
-  .bloom-petal:nth-child(3) { top: 50%; left: 50%; }
-  .bloom-petal:nth-child(4) { top: 50%; left: 50%; }
-  .bloom-petal:nth-child(5) { top: 50%; left: 50%; }
-  .bloom-petal:nth-child(6) { top: 50%; left: 50%; }
-
-  /* color burst theme — applied to :root on scroll */
-  :root {
-    --burst-bg: #050505;
-    --burst-text: #f4f0e8;
-    --burst-accent1: #ff2d00;
-    --burst-accent2: #00eeff;
-    --burst-accent3: #ffe600;
-  }
-  body.color-burst { background: #0a0a0a; }
-  body.color-burst #hero { background: transparent; }
-
-  /* Hit Me Punk — applied per letter via JS */
-  .punk-ltr { display: inline-block; }
-
-  .hero-name {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(42px, 6vw, 96px);
-    font-weight: 800;
-    line-height: .9;
-    letter-spacing: -.04em;
-    margin-bottom: 0;
-    overflow: visible;
-    padding: 28px 0 28px 0;
-    margin-top: -28px;
-  }
-  .hero-name .line { overflow: visible; display: block; }
-  .hero-name .word { display: inline-block; transform: translateY(115%); }
-
-  .hero-sub-row {
-    display: flex; align-items: flex-end;
-    justify-content: space-between;
-    margin-top: 48px; flex-wrap: wrap; gap: 24px;
-  }
-  .hero-tagline {
-    font-size: clamp(14px, 1.5vw, 20px);
-    color: var(--muted); max-width: 380px; line-height: 1.6;
-  }
-  .hero-scroll-hint {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); display: flex; align-items: center; gap: 12px;
-  }
-  .scroll-line {
-    width: 60px; height: 1px; background: var(--muted);
-    transform-origin: left; animation: scrollLineAnim 2s ease-in-out infinite;
-  }
-  @keyframes scrollLineAnim {
-    0%,100% { transform: scaleX(1); opacity: 1; }
-    50% { transform: scaleX(.3); opacity: .4; }
-  }
-
-  .hero-counter {
-    position: absolute; right: 40px; top: 50%;
-    transform: translateY(-50%);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .15em;
-    color: var(--muted); writing-mode: vertical-rl;
-  }
-
-  /* glitch utility */
-  .glitch { position: relative; }
-  .glitch::before, .glitch::after {
-    content: attr(data-text);
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    font: inherit;
-  }
-  .glitch::before {
-    color: var(--red);
-    animation: glitch1 8s infinite steps(1);
-    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
-    will-change: transform, opacity;
-  }
-  .glitch::after {
-    color: var(--green);
-    animation: glitch2 8s infinite steps(1);
-    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
-    will-change: transform, opacity;
-  }
-  @keyframes glitch1 {
-    0%,97%,100% { transform: none; opacity: 0; }
-    97.5% { transform: translate(-4px, 2px); opacity: .7; }
-    98.5% { transform: translate(4px, -2px); opacity: .7; }
-    99%   { transform: none; opacity: 0; }
-  }
-  @keyframes glitch2 {
-    0%,97%,100% { transform: none; opacity: 0; }
-    97.5% { transform: translate(4px, -1px); opacity: .7; }
-    98.5% { transform: translate(-3px, 2px); opacity: .7; }
-    99%   { transform: none; opacity: 0; }
-  }
-
-  /* ── MARQUEE ── */
-  .marquee-wrap {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    overflow: hidden; padding: 18px 0;
-    background: var(--black);
-  }
-  .marquee-track {
-    display: flex; gap: 0;
-    animation: marqueeScroll 18s linear infinite;
-    white-space: nowrap;
-  }
-  .marquee-item {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px; font-weight: 700;
-    letter-spacing: .1em; text-transform: uppercase;
-    padding: 0 48px; color: var(--muted);
-    display: flex; align-items: center; gap: 32px;
-  }
-  .marquee-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); }
-  .marquee-item:nth-child(2n) .dot { background: var(--magenta); }
-  .marquee-item:nth-child(3n) .dot { background: var(--yellow); }
-  @keyframes marqueeScroll { to { transform: translateX(-50%); } }
-
-  /* ── WORK ── */
-  #work { padding: 120px 0; }
-  .section-header {
-    display: flex; align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 64px; flex-wrap: wrap; gap: 16px;
-  }
-  .section-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--cyan);
-  }
-  .section-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; color: var(--yellow);
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(40px, 6vw, 96px);
-    font-weight: 800; line-height: .95;
-    letter-spacing: -.03em;
-  }
-
-  /* ── PROJECT BUBBLES ── */
-  @keyframes float-a { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-18px)} }
-  @keyframes float-b { 0%,100%{transform:translateY(-8px)} 50%{transform:translateY(14px)} }
-  @keyframes float-c { 0%,100%{transform:translateY(0px)} 33%{transform:translateY(-12px)} 66%{transform:translateY(8px)} }
-  @keyframes float-d { 0%,100%{transform:translateY(-6px)} 50%{transform:translateY(16px)} }
-  @keyframes ring-spin { to { transform: rotate(360deg); } }
-
-  .bubble-grid {
-    display: flex; flex-wrap: wrap; gap: 0;
-    align-items: center; justify-content: center;
-    padding: 80px 0 100px;
-  }
-
-  /* wrapper that floats and holds card + ring SVG */
-  .bubble-wrap {
-    position: relative; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    margin: 12px;
-  }
-  /* float is on the whole wrap so card + ring SVG bob together */
-  .bubble-wrap.float-a { animation: float-a 5.2s ease-in-out infinite; }
-  .bubble-wrap.float-b { animation: float-b 6.8s ease-in-out infinite; }
-  .bubble-wrap.float-c { animation: float-c 4.5s ease-in-out infinite; }
-  .bubble-wrap.float-d { animation: float-d 7.1s ease-in-out infinite; }
-  .bubble-wrap.float-e { animation: float-a 5.9s ease-in-out infinite 1.2s; }
-  .bubble-wrap.float-f { animation: float-b 6.2s ease-in-out infinite 0.7s; }
-  .bubble-wrap.float-g { animation: float-c 5.5s ease-in-out infinite 2.1s; }
-
-  .bubble-wrap:hover {
-    z-index: 3;
-    animation-play-state: paused;
-    transform: scale(1.28);
-    transition: transform .45s cubic-bezier(.34,1.56,.64,1);
-  }
-  .bubble-wrap:hover .ring-svg { animation-play-state: paused; }
-
-  /* per-color glow */
-  .glow-cyan .project-card:hover    { box-shadow: 0 0 0 2px var(--cyan),    0 24px 64px rgba(0,238,255,.22); }
-  .glow-magenta .project-card:hover { box-shadow: 0 0 0 2px var(--magenta), 0 24px 64px rgba(255,0,204,.22); }
-  .glow-yellow .project-card:hover  { box-shadow: 0 0 0 2px var(--yellow),  0 24px 64px rgba(255,230,0,.22); }
-
-  .project-card {
-    border-radius: 50%; overflow: hidden;
-    position: relative; cursor: none; flex-shrink: 0;
-    box-shadow: 0 0 0 1px rgba(244,240,232,.08);
-    transition: box-shadow .45s ease;
-  }
-
-  /* ring SVG – spins, lives in .bubble-wrap */
-  .ring-svg {
-    position: absolute; inset: 0;
-    pointer-events: none; overflow: visible;
-    transform-origin: 50% 50%;
-    animation: ring-spin 22s linear infinite;
-  }
-  .ring-text {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
-    fill: rgba(244,240,232,.48);
-    transition: fill .35s ease;
-  }
-  .bubble-wrap:hover .ring-text { fill: rgba(244,240,232,.92); }
-
-  .bubble-media {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%; object-fit: cover;
-    opacity: .82;
-    transition: opacity .4s, transform .6s cubic-bezier(.25,.46,.45,.94);
-  }
-  .project-card:hover .bubble-media { opacity: 1; transform: scale(1.08); }
-
-  .bubble-label {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 24px;
-    background: rgba(5,5,5,.52); backdrop-filter: blur(2px);
-    opacity: 0; transition: opacity .35s ease; z-index: 2;
-  }
-  .project-card:hover .bubble-label { opacity: 1; }
-
-  .bubble-label-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--cyan); margin-bottom: 8px;
-  }
-  .bubble-label-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(13px, 1.4vw, 17px); font-weight: 800;
-    letter-spacing: -.01em; line-height: 1.2;
-    color: var(--white);
-  }
-
-  /* ── ABOUT ── */
-  #about {
-    padding: 120px 0;
-    border-top: 1px solid var(--border);
-  }
-  .about-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 80px; align-items: start;
-  }
-  .about-left { }
-  .about-big-text {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(28px, 3.5vw, 52px);
-    font-weight: 800; line-height: 1.1;
-    letter-spacing: -.02em; margin-bottom: 40px;
-  }
-  .about-big-text em { font-style: normal; color: var(--cyan); }
-  .about-body {
-    font-size: 16px; line-height: 1.7; color: var(--muted);
-    margin-bottom: 40px; max-width: 480px;
-  }
-  .skills-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 16px; margin-top: 48px;
-  }
-  .skill-item {
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    position: relative; overflow: hidden;
-  }
-  .skill-item::before {
-    content: ''; position: absolute; inset: 0;
-    background: var(--white); transform: translateX(-101%);
-    transition: transform .4s cubic-bezier(.76,0,.24,1);
-    z-index: 0;
-  }
-  .skill-item:hover::before { transform: translateX(0); }
-  .skill-item:hover { color: var(--black); }
-  .skill-item > * { position: relative; z-index: 1; }
-  .skill-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px; font-weight: 700; margin-bottom: 4px;
-    color: var(--cyan);
-  }
-  .skill-item:hover .skill-name { color: var(--black); }
-  .skill-desc {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; color: var(--muted);
-    transition: color .3s;
-  }
-  .skill-item:hover .skill-desc { color: rgba(5,5,5,.5); }
-
-  .about-right { position: sticky; top: 120px; }
-  .about-portrait {
-    width: 100%; aspect-ratio: 3/4;
-    background: #111;
-    border-radius: 4px; overflow: hidden;
-    position: relative;
-  }
-  .portrait-placeholder {
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 16px;
-    background: linear-gradient(160deg, #111 0%, #1a0a2e 100%);
-  }
-  .portrait-initials {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(80px, 10vw, 140px);
-    font-weight: 800; letter-spacing: -.05em;
-    background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 50%, var(--yellow) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .portrait-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted);
-  }
-  .about-stats {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1px; margin-top: 1px; background: var(--border);
-  }
-  .stat-box {
-    background: var(--black); padding: 24px 20px;
-  }
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 40px; font-weight: 800; letter-spacing: -.03em;
-    color: var(--white);
-  }
-  .stat-box:nth-child(1) .stat-num { color: var(--cyan); }
-  .stat-box:nth-child(2) .stat-num { color: var(--magenta); }
-  .stat-box:nth-child(3) .stat-num { color: var(--yellow); }
-  .stat-box:nth-child(4) .stat-num { color: var(--cyan); }
-  .stat-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
-    color: var(--muted); margin-top: 4px;
-  }
-
-  /* ── CONTACT ── */
-  #contact {
-    padding: 120px 0 80px;
-    border-top: 1px solid var(--border);
-  }
-  .contact-big {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(48px, 9vw, 150px);
-    font-weight: 800; line-height: .9;
-    letter-spacing: -.04em;
-    margin-bottom: 64px;
-  }
-  .contact-big .line { overflow: hidden; display: block; }
-  .contact-big .word-wrap { display: inline-block; overflow: hidden; }
-  .contact-big .word { display: inline-block; }
-
-  .contact-row {
-    display: flex; align-items: center;
-    justify-content: space-between; flex-wrap: wrap; gap: 32px;
-    padding-top: 48px; border-top: 1px solid var(--border);
-  }
-  .contact-email {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(18px, 3vw, 36px);
-    font-weight: 700; text-decoration: none;
-    color: var(--white);
-    display: inline-flex; align-items: center; gap: 16px;
-    position: relative;
-  }
-  .contact-email::after {
-    content: ''; position: absolute; bottom: -4px; left: 0;
-    width: 100%; height: 2px; background: var(--magenta);
-    transform: scaleX(0); transform-origin: right;
-    transition: transform .5s cubic-bezier(.76,0,.24,1);
-  }
-  .contact-email:hover::after { transform: scaleX(1); transform-origin: left; }
-
-  .cta-btn {
-    display: inline-flex; align-items: center; gap: 12px;
-    padding: 18px 36px;
-    border: 1px solid var(--magenta); border-radius: 100px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px; font-weight: 500; letter-spacing: .05em;
-    color: var(--magenta); text-decoration: none; cursor: none;
-    position: relative; overflow: hidden;
-  }
-  .cta-btn::before {
-    content: ''; position: absolute; inset: 0;
-    background: var(--magenta); border-radius: 100px;
-    transform: translateY(101%);
-    transition: transform .45s cubic-bezier(.76,0,.24,1);
-  }
-  .cta-btn:hover::before { transform: translateY(0); }
-  .cta-btn:hover { color: var(--black); }
-  .cta-btn > * { position: relative; z-index: 1; }
-
-  .socials { display: flex; gap: 24px; align-items: center; }
-  .social-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
-    color: var(--muted); text-decoration: none;
-    transition: color .3s;
-  }
-  .social-link:hover { color: var(--cyan); }
-
-  /* ── FOOTER ── */
-  footer {
-    padding: 32px 40px;
-    border-top: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-  }
-  .footer-copy {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: .1em; color: var(--muted);
-  }
-
-  /* ── PROJECT OVERLAY ── */
-  #project-overlay {
-    position: fixed; inset: 0; z-index: 500;
-    background: var(--black);
-    overflow-y: auto; overflow-x: hidden;
-    transform: translateY(100%);
-    will-change: transform;
-    contain: layout style;
-  }
-  #project-overlay.is-open { pointer-events: all; }
-
-  .po-close {
-    position: fixed; top: 32px; right: 40px; z-index: 600;
-    width: 52px; height: 52px; border-radius: 50%;
-    border: 1px solid var(--border);
-    background: rgba(5,5,5,.7); backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    cursor: none; color: var(--white);
-    font-size: 22px; line-height: 1;
-    opacity: 0; pointer-events: none;
-    transition: border-color .3s, background .3s;
-  }
-  .po-close.visible { pointer-events: all; }
-  .po-close:hover { background: var(--white); color: var(--black); border-color: var(--white); }
-
-  .po-inner { min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* hero strip */
-  .po-hero {
-    min-height: 100vh; display: flex; flex-direction: column;
-    justify-content: flex-end; padding: 80px 40px;
-    position: relative; overflow: hidden;
-  }
-  .po-bg-num {
-    position: absolute; right: -0.05em; bottom: -0.15em;
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(200px, 30vw, 400px);
-    font-weight: 800; line-height: 1;
-    color: rgba(244,240,232,.03);
-    pointer-events: none; user-select: none;
-  }
-  .po-bg-art {
-    position: absolute; inset: 0; pointer-events: none;
-  }
-  .po-tag-row {
-    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
-    transform: translateY(40px); opacity: 0;
-  }
-  .po-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-    border: 1px solid var(--border); padding: 6px 14px; border-radius: 100px;
-    color: var(--muted);
-  }
-  .po-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(40px, 8vw, 130px);
-    font-weight: 800; line-height: .92; letter-spacing: -.04em;
-    transform: translateY(60px); opacity: 0;
-  }
-  .po-subtitle {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); margin-top: 24px;
-    transform: translateY(40px); opacity: 0;
-  }
-
-  /* body content */
-  .po-body { padding: 80px 40px; max-width: 1400px; margin: 0 auto; width: 100%; }
-  .po-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 80px; align-items: start; margin-bottom: 80px;
-  }
-  .po-brief-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 20px;
-  }
-  .po-brief {
-    font-size: clamp(16px, 1.5vw, 20px); line-height: 1.7;
-    color: rgba(244,240,232,.8);
-  }
-  .po-meta { display: flex; flex-direction: column; gap: 24px; }
-  .po-meta-item { padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-  .po-meta-key {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 8px;
-  }
-  .po-meta-val {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px; font-weight: 700;
-  }
-
-
-  /* next project */
-  .po-next {
-    border-top: 1px solid var(--border);
-    padding: 60px 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    cursor: none; gap: 24px;
-    transition: background .4s;
-    max-width: 1400px; margin: 0 auto; width: 100%;
-  }
-  .po-next:hover { background: rgba(244,240,232,.04); }
-  .po-next-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 12px;
-  }
-  .po-next-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(24px, 3vw, 48px);
-    font-weight: 800; letter-spacing: -.02em;
-  }
-  .po-next-arrow { font-size: 48px; flex-shrink: 0; }
-
-  /* ── REVEAL UTILS ── */
-  .reveal-text .char { display: inline-block; }
-  .split-reveal { overflow: hidden; }
-  .split-reveal .inner { transform: translateY(110%); display: block; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    /* nav */
-    nav { padding: 20px 24px; }
-    .nav-links { display: none; }
-    .nav-hamburger { display: flex; }
-    .container { padding: 0 24px; }
-
-    /* hero */
-    #hero { padding-bottom: 60px; }
-    .hero-counter { display: none; }
-    .hero-bg-year { display: none; }
-    .hero-name { padding: 16px 0; margin-top: 0; }
-    .hero-sub-row { flex-direction: column; align-items: flex-start; gap: 28px; }
-    .hero-meta { align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 20px; }
-    .hero-meta-item { text-align: left; }
-    .hero-meta-val { justify-content: flex-start; }
-
-    /* sections */
-    #work, #about { padding: 72px 0; }
-    #contact { padding: 72px 0 48px; }
-
-    /* about */
-    .about-grid { grid-template-columns: 1fr; gap: 48px; }
-    .about-right { position: static; }
-    .skills-grid { grid-template-columns: 1fr; }
-    .skill-desc { word-break: break-word; overflow-wrap: break-word; }
-
-    /* projects — bubble grid on mobile */
-    .bubble-grid { gap: 16px; padding: 40px 0 60px; }
-    .project-card { flex-shrink: 0; }
-
-    /* project overlay */
-    .po-hero { padding: 60px 24px; }
-    .po-body { padding: 48px 24px; }
-    .po-grid { grid-template-columns: 1fr; gap: 40px; }
-    .po-close { top: 20px; right: 20px; }
-    .po-next { padding: 40px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
-
-    /* contact */
-    .contact-email { word-break: break-all; overflow-wrap: anywhere; }
-    .contact-row { flex-direction: column; align-items: flex-start; gap: 24px; }
-
-    /* footer */
-    .footer-copy { word-break: break-word; overflow-wrap: break-word; }
-    footer { padding: 24px; }
-  }
-
-  /* touch devices — disable custom cursor */
-  @media (hover: none) {
-    body { cursor: auto; }
-    #cursor { display: none !important; }
-    .project-card, .cta-btn, .po-next, .po-close { cursor: pointer; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-  }
-
+/* Scroll space */
+#ss{height:1600vh}
 </style>
 </head>
 <body>
+<canvas id="c"></canvas>
+<div id="xhair"></div>
 
-
-
-<!-- CURSOR -->
-<div id="cursor">
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
-</div>
-
-
-<!-- LOADER -->
-<div id="loader">
-  <div id="loader-count">0</div>
-  <div id="loader-label">Loading portfolio</div>
-  <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
-</div>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">PC</a>
-  <ul class="nav-links">
-    <li><a href="#work" data-magnetic>Work</a></li>
-    <li><a href="#about" data-magnetic>About</a></li>
-    <li><a href="#contact" data-magnetic>Contact</a></li>
-  </ul>
-  <button class="nav-hamburger" aria-label="Menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+<nav id="nav">
+  <span class="logo">PC</span>
+  <div class="links">
+    <a href="#" onclick="jumpToZone(0);return false">Intro</a>
+    <a href="#" onclick="jumpToZone(5);return false">Work</a>
+    <a href="#" onclick="jumpToZone(11);return false">About</a>
+    <a href="#" onclick="jumpToZone(12);return false">Contact</a>
+  </div>
 </nav>
 
-<!-- MOBILE MENU -->
-<div id="mobile-menu" role="dialog" aria-modal="true">
-  <div class="menu-eyebrow">Navigation</div>
-  <a href="#work">Work</a>
-  <a href="#about">About</a>
-  <a href="#contact">Contact</a>
-</div>
+<div id="progress"></div>
+<div id="zcnt">ZONE <b id="znum">01</b></div>
+<div id="hint"><p>SCROLL TO EXPLORE</p><div>↓</div></div>
 
-<!-- HERO -->
-<section id="hero" id="hero-bloom-trigger">
-  <div class="hero-bg-year" aria-hidden="true">2026</div>
-  <div class="container" style="position:relative;z-index:2;display:flex;align-items:center;gap:clamp(32px,5vw,80px);">
-    <!-- Photo stack -->
-    <div class="hero-photo-stack" id="heroPhotoStack">
-      <!-- bloom petals behind main photo -->
-      <div class="bloom-petal"><img src="projects/bloom-1.jpg" alt=""></div>
-      <div class="bloom-petal"><img src="projects/bloom-2.jpg" alt=""></div>
-      <div class="bloom-petal"><img src="projects/bloom-3.jpg" alt=""></div>
-      <div class="bloom-petal"><img src="projects/bloom-4.jpg" alt=""></div>
-      <div class="bloom-petal"><img src="projects/bloom-5.jpg" alt=""></div>
-      <div class="bloom-petal"><img src="projects/bloom-6.jpg" alt=""></div>
-      <!-- main photo on top -->
-      <div class="hero-photo-main">
-        <img src="projects/hero-serious.jpg" alt="Parag Chavhan" class="serious">
-        <img src="projects/hero-tongue.jpg"  alt="Parag Chavhan" class="tongue">
-      </div>
-    </div>
-    <!-- Text -->
-    <div style="flex:1;min-width:0;position:relative;z-index:20;">
-      <div class="hero-eyebrow"><span>Architect · Designer · Visualizer</span></div>
-      <h1 class="hero-name" id="heroName" data-text="Parag Chavhan">
-        <span class="line"><span class="word">Parag</span></span>
-        <span class="line"><span class="word">Chavhan</span></span>
-      </h1>
-      <div class="hero-sub-row">
-        <p class="hero-tagline split-reveal">
-          <span class="inner">Architecture, design, and everything<br>that lives in between.</span>
-        </p>
-        <div class="hero-meta">
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">Based in</span>
-            <span class="hero-meta-val">Vijayawada, IN</span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">Status</span>
-            <span class="hero-meta-val"><span class="hero-avail-dot"></span>Available</span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">Program</span>
-            <span class="hero-meta-val">B.Arch · SPA</span>
-          </div>
-        </div>
-      </div>
-      <a href="#work" class="hero-cta" data-magnetic>
-        <span>View Work</span>
-        <span class="hero-cta-arrow">→</span>
-      </a>
-    </div>
+<!-- -- Zone overlays (all content floats in here) -------------------------- -->
+
+<!-- 0 - 4: Story stages (left aligned) -->
+<div class="zone-overlay right on" id="z0" style="--a:#00eeff">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 01 · The Spark</span>
+    <h2 class="zo-head">A kid who questioned every wall.</h2>
+    <p class="zo-body">2021. Architecture school. A pencil, a dream, and a T-square he never quite mastered.</p>
   </div>
-  <div class="hero-counter">2026 · Portfolio</div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track" id="marqueeTrack">
-    <div class="marquee-item">Architecture <span class="dot"></span></div>
-    <div class="marquee-item">Branding <span class="dot"></span></div>
-    <div class="marquee-item">3D Visualization <span class="dot"></span></div>
-    <div class="marquee-item">Urban Design <span class="dot"></span></div>
-    <div class="marquee-item">Visual Identity <span class="dot"></span></div>
-    <div class="marquee-item">Graphic Design <span class="dot"></span></div>
-    <div class="marquee-item">Spatial Design <span class="dot"></span></div>
-    <div class="marquee-item">Exhibition Design <span class="dot"></span></div>
-    <div class="marquee-item">Architecture <span class="dot"></span></div>
-    <div class="marquee-item">Branding <span class="dot"></span></div>
-    <div class="marquee-item">3D Visualization <span class="dot"></span></div>
-    <div class="marquee-item">Urban Design <span class="dot"></span></div>
-    <div class="marquee-item">Visual Identity <span class="dot"></span></div>
-    <div class="marquee-item">Graphic Design <span class="dot"></span></div>
-    <div class="marquee-item">Spatial Design <span class="dot"></span></div>
-    <div class="marquee-item">Exhibition Design <span class="dot"></span></div>
+</div>
+<div class="zone-overlay left" id="z1" style="--a:#ff44cc">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 02 · The Chaos</span>
+    <h2 class="zo-head">Order inside the disorder.</h2>
+    <p class="zo-body">Five studios deep. The beautiful mess of deadlines, models, and 3am epiphanies.</p>
+  </div>
+</div>
+<div class="zone-overlay right" id="z2" style="--a:#ffd700">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 03 · The Work</span>
+    <h2 class="zo-head">Projects that ask better questions.</h2>
+    <p class="zo-body">Housing, urbanism, spatial installations. Each a hypothesis about how people want to live.</p>
+  </div>
+</div>
+<div class="zone-overlay left" id="z3" style="--a:#ff8844">
+  <div class="zo-inner">
+    <span class="zo-tag">Stage 04 · The Human</span>
+    <h2 class="zo-head">Chaotic. Orderly. Impossibly creative.</h2>
+    <p class="zo-body">Pink pagdi at weddings. LED headphones in studio. Floral shirts everywhere.</p>
+  </div>
+</div>
+<div class="zone-overlay center" id="z4" style="--a:#88ff44">
+  <div class="zo-inner" style="max-width:480px">
+    <span class="zo-tag">Stage 05 · The Invite</span>
+    <h2 class="zo-head">Let's build something worth talking about.</h2>
+    <p class="zo-body">Available. Ready. Obsessively curious.</p>
+    <a class="zo-cta" href="#" onclick="jumpToZone(5);return false">Fly into my work -></a>
   </div>
 </div>
 
-<!-- WORK -->
-<section id="work">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <div class="section-tag">Selected Work</div>
-        <h2 class="section-title split-reveal"><span class="inner">Projects</span></h2>
-      </div>
-      <span class="section-num">2022 – 2024</span>
-    </div>
-
-    <div class="bubble-grid">
-
-      <!-- 01 ABODE — medium -->
-      <div class="project-card" data-project="01" style="width:155px;height:155px;">
-        <video class="bubble-media" src="projects/abode-logo.mp4" autoplay loop muted playsinline></video>
-        <div class="bubble-label">
-          <div class="bubble-label-tag">Brand Identity · 2023</div>
-          <div class="bubble-label-title">ABODE</div>
-        </div>
-      </div>
-
-      <!-- 02 Thesis — hero/largest -->
-      <div class="project-card" data-project="02" style="width:225px;height:225px;">
-        <img class="bubble-media" src="projects/thesis-thumb.jpg" alt="Thesis">
-        <div class="bubble-label">
-          <div class="bubble-label-tag">Architecture · 2026</div>
-          <div class="bubble-label-title">Gateway to the Sacred</div>
-        </div>
-      </div>
-
-      <!-- 03 Retro Futurism — small -->
-      <div class="project-card" data-project="03" style="width:118px;height:118px;">
-        <img class="bubble-media" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png" alt="Retro Futurism">
-        <div class="bubble-label">
-          <div class="bubble-label-tag">Digital Art · 2025</div>
-          <div class="bubble-label-title">Retro Futurism</div>
-        </div>
-      </div>
-
-      <!-- 04 NRITYAMRIT — large -->
-      <div class="project-card" data-project="04" style="width:190px;height:190px;">
-        <img class="bubble-media" src="projects/ai-nrityamrit.webp" alt="NRITYAMRIT">
-        <div class="bubble-label">
-          <div class="bubble-label-tag">Branding · 2023</div>
-          <div class="bubble-label-title">NRITYAMRIT</div>
-        </div>
-      </div>
-
-      <!-- 05 MOSAFIRO — tiny -->
-      <div class="project-card" data-project="05" style="width:108px;height:108px;">
-        <img class="bubble-media" src="projects/ai-mosafiro.webp" alt="MOSAFIRO">
-        <div class="bubble-label">
-          <div class="bubble-label-tag">Architecture · 2023</div>
-          <div class="bubble-label-title">MOSAFIRO</div>
-        </div>
-      </div>
-
-      <!-- 06 Winkit — large -->
-      <div class="project-card" data-project="06" style="width:195px;height:195px;">
-        <img class="bubble-media" src="projects/ai-winkit.webp" alt="Winkit">
-        <div class="bubble-label">
-          <div class="bubble-label-tag">UI/UX · 2024</div>
-          <div class="bubble-label-title">Winkit</div>
-        </div>
-      </div>
-
-      <!-- 07 Dhakor — medium-small -->
-      <div class="project-card" data-project="07" style="width:138px;height:138px;">
-        <img class="bubble-media" src="projects/ai-dhakor.webp" alt="Dhakor Museum">
-        <div class="bubble-label">
-          <div class="bubble-label-tag">Exhibition · 2023</div>
-          <div class="bubble-label-title">Dhakor Museum</div>
-        </div>
-      </div>
-
-    </div>
+<!-- 5 - 10: Projects -->
+<div class="zone-overlay right" id="z5" style="--a:#00eeff">
+  <div class="zo-inner">
+    <span class="zo-num">01 / 06</span>
+    <span class="zo-tag">Urban Housing</span>
+    <h2 class="zo-head">Project Alpha</h2>
+    <p class="zo-body">A housing complex that questions how density and community coexist. Compact, breathable, community-forward.</p>
+    <a class="zo-cta" href="project.html?id=1">View Case Study -></a>
   </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="container">
-    <div class="section-tag" style="margin-bottom:48px;">About Me</div>
-    <div class="about-grid">
-      <div class="about-left">
-        <h2 class="about-big-text">
-          Where space<br>meets <em>story</em> —<br>built to last.
-        </h2>
-        <p class="about-body">
-          I'm Parag, currently in my fifth year pursuing Architecture at the
-          School of Planning and Architecture, Vijayawada. My journey has
-          exposed me to diverse architectural typologies, supplemented by
-          independent exploration through competitions and real-world projects.
-        </p>
-        <p class="about-body" style="margin-bottom:0;">
-          I have a keen interest in architectural visualization, visual design,
-          and branding. I stay on the cutting edge of AI tools — using them
-          actively for generative design, AI-assisted marketing, motion graphics,
-          and campaign production — bringing the speed of technology to
-          design-driven storytelling.
-        </p>
-        <div class="skills-grid">
-          <div class="skill-item">
-            <div class="skill-name">Architecture</div>
-            <div class="skill-desc">AutoCAD · Revit · SketchUp</div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">3D & Rendering</div>
-            <div class="skill-desc">Blender · ZBrush · Enscape · V-ray</div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">Visual Design</div>
-            <div class="skill-desc">Photoshop · Illustrator · InDesign</div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">Branding & Identity</div>
-            <div class="skill-desc">Logo · Packaging · Exhibition</div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">AI Marketing</div>
-            <div class="skill-desc">Higgsfield · Kling · Veo · Midjourney · Runway</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="about-right">
-        <div style="display:flex;gap:0;margin-bottom:6px;">
-          <div style="height:3px;flex:1;background:var(--cyan);"></div>
-          <div style="height:3px;flex:1;background:var(--magenta);"></div>
-          <div style="height:3px;flex:1;background:var(--yellow);"></div>
-        </div>
-        <div class="about-portrait">
-          <img src="projects/about-photo.jpg" alt="Parag Chavhan" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
-        </div>
-        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,240,232,.25);">Parag Chavhan</span>
-          <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(244,240,232,.2);">Holi · 2025</span>
-        </div>
-        <div class="about-stats">
-          <div class="stat-box">
-            <div class="stat-num" data-count="40">0</div>
-            <div class="stat-label">Projects Shipped</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" data-count="5">0</div>
-            <div class="stat-label">Years Experience</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" data-count="20">0</div>
-            <div class="stat-label">Happy Clients</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" data-count="3">0</div>
-            <div class="stat-label">Awards Won</div>
-          </div>
-        </div>
-      </div>
-    </div>
+</div>
+<div class="zone-overlay left" id="z6" style="--a:#ff44cc">
+  <div class="zo-inner">
+    <span class="zo-num">02 / 06</span>
+    <span class="zo-tag">Cultural Centre</span>
+    <h2 class="zo-head">Project Beta</h2>
+    <p class="zo-body">A public cultural landmark where programme dissolves into landscape. The building continues into the ground.</p>
+    <a class="zo-cta" href="project.html?id=2">View Case Study -></a>
   </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="container">
-    <div class="section-tag" style="margin-bottom:48px;">Get In Touch</div>
-    <div class="contact-big">
-      <span class="line"><span class="word-wrap"><span class="word">Let's</span></span></span>
-      <span class="line"><span class="word-wrap"><span class="word">Build</span></span></span>
-      <span class="line" style="color:var(--muted)"><span class="word-wrap"><span class="word">Something.</span></span></span>
-    </div>
-    <div class="contact-row">
-      <a href="mailto:drparagchavhan23@gmail.com" class="contact-email">
-        drparagchavhan23@gmail.com â†—
-      </a>
-      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
-        <div class="socials">
-          <a href="#" class="social-link">LinkedIn</a>
-          <a href="#" class="social-link">Dribbble</a>
-          <a href="#" class="social-link">GitHub</a>
-        </div>
-        <a href="mailto:drparagchavhan23@gmail.com" class="cta-btn">
-          <span>Start a project</span>
-          <span>→</span>
-        </a>
-      </div>
-    </div>
+</div>
+<div class="zone-overlay right" id="z7" style="--a:#ffd700">
+  <div class="zo-inner">
+    <span class="zo-num">03 / 06</span>
+    <span class="zo-tag">Spatial Installation</span>
+    <h2 class="zo-head">Project Gamma</h2>
+    <p class="zo-body">A temporary installation exploring the threshold between public solitude and collective presence.</p>
+    <a class="zo-cta" href="project.html?id=3">View Case Study -></a>
   </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-copy">© 2026 Parag Chavhan. All rights reserved.</div>
-  <div class="footer-copy">SPA Vijayawada · B.Arch 5th Year · drparagchavhan23@gmail.com</div>
-</footer>
-
-<!-- PROJECT OVERLAY -->
-<div id="project-overlay" role="dialog" aria-modal="true" aria-label="Project detail">
-  <button class="po-close" id="po-close-btn" aria-label="Close project">✕</button>
-  <div class="po-inner" id="po-inner"></div>
+</div>
+<div class="zone-overlay left" id="z8" style="--a:#ff8844">
+  <div class="zo-inner">
+    <span class="zo-num">04 / 06</span>
+    <span class="zo-tag">Residential</span>
+    <h2 class="zo-head">Project Delta</h2>
+    <p class="zo-body">Four houses around a shared courtyard. Privacy negotiated not by walls but by geometry and level change.</p>
+    <a class="zo-cta" href="project.html?id=4">View Case Study -></a>
+  </div>
+</div>
+<div class="zone-overlay right" id="z9" style="--a:#88ff44">
+  <div class="zo-inner">
+    <span class="zo-num">05 / 06</span>
+    <span class="zo-tag">Museum</span>
+    <h2 class="zo-head">Project Epsilon</h2>
+    <p class="zo-body">A museum of living craft -- organised not by object but by process. You see things being made, then made.</p>
+    <a class="zo-cta" href="project.html?id=5">View Case Study -></a>
+  </div>
+</div>
+<div class="zone-overlay left" id="z10" style="--a:#cc44ff">
+  <div class="zo-inner">
+    <span class="zo-num">06 / 06</span>
+    <span class="zo-tag">Transit + Urban</span>
+    <h2 class="zo-head">Project Zeta</h2>
+    <p class="zo-body">A transit hub that refuses to be only infrastructure. Every waiting space is also a civic one.</p>
+    <a class="zo-cta" href="project.html?id=6">View Case Study -></a>
+  </div>
 </div>
 
-<!-- SCRIPTS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
-<script>
-(function () {
-  gsap.registerPlugin(ScrollTrigger, TextPlugin);
+<!-- 11: About -->
+<div class="zone-overlay right" id="z11" style="--a:#f4f0e8">
+  <div class="zo-inner" style="max-width:400px">
+    <span class="zo-tag">About</span>
+    <h2 class="zo-head">Parag Chavhan.</h2>
+    <p class="zo-body">Architecture student. Obsessive builder. I spend studios asking the most uncomfortable questions -- about who a space is really for, and what it refuses to do.</p>
+    <p class="zo-body" style="margin-top:10px">Outside the studio I'm probably fiddling with code, listening to something at an unreasonable volume, or wearing a floral shirt.</p>
+    <div class="about-tags">
+      <span>Architecture</span><span>Urban Design</span><span>3D Modelling</span>
+      <span>Parametric</span><span>Digital Fab</span>
+    </div>
+  </div>
+</div>
 
-  /* ── NOISE: static SVG filter, zero JS cost ── */
-  /* canvas removed — handled by CSS SVG filter in hero::after */
+<!-- 12: Contact -->
+<div class="zone-overlay center" id="z12" style="--a:#ffd700">
+  <div class="zo-inner" style="max-width:520px;text-align:center">
+    <span class="zo-tag">Contact · Let's talk</span>
+    <h2 class="zo-head" style="font-size:clamp(28px,4vw,58px)">Let's make something<br>worth talking about.</h2>
+    <p class="zo-body" style="margin:0 auto">Open to internships, collaborations, and interesting conversations.</p>
+    <a class="zo-cta" style="font-size:11px;margin-top:24px" href="mailto:drparagchavhan23@gmail.com">drparagchavhan23@gmail.com</a>
+    <div class="contact-links">
+      <a href="#">Instagram</a><a href="#">Behance</a><a href="#">LinkedIn</a>
+    </div>
+  </div>
+</div>
 
-  /* ── CURSOR — pure RAF, no GSAP ticker overhead ── */
-  const dot = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-  (function rafCursor() {
-    rx += (mx - rx) * .13;
-    ry += (my - ry) * .13;
-    dot.style.transform  = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
-    ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-    requestAnimationFrame(rafCursor);
-  })();
-  document.querySelectorAll('a, button, .project-card, .skill-item, .cta-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+<div id="ss"></div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
+
+const W = () => window.innerWidth, H = () => window.innerHeight;
+
+/* -- Scene -- */
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x6a2088, 0.0028);
+
+const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 600);
+
+const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true, alpha:true });
+renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.setSize(W(), H());
+
+/* CSS2D renderer for floating labels */
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(W(), H());
+labelRenderer.domElement.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15;';
+document.body.appendChild(labelRenderer.domElement);
+
+/* ====================================== CAMERA PATH ====================== */
+/* Zones:  0-4 -> story stages   5-10 -> projects   11 -> about   12 -> contact */
+const PATH = new THREE.CatmullRomCurve3([
+  // -- Story intro -----------------------------------------------------------
+  new THREE.Vector3(  0,   0,  38),
+  new THREE.Vector3( -8,   4,  12),
+  new THREE.Vector3(  6,  -4,  -5),   // S0
+  new THREE.Vector3( 22,   5, -55),
+  new THREE.Vector3( -2,  -8,-105),   // S1
+  new THREE.Vector3(-20,   6,-155),
+  new THREE.Vector3(  4,   2,-205),   // S2
+  new THREE.Vector3( 18,  12,-255),
+  new THREE.Vector3( -6,  -5,-305),   // S3
+  new THREE.Vector3(-16,   8,-360),
+  new THREE.Vector3(  0,   0,-415),   // S4
+  // -- Projects gallery ------------------------------------------------------
+  new THREE.Vector3( 22,   6,-480),
+  new THREE.Vector3(-18,  -4,-545),   // P1
+  new THREE.Vector3( 24,  10,-610),   // P2
+  new THREE.Vector3(-20,  -8,-675),   // P3
+  new THREE.Vector3( 22,   6,-740),   // P4
+  new THREE.Vector3(-18,  12,-805),   // P5
+  new THREE.Vector3( 16,  -6,-870),   // P6
+  // -- About + Contact -------------------------------------------------------
+  new THREE.Vector3(  8,  16,-930),
+  new THREE.Vector3(-10,   6,-980),   // About
+  new THREE.Vector3(  0,   0,-1060),  // Contact
+], false, 'catmullrom', 0.5);
+
+/* Zone thresholds (progress 0->1) mapped to 13 zones */
+const ZONE_COUNT = 13;
+/* Each zone spans 1/13 of the journey */
+const zoneOf = p => Math.min(Math.floor(p * ZONE_COUNT), ZONE_COUNT - 1);
+
+/* ====================================== STAGE NODES ===================== */
+const STAGES = [
+  { color:0x00eeff, pos:new THREE.Vector3( -5, -9, -10)  },
+  { color:0xff44cc, pos:new THREE.Vector3( 14,  6,-110)  },
+  { color:0xffd700, pos:new THREE.Vector3(-14, 10,-210)  },
+  { color:0xff8844, pos:new THREE.Vector3( 12, -9,-310)  },
+  { color:0x88ff44, pos:new THREE.Vector3(  0,  0,-420)  },
+];
+
+const lineMat = (col, op) => new THREE.LineBasicMaterial({ color:col, transparent:op<1, opacity:op });
+function wireObj(geo, col, op=0.75) {
+  return new THREE.LineSegments(new THREE.WireframeGeometry(geo), lineMat(col, op));
+}
+function ring(rx, ry, col, op) {
+  const pts = [];
+  for(let i=0;i<=64;i++){const a=(i/64)*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*rx,0,Math.sin(a)*ry));}
+  return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat(col, op));
+}
+const GEOS = [
+  ()=>new THREE.IcosahedronGeometry(2,0), ()=>new THREE.OctahedronGeometry(2,0),
+  ()=>new THREE.TetrahedronGeometry(2.2,0), ()=>new THREE.DodecahedronGeometry(1.8,0),
+  ()=>new THREE.TorusGeometry(1.6,.55,8,18),
+];
+const nodeGroups=[], nodeMats=[];
+STAGES.forEach((s,i)=>{
+  const g=new THREE.Group(); g.position.copy(s.pos);
+  const mat=lineMat(s.color,0.8); nodeMats.push(mat);
+  g.add(new THREE.LineSegments(new THREE.WireframeGeometry(GEOS[i]()),mat));
+  [4,6.5,9].forEach((r,ri)=>{const rl=ring(r,r*.6,s.color,.12-ri*.02);rl.rotation.x=Math.PI/2+ri*.45;rl.rotation.z=ri*.7;g.add(rl);});
+  for(let j=0;j<8;j++){const m=wireObj(new THREE.OctahedronGeometry(.25,0),s.color,.35);m.position.set((Math.random()-.5)*14,(Math.random()-.5)*14,(Math.random()-.5)*10);g.add(m);}
+  scene.add(g); nodeGroups.push(g);
+});
+
+/* ====================================== PROJECT PORTALS ================= */
+const PROJECT_COLORS = [0x00eeff,0xff44cc,0xffd700,0xff8844,0x88ff44,0xcc44ff];
+const PROJECT_NUMS   = ['01','02','03','04','05','06'];
+const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
+const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
+
+/* Portals close to the path, clear of cloud positions (clouds avoid this Z range via CLOUD_DATA) */
+const PORTAL_POSITIONS = [
+  new THREE.Vector3(-20,   2,-548),
+  new THREE.Vector3( 22,   8,-615),
+  new THREE.Vector3(-20,  -4,-678),
+  new THREE.Vector3( 22,   4,-742),
+  new THREE.Vector3(-20,  10,-808),
+  new THREE.Vector3( 18,  -2,-872),
+];
+
+const portalGroups = [];
+const labelDivs = [];
+PORTAL_POSITIONS.forEach((pos, i) => {
+  const col = PROJECT_COLORS[i];
+  const g = new THREE.Group();
+  g.position.copy(pos);
+
+  const W2 = 14, H2 = 9;
+
+  // Glowing backing panel
+  const panel = new THREE.Mesh(
+    new THREE.PlaneGeometry(W2, H2),
+    new THREE.MeshBasicMaterial({
+      color: new THREE.Color(col).multiplyScalar(0.12),
+      transparent:true, opacity:.7, side:THREE.DoubleSide, depthWrite:false
+    })
+  );
+  g.add(panel);
+
+  // Border frame
+  const hw=W2/2, hh=H2/2;
+  const frame = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-hw,-hh,0),new THREE.Vector3(hw,-hh,0),
+      new THREE.Vector3(hw,hh,0),new THREE.Vector3(-hw,hh,0),
+      new THREE.Vector3(-hw,-hh,0)
+    ]),
+    lineMat(col, 0.7)
+  );
+  g.add(frame);
+
+  // Corner accents
+  const ca = 2.2;
+  [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].forEach(([cx,cy])=>{
+    const sx=cx>0?-1:1, sy=cy>0?-1:1;
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(cx+sx*ca,cy,0),new THREE.Vector3(cx,cy,0),new THREE.Vector3(cx,cy+sy*ca,0)
+    ]), lineMat(col,.9)));
   });
 
+  // CSS2D label anchored to this 3D group — starts invisible, fades in by distance
+  const div = document.createElement('div');
+  div.className = 'label3d';
+  div.style.color = '#' + new THREE.Color(col).getHexString();
+  div.style.opacity = '0';
+  div.style.transition = 'opacity 0.4s';
+  div.innerHTML = `<div class="l3-num">${PROJECT_NUMS[i]}</div><div class="l3-name">PROJECT ${PROJECT_NAMES[i].toUpperCase()}</div><div class="l3-cat">${PROJECT_CATS[i]}</div>`;
+  labelDivs.push(div);
+  const lbl = new CSS2DObject(div);
+  g.add(lbl);
 
-  /* ── MOBILE HAMBURGER MENU ── */
-  (function() {
-    const btn = document.querySelector('.nav-hamburger');
-    const menu = document.getElementById('mobile-menu');
-    if (!btn || !menu) return;
-    const links = menu.querySelectorAll('a');
+  // Face camera (billboarded on Y only -- portals tilt toward path)
+  const toPath = PATH.getPointAt(0.4 + i * 0.07).clone().sub(pos);
+  g.rotation.y = Math.atan2(toPath.x, toPath.z);
 
-    function openMenu() {
-      menu.style.display = 'flex';
-      requestAnimationFrame(() => menu.classList.add('is-open'));
-      btn.classList.add('is-open');
-      btn.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMenu() {
-      menu.classList.remove('is-open');
-      btn.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-      setTimeout(() => { menu.style.display = 'none'; }, 300);
-    }
+  scene.add(g);
+  portalGroups.push(g);
+});
 
-    btn.addEventListener('click', () => btn.classList.contains('is-open') ? closeMenu() : openMenu());
-    links.forEach(a => a.addEventListener('click', closeMenu));
-  })();
+/* ====================================== ABOUT OBJECT ==================== */
+const aboutGroup = new THREE.Group();
+aboutGroup.position.set(-12, 8, -980);
+// Concentric rings for "person" marker
+[5,8,12].forEach((r,i)=>{
+  const rl=ring(r,r*.5, 0xf4f0e8, .08-i*.02);
+  rl.rotation.x=Math.PI/2+i*.3; rl.rotation.z=i*.5;
+  aboutGroup.add(rl);
+});
+aboutGroup.add(wireObj(new THREE.OctahedronGeometry(2.5,1),0xf4f0e8,.4));
+scene.add(aboutGroup);
 
-  /* ── HERO NAME LETTER REPULSION ── */
-  (function() {
-    if (window.matchMedia('(hover: none)').matches) return; // skip on touch
-    const words = document.querySelectorAll('.hero-name .word');
-    if (!words.length) return;
+/* ====================================== CONTACT OBJECT ================== */
+const contactGroup = new THREE.Group();
+contactGroup.position.set(0, 0, -1060);
+// Large glowing ring gate
+const ringPts=[];
+for(let i=0;i<=80;i++){const a=(i/80)*Math.PI*2;ringPts.push(new THREE.Vector3(Math.cos(a)*18,Math.sin(a)*18,0));}
+contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), lineMat(0xffd700,.6)));
+const ringPts2=[];
+for(let i=0;i<=80;i++){const a=(i/80)*Math.PI*2;ringPts2.push(new THREE.Vector3(Math.cos(a)*16,Math.sin(a)*16,0));}
+contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts2), lineMat(0xffd700,.25)));
+// Spoke lines
+for(let i=0;i<12;i++){const a=(i/12)*Math.PI*2;contactGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(Math.cos(a)*18,Math.sin(a)*18,0)]),lineMat(0xffd700,.06)));}
+scene.add(contactGroup);
 
-    const REPEL_RADIUS = 80;
-    const REPEL_STRENGTH = 22;
-    const LERP_OUT = 0.08;
-    const LERP_BACK = 0.05;
+/* ====================================== STARS =========================== */
+const STAR_RGBS=[[1,.9,.3],[1,.4,.8],[.3,1,1],[.7,.4,1],[1,.6,.2],[1,1,1]];
+const SN=2800;
+const spos=new Float32Array(SN*3),scol=new Float32Array(SN*3);
+for(let i=0;i<SN;i++){
+  const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=80+Math.random()*400;
+  spos[i*3]=r*Math.sin(phi)*Math.cos(theta);
+  spos[i*3+1]=r*Math.sin(phi)*Math.sin(theta)*.55;
+  spos[i*3+2]=r*Math.cos(phi)-500;
+  const c=STAR_RGBS[Math.floor(Math.random()*STAR_RGBS.length)];
+  scol[i*3]=c[0];scol[i*3+1]=c[1];scol[i*3+2]=c[2];
+}
+const sg=new THREE.BufferGeometry();
+sg.setAttribute('position',new THREE.BufferAttribute(spos,3));
+sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
+scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.14,transparent:true,opacity:.9,sizeAttenuation:true})));
 
+/* ====================================== CLOUDS ========================== */
+/*
+  Volumetric soft clouds — 20 layered translucent spheres per cloud.
+  Bright white core fading to near-transparent edges. No hard outlines.
+  Seeded RNG keeps each cloud shape unique but deterministic.
+*/
+function makeCloud(size, seed) {
+  const grp = new THREE.Group();
+  const rng = (n) => { const x = Math.sin(seed*127.1+n*311.7)*43758.5453; return x-Math.floor(x); };
+  const count = 20;
+  for (let i = 0; i < count; i++) {
+    const angle  = rng(i*4)   * Math.PI * 2;
+    const rise   = rng(i*4+1);          // 0=bottom 1=top
+    const reach  = rng(i*4+2) * 0.9;   // 0=center 1=edge
+    const jitter = rng(i*4+3);
 
-    const letters = [];
-    words.forEach(word => {
-      const chars = [...word.textContent];
-      word.textContent = '';
-      chars.forEach(ch => {
-        const s = document.createElement('span');
-        s.textContent = ch;
-        s.style.cssText = 'display:inline-block;position:relative;will-change:transform;';
-        word.appendChild(s);
-        // lock width after render so font swaps don't cause reflow
-        requestAnimationFrame(() => { s.style.width = s.getBoundingClientRect().width + 'px'; s.style.textAlign = 'center'; });
-        letters.push({ el: s, cx: 0, cy: 0, frame: 0, chaotic: false });
-      });
-    });
+    const rx = Math.cos(angle) * reach * size;
+    const ry = (rise*0.7 - 0.15) * size * 0.55;
+    const rz = Math.sin(angle) * reach * size * 0.38;
+    const sr = size * (0.25 + (1-reach)*0.42 + rise*0.15) * (0.65 + jitter*0.7);
 
-    let mx = -9999, my = -9999;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    // opacity: dense at core, airy at edges
+    const coreness = (1-reach)*0.65 + rise*0.25;
+    const op = Math.min(0.88, 0.06 + coreness * 0.82);
 
-    (function repelLoop() {
-      letters.forEach(lt => {
-        const r = lt.el.getBoundingClientRect();
-        // derive resting position by undoing current displacement
-        const lcx = r.left + r.width / 2 - lt.cx;
-        const lcy = r.top  + r.height / 2 - lt.cy;
-        const dx = lcx - mx;
-        const dy = lcy - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+    // color: pure white core, very faint lavender-blue at edges (picks up sky bg)
+    const w  = Math.round(240 + coreness*15);
+    const col = (w<<16)|(w<<8)|Math.min(255, w+Math.round((1-coreness)*18));
 
-        let tx = 0, ty = 0;
-        const inZone = dist < REPEL_RADIUS && dist > 0.5;
-        if (inZone) {
-          const force = Math.pow((REPEL_RADIUS - dist) / REPEL_RADIUS, 1.6);
-          tx = (dx / dist) * force * REPEL_STRENGTH;
-          ty = (dy / dist) * force * REPEL_STRENGTH;
-          ty = Math.max(ty, 0); // never move upward — keeps eyebrow untouched
-        }
-
-        const lerpF = inZone ? LERP_OUT : LERP_BACK;
-        lt.cx += (tx - lt.cx) * lerpF;
-        lt.cy += (ty - lt.cy) * lerpF;
-        lt.el.style.transform = `translate(${lt.cx.toFixed(2)}px,${lt.cy.toFixed(2)}px)`;
-
-      });
-      requestAnimationFrame(repelLoop);
-    })();
-  })();
-
-  /* ── LOADER ── */
-  const loaderCount = document.getElementById('loader-count');
-  const loaderBar = document.getElementById('loader-bar');
-  const loader = document.getElementById('loader');
-  let prog = 0;
-  const loaderTl = gsap.timeline({
-    onComplete: () => {
-      gsap.to(loader, {
-        yPercent: -100,
-        duration: .9,
-        ease: 'expo.inOut',
-        onComplete: () => {
-          loader.style.display = 'none';
-          /* preload all project images so overlay can use them from cache */
-          Object.values(IMG).flat().forEach(src => { const i = new Image(); i.src = src; });
-          initAnimations();
-        }
-      });
-    }
-  });
-  loaderTl.to({ val: 0 }, {
-    val: 100, duration: 2.2, ease: 'power2.inOut',
-    onUpdate: function () {
-      const v = Math.round(this.targets()[0].val);
-      loaderCount.textContent = v;
-      loaderBar.style.width = v + '%';
-    }
-  });
-
-  /* ── MAIN ANIMATIONS ── */
-  function initAnimations() {
-    /* Hero eyebrow */
-    gsap.to('.hero-eyebrow span', {
-      y: '0%', duration: 1, ease: 'expo.out', delay: .1
-    });
-    /* Hero name words */
-    gsap.to('.hero-name .word', {
-      y: '0%', duration: 1.2, ease: 'expo.out',
-      stagger: .1, delay: .2
-    });
-    /* Hero tagline */
-    gsap.to('.hero-tagline .inner', {
-      y: '0%', duration: 1, ease: 'expo.out', delay: .5
-    });
-
-    /* Scroll-triggered section titles */
-    document.querySelectorAll('.split-reveal .inner').forEach(el => {
-      gsap.fromTo(el,
-        { y: '110%' },
-        {
-          y: '0%', duration: 1, ease: 'expo.out',
-          scrollTrigger: { trigger: el, start: 'top 88%' }
-        }
-      );
-    });
-
-    /* About big text char split */
-    const aboutBig = document.querySelector('.about-big-text');
-    if (aboutBig) {
-      const html = aboutBig.innerHTML;
-      const words = html.split(/(<[^>]+>|\s+)/g).filter(Boolean);
-      aboutBig.innerHTML = words.map(w =>
-        /^</.test(w) ? w : `<span class="ab-word" style="display:inline-block;overflow:hidden;"><span style="display:inline-block;">${w}</span></span>`
-      ).join('');
-      gsap.from('.ab-word span', {
-        y: '110%', duration: .8, ease: 'expo.out', stagger: .04,
-        scrollTrigger: { trigger: aboutBig, start: 'top 85%' }
-      });
-    }
-
-    /* Stats count-up */
-    document.querySelectorAll('[data-count]').forEach(el => {
-      const target = +el.dataset.count;
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => {
-          gsap.to({ val: 0 }, {
-            val: target, duration: 1.6, ease: 'power2.out',
-            onUpdate: function () {
-              el.textContent = Math.round(this.targets()[0].val) + (target >= 20 ? '+' : '');
-            }
-          });
-        }
-      });
-    });
-
-    /* Project cards stagger */
-    gsap.from('.project-card', {
-      y: 60, opacity: 0, duration: .9, ease: 'power3.out', stagger: .12,
-      scrollTrigger: { trigger: '.projects-list', start: 'top 75%' }
-    });
-
-    /* Skill items */
-    gsap.from('.skill-item', {
-      y: 30, opacity: 0, duration: .7, ease: 'power3.out', stagger: .08,
-      scrollTrigger: { trigger: '.skills-grid', start: 'top 85%' }
-    });
-
-    /* Contact big text */
-    gsap.from('.contact-big .word', {
-      y: '110%', duration: 1, ease: 'expo.out', stagger: .1,
-      scrollTrigger: { trigger: '.contact-big', start: 'top 85%' }
-    });
-
-    /* Parallax on hero name */
-    gsap.to('.hero-name', {
-      y: '-20%', ease: 'none',
-      scrollTrigger: {
-        trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true
-      }
-    });
+    grp.add(Object.assign(
+      new THREE.Mesh(
+        new THREE.SphereGeometry(sr, 7, 5),
+        new THREE.MeshBasicMaterial({ color:col, transparent:true, opacity:op, depthWrite:false })
+      ),
+      { position: new THREE.Vector3(rx, ry, rz) }
+    ));
   }
+  return grp;
+}
 
+/* Clouds absent from Z -520 to -900 (portal zone) */
+const CLOUD_DATA=[
+  [16,-6,-25,14,0],[-28,-3,-65,18,1],[34,20,-115,11,2],[-20,-2,-175,16,3],[25,-10,-235,10,4],[-38,17,-285,20,5],
+  [12,-7,-345,13,6],[-14,22,-405,15,7],[-32,-16,-460,17,8],[20,30,-50,12,9],[-10,-22,-130,14,10],
+  [50,12,-495,10,11],
+  [-45,8,-910,15,12],[38,-6,-940,13,13],[-30,14,-970,18,14],[42,10,-1000,11,15],[-20,-5,-1040,14,16],
+];
+const cloudGroups=CLOUD_DATA.map(([x,y,z,size,seed])=>{const cl=makeCloud(size,seed);cl.position.set(x,y,z);scene.add(cl);return cl;});
 
-  /* ── MAGNETIC BUTTONS ── */
-  document.querySelectorAll('[data-magnetic], .cta-btn').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const r = btn.getBoundingClientRect();
-      const x = e.clientX - r.left - r.width / 2;
-      const y = e.clientY - r.top - r.height / 2;
-      gsap.to(btn, { x: x * .35, y: y * .35, duration: .4, ease: 'power2.out' });
-    });
-    btn.addEventListener('mouseleave', () => {
-      gsap.to(btn, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1,.5)' });
-    });
+/* ====================================== ISLANDS ======================== */
+function terrainY(x,z,size){
+  const r=Math.sqrt(x*x+z*z);
+  return(Math.sin(x*.85+z*.6)*.30+Math.sin(x*1.9-z*1.3)*.16+Math.sin(z*.7-x*.45)*.22-(r/size)*.45)*size*.38;
+}
+function makeIsland(size,hasTree){
+  const grp=new THREE.Group(),RS=14;
+  const topGeo=new THREE.CylinderGeometry(size,size*.82,size*.55,RS,4);
+  const tPos=topGeo.attributes.position;
+  for(let i=0;i<tPos.count;i++){
+    const x=tPos.getX(i),y=tPos.getY(i),z=tPos.getZ(i);
+    if(y>size*.05){tPos.setY(i,y+terrainY(x,z,size));}
+    else{const e=.82+Math.random()*.22;tPos.setX(i,x*e+(Math.random()-.5)*size*.08);tPos.setZ(i,z*e+(Math.random()-.5)*size*.08);tPos.setY(i,y+(Math.random()-.5)*size*.12);}
+  }
+  topGeo.computeVertexNormals();
+  grp.add(new THREE.Mesh(topGeo,new THREE.MeshBasicMaterial({color:0x9aaa88})));
+  const gGeo=new THREE.CylinderGeometry(size*.8,size*.8,size*.07,RS,2);
+  const gPos=gGeo.attributes.position;
+  for(let i=0;i<gPos.count;i++){const x=gPos.getX(i),y=gPos.getY(i),z=gPos.getZ(i);if(y>0)gPos.setY(i,size*.28+terrainY(x,z,size)+size*.03);}
+  gGeo.computeVertexNormals();
+  grp.add(new THREE.Mesh(gGeo,new THREE.MeshBasicMaterial({color:0x5cb84a})));
+  const sc=4+Math.floor(Math.random()*3);
+  for(let s=0;s<sc;s++){
+    const ic=s===0,a=ic?0:(s/(sc-1))*Math.PI*2+Math.random()*.6,ro=ic?0:(.15+Math.random()*.4)*size;
+    const sh=size*(.55+Math.random()*.75),sr=size*(.06+Math.random()*.1);
+    const sp=new THREE.Mesh(new THREE.CylinderGeometry(sr*.05,sr,sh,10,2),new THREE.MeshBasicMaterial({color:ic?0x707860:0x889070}));
+    sp.position.set(Math.cos(a)*ro,-(size*.1+sh*.5),Math.sin(a)*ro);
+    sp.rotation.z=(Math.random()-.5)*.18;sp.rotation.x=(Math.random()-.5)*.18;grp.add(sp);
+  }
+  if(hasTree){
+    const tx=(Math.random()-.5)*size*.35,tz=(Math.random()-.5)*size*.35;
+    const baseY=size*.28+terrainY(tx,tz,size),trH=size*(.75+Math.random()*.45);
+    const tr=new THREE.Mesh(new THREE.CylinderGeometry(size*.035,size*.075,trH,10),new THREE.MeshBasicMaterial({color:0x7a5535}));
+    tr.position.set(tx,baseY+trH*.5,tz);tr.rotation.z=(Math.random()-.5)*.16;grp.add(tr);
+    const cY=baseY+trH,cR=size*.55;
+    for(let p=0;p<12;p++){
+      const pa=(p/12)*Math.PI*2+Math.random()*.7,pr=Math.random()*cR*(p<3?.3:1),ps=cR*(.3+Math.random()*.4);
+      const pf=new THREE.Mesh(new THREE.SphereGeometry(ps,9,7),new THREE.MeshBasicMaterial({color:0x2d6830+Math.floor(Math.random()*0x15)*0x010100}));
+      pf.position.set(tx+Math.cos(pa)*pr,cY+Math.random()*cR*.65,tz+Math.sin(pa)*pr);grp.add(pf);
+    }
+  }
+  return grp;
+}
+const ISLAND_DATA=[
+  [28,14,-45,5.5,true,.4],[-32,-12,-95,4.2,false,1.1],[38,8,-155,6,true,2.2],[-22,22,-210,3.8,true,.9],
+  [18,-20,-270,5,false,1.7],[-40,10,-330,4.5,true,2.8],[30,18,-385,3.5,false,.3],[-15,-16,-130,3.2,true,1.5],
+  [35,-8,-520,4.8,true,.6],[-28,14,-600,5.2,false,1.9],[40,-12,-680,4,true,2.4],[-35,8,-760,5,false,.8],
+  [25,20,-840,3.8,true,1.4],[-30,-10,-920,4.5,false,2.1],[20,12,-1000,4,true,.5],
+];
+const islandGroups=ISLAND_DATA.map(([x,y,z,size,hasTree,rotY])=>{
+  const isl=makeIsland(size,hasTree);isl.position.set(x,y,z);isl.rotation.y=rotY;scene.add(isl);return isl;
+});
+
+/* ====================================== PLANETS ======================== */
+function makePlanet(radius,col,ringCol){
+  const g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,16,12),new THREE.MeshBasicMaterial({color:col})));
+  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28,10,8),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
+  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.75,14,10),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.04,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
+  if(ringCol){const r=new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.18,4,48),new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:.75,side:THREE.DoubleSide}));r.rotation.x=Math.PI*.32;g.add(r);}
+  return g;
+}
+const p1=makePlanet(11,0x30e8c0,null); p1.position.set(-65,50,-70);   scene.add(p1);
+const p2=makePlanet(8.5,0xaa44ff,0xcc88ff); p2.position.set(72,28,-350);  scene.add(p2);
+const p3=makePlanet(7,0xff8844,null);    p3.position.set(-55,-22,-600); scene.add(p3);
+const p4=makePlanet(9,0x44ddff,null);   p4.position.set(60,35,-850);  scene.add(p4);
+const p5=makePlanet(6,0xffdd44,null);   p5.position.set(-40,10,-1020); scene.add(p5);
+const planets=[p1,p2,p3,p4,p5];
+
+scene.add(new THREE.AmbientLight(0x8844cc,0.9));
+
+/* ====================================== PROGRESS DOTS ================== */
+const ZONE_LABELS=['Spark','Chaos','Work','Human','Invite','P.01','P.02','P.03','P.04','P.05','P.06','About','Contact'];
+const ZONE_COLORS=['#00eeff','#ff44cc','#ffd700','#ff8844','#88ff44','#00eeff','#ff44cc','#ffd700','#ff8844','#88ff44','#cc44ff','#f4f0e8','#ffd700'];
+const progressEl=document.getElementById('progress');
+ZONE_LABELS.forEach((l,i)=>{
+  const d=document.createElement('div');
+  d.className='dot';d.dataset.l=l;d.dataset.i=i;
+  d.style.setProperty('--c',ZONE_COLORS[i]);
+  d.addEventListener('click',()=>jumpToZone(i));
+  progressEl.appendChild(d);
+});
+const dots=[...document.querySelectorAll('.dot')];
+
+/* ====================================== JUMP TO ZONE =================== */
+window.jumpToZone = function(i) {
+  const frac = i / (ZONE_COUNT - 1);
+  const scrollH = document.getElementById('ss').offsetHeight;
+  window.scrollTo({ top: scrollH * frac, behavior:'smooth' });
+};
+
+/* ====================================== MOUSE PAN ====================== */
+const mouse = { x:0, y:0 };
+const pan   = { x:0, y:0 };
+window.addEventListener('mousemove', e => {
+  mouse.x =  (e.clientX / window.innerWidth  - 0.5) * 2;
+  mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+/* ====================================== ANIMATE ======================== */
+const clock  = new THREE.Clock();
+const camUp  = new THREE.Vector3(0,1,0);
+const lookPt = new THREE.Vector3();   // declared here so animate() can use it
+// Pre-allocated to avoid GC pressure every frame
+const _fwd       = new THREE.Vector3();
+const _right     = new THREE.Vector3();
+const _paralaxPt = new THREE.Vector3();
+const _fogA      = new THREE.Color();
+const _fogB      = new THREE.Color();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  nodeGroups.forEach((g,i)=>{
+    g.children[0].rotation.x+=.003+i*.0005;g.children[0].rotation.y+=.005+i*.0005;
+    if(g.children[1])g.children[1].rotation.y+=.004;
+    if(g.children[2])g.children[2].rotation.y-=.003;
+    if(g.children[3])g.children[3].rotation.z+=.002;
   });
 
-  /* ── PROJECT DATA ── */
-  /* project images live in ./projects/ folder */
-  const IMG = {
-    aykyata:    ['projects/p05-aykyata.jpg',  'projects/ai-aykyata.webp'],
-    nrityamrit: ['projects/p07-nrityamrit.jpg','projects/ai-nrityamrit.webp'],
-    abode:      ['projects/p08-abode.jpg','projects/p09-abode2.jpg','projects/ai-abode.webp'],
-    mosafiro:   ['projects/p06-mosafiro.jpg',  'projects/ai-mosafiro.webp'],
-    winkit:     ['projects/p11-winkit.jpg',    'projects/ai-winkit.webp'],
-    dhakor:     ['projects/p10-dhakor.jpg',    'projects/ai-dhakor.webp'],
-    thesis:     ['projects/thesis-thumb.jpg'],
-  };
-
-  const PROJECTS = [
-    {
-      id: '01',
-      num: '01',
-      title: 'ABODE',
-      subtitle: 'One Stop For Your Home',
-      tags: ['Brand Identity', 'Packaging', 'Web Design'],
-      type: 'Brand Identity + Web',
-      year: '2025',
-      tools: 'Illustrator · Photoshop · Figma · InDesign',
-      imgKey: 'abode',
-      location: 'urabode.in',
-      brief: `ABODE is a contemporary home décor and lifestyle brand focused on bringing warmth, personality, and handcrafted character into everyday living spaces. Built as a one-stop destination for thoughtfully designed home accessories, ABODE blends modern aesthetics with artisanal craftsmanship.\n\nThe identity system extends across packaging, social media (Instagram), and a full e-commerce website — creating a cohesive brand experience that feels personal and timeless.`,
-      highlights: ['Logo System', 'Packaging Design', 'Instagram Presence', 'E-Commerce Website'],
-      logoVideo: 'projects/abode-logo.mp4',
-      sections: [
-        { type: 'video', src: 'projects/abode-logo.mp4', label: '01 — Logo Animation', heading: 'The Mark in Motion', body: 'The ABODE logomark animates the arch — a universal symbol of home — into a geometric identity. An architectural "A" fused with an arched doorway, rendered in a warm off-black and ivory palette that signals craft and permanence.' },
-        { type: 'image', src: 'projects/p08-abode.jpg', label: '02 — Brand Identity System', heading: 'A Complete Visual Language', body: 'Logo system across light and dark grounds, Devanagari lockup, primary typefaces, and the full colour palette. Every touchpoint — from stationery to signage — follows a unified system built around warmth, trust, and domesticity.' },
-        { type: 'image', src: 'projects/p09-abode2.jpg', label: '03 — Packaging · Social · Web', heading: 'From Box to Browser', body: 'Branded shipping boxes and freebies carry the identity into the physical world. The Instagram grid (@urabode) extends the warm earth-tone language across lifestyle photography and product content. The e-commerce website at urabode.in completes the ecosystem — a cohesive end-to-end brand experience.' },
-        { type: 'image', src: 'projects/ai-abode.webp', label: '04 — Art Direction', heading: 'Visual Mood & Campaign Direction', body: 'Campaign imagery rooted in craft, texture, and domestic warmth — terracotta tones, hand-thrown ceramics, and natural light. The visual mood anchors ABODE in a world of intentional, slow living.' },
-      ],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M40 12 L64 38 L64 68 L16 68 L16 38 Z" stroke="#b55418" stroke-width="2.5" fill="none"/>
-        <path d="M16 38 Q40 14 64 38" stroke="#b55418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <rect x="32" y="50" width="16" height="18" stroke="#b55418" stroke-width="2" fill="none"/>
-        <circle cx="40" cy="8" r="3" fill="#b55418"/>
-      </svg>`,
-      panelBg: ['linear-gradient(160deg,#1e1206 0%,#3d2410 100%)'],
-      accentColor: '#b55418',
-    },
-    {
-      id: '02',
-      num: '02',
-      title: 'GATEWAY TO THE SACRED',
-      subtitle: 'Pilgrimage Ropeway Terminal, Govind Ghat',
-      tags: ['Architecture', 'Thesis', 'Sacred Space'],
-      type: 'B.Arch Thesis',
-      year: '2026',
-      tools: 'AutoCAD · Revit · Rhino · Enscape · Photoshop · InDesign',
-      imgKey: 'thesis',
-      location: 'Govind Ghat, Uttarakhand',
-      brief: `A B.Arch thesis project proposing a ropeway terminal at Govind Ghat — the sacred gateway to Hemkund Sahib and the Valley of Flowers. Situated at the confluence of the Alaknanda and Saraswati rivers, the site holds deep spiritual significance for Sikh and Hindu pilgrims alike.\n\nThe design mediates between the scale of the Himalayan landscape and the intimate experience of pilgrimage — creating a threshold that prepares the traveller for the sacred ascent. The architecture draws from the language of mountain monasteries and traditional yatra infrastructure, reinterpreted through a contemporary tectonic vocabulary.`,
-      highlights: ['Ropeway Terminal Design', 'Sacred Threshold Architecture', 'Landscape Integration', '8-Sheet Documentation'],
-      sections: [
-        { type: 'image', src: 'projects/thesis-render1.jpg', label: '01 — AI Render · Aerial View', heading: 'Terminal at the Confluence', body: 'Aerial render showing the ropeway terminal complex at Govind Ghat — the tiered wooden structure stepping down the hillside, with the pilgrimage bridge spanning the gorge and the Alaknanda river below.' },
-        { type: 'image', src: 'projects/thesis-render2.jpg', label: '02 — AI Render · Bird\'s Eye', heading: 'Sacred Threshold from Above', body: 'Bird\'s eye render capturing the full complex — cascading terraces, serpentine ramps, the contemplative garden court, and the terminal building mediating between road-head and the sacred ascent to Hemkund Sahib.' },
-      ],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M40 10 L52 30 L52 58" stroke="#4a9eca" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M40 10 L28 30 L28 58" stroke="#4a9eca" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <line x1="10" y1="60" x2="70" y2="60" stroke="#4a9eca" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="40" cy="10" r="4" fill="#4a9eca"/>
-        <circle cx="28" cy="30" r="3" fill="none" stroke="#4a9eca" stroke-width="2"/>
-        <circle cx="52" cy="30" r="3" fill="none" stroke="#4a9eca" stroke-width="2"/>
-        <line x1="10" y1="60" x2="28" y2="30" stroke="#4a9eca" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
-        <line x1="70" y1="60" x2="52" y2="30" stroke="#4a9eca" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
-        <path d="M20 68 Q40 56 60 68" stroke="#4a9eca" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
-      </svg>`,
-      panelBg: ['linear-gradient(160deg,#050e1a 0%,#0d2238 100%)'],
-      accentColor: '#4a9eca',
-    },
-    {
-      id: '03',
-      num: '03',
-      title: 'RETRO FUTURISM',
-      subtitle: 'Self-Made Working Model · Product Design · AI Marketing',
-      tags: ['Product Design', 'Prototyping', 'AI Marketing', 'Digital Art'],
-      type: 'Self-Made Working Model · Digital Arts',
-      year: '2025',
-      tools: 'Acrylic Paint · Hand Lettering · Mixed Media · Kling AI · Higgsfield · Veo',
-      location: 'SPA Vijayawada',
-      brief: `A fully self-made product design project — not a render, not a mockup. A real, working Deltron DM-30 Bluetooth speaker hand-built and hand-painted from scratch as a functional prototype for Digital Arts.\n\nEvery face tells a different story: folk art floral mandala on the speaker grille, bold graffiti lettering "Retro Futurism" on the side, a sticker collage archive on the back, and a custom embossed nameplate. The speaker plays music. The lights glow. It works.\n\nThe project extended into AI marketing — a cinematic product film generated using Kling AI and Higgsfield, with every prompt written, directed, and art-directed by hand. An end-to-end exercise spanning physical making, visual design, and AI-assisted promotion.`,
-      highlights: ['Fully functional working model — it plays music', 'Hands-on painting & prototyping from scratch', 'AI marketing film directed via Kling + Higgsfield', 'Folk art mandala grille · Graffiti lettering · Sticker collage'],
-      sections: [
-        { type: 'video', src: 'projects/retro-op1.mp4', muted: false, label: '01 — AI Marketing Videos', heading: 'It Actually Works', body: 'This is not a render. Not a mockup. A fully functional Bluetooth speaker — it plays music, the LED grille glows, the controls respond. Built and painted entirely by hand from a stock DM-30.' },
-        { type: 'video', src: 'projects/retro-op2.mp4', muted: false, label: '03 — Hands-On Prototyping', heading: 'Making as Design', body: 'The process of painting, layering stickers, and assembling each panel. Every stroke is deliberate — from the acrylic folk patterns to the graffiti lettering applied freehand with markers.' },
-        { type: 'video', src: 'projects/retro-op3.mp4', muted: false, label: '04 — All Four Faces', heading: 'Four Faces, Four Visual Languages', body: 'A 360 showcase: folk art mandala grille, street graffiti side, sticker collage back, and embossed nameplate. Each face is a separate visual world, unified by the retro-futurist concept.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/c78807fc-94ea-46c3-8fb0-885df3b19562.png', label: '05 — Front Face', heading: 'The Speaker as Canvas', body: 'DM-30 hardware reframed by a blue-painted window border, butterfly stickers, and folk art leaf motifs — turning functional controls into compositional elements.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/e5faec23-47d0-49bc-8bc0-ee49ae082838.png', label: '06 — Graffiti Side', heading: 'Street Language Meets Folk Memory', body: '"Retro Futurism" in graffiti-style freehand lettering with a lightning bolt burst. Pop art energy meets Indian street signage.' },
-        { type: 'image', src: 'https://d2ol7oe51mr4n9.cloudfront.net/user_3FTJ65KtaJsESMVOeJabvlu5a4O/1af2e1ec-c4e6-49fd-936f-b84bb23d3d3f.png', label: '07 — Mandala Grille', heading: 'Folk Art Frequency', body: 'A concentric mandala in purple and pink painted over the speaker grille — a folk art pattern that mirrors sound waves. The glowing cut-out rings are the visual heartbeat of the object.' },
-      ],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="40,8 44,30 66,30 49,44 55,66 40,53 25,66 31,44 14,30 36,30" stroke="#e8355a" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-        <polygon points="40,20 42,32 54,32 44,39 48,51 40,44 32,51 36,39 26,32 38,32" fill="#e8355a" opacity="0.15"/>
-      </svg>`,
-      panelBg: ['linear-gradient(160deg,#0d0506 0%,#1a0808 100%)'],
-      accentColor: '#e8355a',
-    },
-    {
-      id: '04',
-      num: '04',
-      title: 'NRITYAMRIT',
-      subtitle: 'Lavani Dance Studio — Brand Identity',
-      tags: ['Branding', 'Logo Design', 'Visual Identity'],
-      type: 'Brand Identity',
-      year: '2025',
-      tools: 'Illustrator · Photoshop · InDesign',
-      imgKey: 'nrityamrit',
-      location: 'Maharashtra',
-      brief: `NRITYAMRIT is a Lavani dance studio rooted in the energy, grace, and cultural richness of Maharashtra's traditional performance art. The identity captures the expressive movement of Lavani through a contemporary visual language, creating a balance between heritage and modernity.\n\nThe logo abstracts the form of a Lavani dancer into a minimal symbolic figure using flowing curves and rhythmic geometry. Warm tones of saffron, red, black, and earthy brown evoke celebration, passion, strength, and cultural identity.`,
-      highlights: ['Logo Construction', 'Signage System', 'Brand Applications', 'Colour System'],
-      panelBg: ['linear-gradient(160deg,#2e0a08 0%,#5a1a10 100%)'],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="28" r="10" stroke="#c0392b" stroke-width="2.5" fill="none"/>
-        <path d="M30 38 Q24 52 28 65" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <path d="M50 38 Q58 48 54 62" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <path d="M28 65 Q40 72 54 62" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <path d="M36 38 Q40 46 44 38" stroke="#c0392b" stroke-width="2" stroke-linecap="round" fill="none"/>
-        <circle cx="40" cy="18" r="2.5" fill="#c0392b"/>
-        <path d="M34 12 Q40 8 46 12" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      </svg>`,
-      accentColor: '#c0392b',
-    },
-    {
-      id: '05',
-      num: '05',
-      title: 'MOSAFIRO',
-      subtitle: 'ka KARAVANA — Nomadic Dwelling',
-      tags: ['Architecture', 'Spatial Design', 'Blender'],
-      type: 'Architectural Design',
-      year: '2024 — Semester V',
-      tools: 'AutoCAD · Blender · Photoshop · Illustrator',
-      imgKey: 'mosafiro',
-      location: 'Mobile / Off-Grid',
-      brief: `MOVANA is a compact 9m Ã— 3m portable dwelling designed for modern nomadic living — combining mobility with the essentials of a comfortable home. The project explores how limited space can transform into a highly functional and adaptable living environment through smart spatial planning and multifunctional design.\n\nThe house accommodates a living area, kitchen, loft-style sleeping space, compact washroom, study corner, and an integrated terrace garden. Solar panels, rainwater harvesting, and efficient storage solutions support off-grid living while enhancing self-sufficiency.`,
-      highlights: ['9m Ã— 3m Footprint', 'Off-Grid Systems', 'Loft Sleeping Space', 'Terrace Garden'],
-      panelBg: ['linear-gradient(160deg,#1a1a08 0%,#3a3010 100%)'],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="10" stroke="#d48300" stroke-width="2.5" fill="none"/>
-        <line x1="40" y1="8" x2="40" y2="20" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="40" y1="60" x2="40" y2="72" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="8" y1="40" x2="20" y2="40" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="60" y1="40" x2="72" y2="40" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="17" y1="17" x2="25" y2="25" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="55" y1="55" x2="63" y2="63" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="63" y1="17" x2="55" y2="25" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <line x1="25" y1="55" x2="17" y2="63" stroke="#d48300" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="40" cy="40" r="4" fill="#d48300" opacity="0.6"/>
-        <path d="M30 34 L40 24 L50 34" stroke="#d48300" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
-      </svg>`,
-      accentColor: '#d48300',
-    },
-    {
-      id: '06',
-      num: '06',
-      title: 'WINKIT',
-      subtitle: 'Everyday Convenience, Reframed Through Design',
-      tags: ['UI/UX', 'Critical Design', 'Graphic Design'],
-      type: 'Critical Design / UI',
-      year: '2025',
-      tools: 'Figma · Illustrator · Photoshop',
-      imgKey: 'winkit',
-      location: 'Digital — Conceptual',
-      brief: `Winkit reinterprets the familiar quick-commerce interface as a commentary on normalised consumer behaviour and hidden systems of exploitation. Inspired by the visual language of Blinkit, the platform uses playful branding and clean digital aesthetics to contrast against the darker realities behind everyday products.\n\nClicking on any product reveals the horrifying manufacturing process behind it — exposing issues of animal abuse, toxic farming, and environmental impact hidden within consumer culture. The project transforms a familiar user experience into an interactive medium for awareness and reflection.`,
-      highlights: ['Parody Commerce UI', 'Product Storytelling', 'Critical Awareness', 'Interactive Experience'],
-      panelBg: ['linear-gradient(160deg,#0a1a10 0%,#0d3020 100%)'],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="12" y="28" width="56" height="36" rx="4" stroke="#00a86b" stroke-width="2.5" fill="none"/>
-        <path d="M28 28 L28 22 Q28 14 40 14 Q52 14 52 22 L52 28" stroke="#00a86b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <circle cx="40" cy="46" r="6" stroke="#00a86b" stroke-width="2.5" fill="none"/>
-        <line x1="40" y1="52" x2="40" y2="58" stroke="#00a86b" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="40" cy="46" r="2" fill="#00a86b"/>
-      </svg>`,
-      accentColor: '#00a86b',
-    },
-    {
-      id: '07',
-      num: '07',
-      title: 'DHAKOR',
-      subtitle: 'Industrial Museum — Visual Identity',
-      tags: ['Graphic Design', 'Exhibition Design', 'Government Project'],
-      type: 'Graphic Design — Work Experience',
-      year: '2024 — Ongoing',
-      tools: 'Illustrator · Photoshop · InDesign',
-      imgKey: 'dhakor',
-      location: 'Dhakor, Gujarat',
-      brief: `An ongoing government project — conceptualisation and creation of the Visual Identity for the Dhakor Industrial Museum. The scope includes brand strategy, visual language, and complete exhibition graphics that bring the story of industrial heritage to life.\n\nThe visual system draws on the rich textile and craft motifs of the region, translating them into a bold, contemporary exhibition language that respects heritage while communicating clearly to modern visitors.`,
-      highlights: ['Visual Identity System', 'Exhibition Graphics', 'Wayfinding', 'Brand Strategy'],
-      panelBg: ['linear-gradient(160deg,#2a0808 0%,#4a1010 100%)'],
-      logo: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="14" y="36" width="52" height="30" rx="2" stroke="#7b1f1f" stroke-width="2.5" fill="none"/>
-        <rect x="22" y="24" width="14" height="12" rx="1" stroke="#7b1f1f" stroke-width="2" fill="none"/>
-        <rect x="44" y="18" width="14" height="18" rx="1" stroke="#7b1f1f" stroke-width="2" fill="none"/>
-        <line x1="14" y1="52" x2="66" y2="52" stroke="#7b1f1f" stroke-width="1.5" opacity="0.4"/>
-        <rect x="34" y="52" width="12" height="14" rx="1" stroke="#7b1f1f" stroke-width="2" fill="none"/>
-        <circle cx="24" cy="62" r="3" stroke="#7b1f1f" stroke-width="1.5" fill="none"/>
-        <circle cx="56" cy="62" r="3" stroke="#7b1f1f" stroke-width="1.5" fill="none"/>
-      </svg>`,
-      accentColor: '#7b1f1f',
-    },
-  ];
-
-  function buildOverlay(idx) {
-    const p = PROJECTS[idx];
-    const next = PROJECTS[(idx + 1) % PROJECTS.length];
-    const imgs = IMG[p.imgKey] || [];
-
-    /* image gallery using background-image to avoid file:// img loading quirks */
-    const galleryHTML = imgs.length ? imgs.map((src, i) => `
-      <div style="
-        width:100%;
-        height:${i===0?'75vh':'55vh'};
-        min-height:${i===0?'400px':'280px'};
-        background:url('${src}') center/cover no-repeat #111;
-        border-radius:2px;
-        ${i>0?'margin-top:3px;':''}
-        transition:transform .6s cubic-bezier(.25,.46,.45,.94);
-        cursor:zoom-in;
-      " onmouseover="this.style.transform='scale(1.012)'"
-         onmouseout="this.style.transform='scale(1)'"></div>`).join('')
-    : `<div style="height:300px;background:#111;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;color:rgba(244,240,232,.3);">VISUALS COMING SOON</div>`;
-
-    const briefParas = p.brief.split('\n\n').map(para =>
-      `<p style="font-size:clamp(15px,1.4vw,18px);line-height:1.75;color:rgba(244,240,232,.8);margin-bottom:20px;">${para}</p>`
-    ).join('');
-
-    /* derive hero bg: first image-type section, fallback to imgs[0] */
-    const heroImg = (p.sections && p.sections.find(s => s.type === 'image'))?.src
-                 || imgs[0]
-                 || '';
-
-    return `
-      <div class="po-hero" style="background:${p.panelBg[0]};position:relative;overflow:hidden;">
-        ${heroImg ? `
-        <div style="position:absolute;inset:0;z-index:0;
-          background:url('${heroImg}') center/cover no-repeat;
-          filter:blur(12px) saturate(1.4);
-          transform:scale(1.08);
-          opacity:0.55;">
-        </div>
-        <div style="position:absolute;inset:0;z-index:1;background:${p.panelBg[0]};opacity:0.60;"></div>
-        ` : ''}
-        <div class="po-bg-num" style="z-index:2;">${p.num}</div>
-        <div style="position:relative;z-index:3;max-width:1320px;margin:0 auto;width:100%;">
-          ${p.logo ? `<div style="width:72px;height:72px;margin-bottom:28px;opacity:0.92;">${p.logo}</div>` : ''}
-          <div class="po-tag-row">${p.tags.map(t=>`<span class="po-tag">${t}</span>`).join('')}</div>
-          <div class="po-title">${p.title}</div>
-          <div class="po-subtitle">${p.subtitle}</div>
-        </div>
-      </div>
-
-      <div class="po-body">
-
-        <!-- Brief + Meta -->
-        <div class="po-grid" style="margin-bottom:64px;">
-          <div>${briefParas}</div>
-          <div class="po-meta">
-            <div class="po-meta-item">
-              <div class="po-meta-key">Type</div>
-              <div class="po-meta-val">${p.type}</div>
-            </div>
-            <div class="po-meta-item">
-              <div class="po-meta-key">Year</div>
-              <div class="po-meta-val">${p.year}</div>
-            </div>
-            <div class="po-meta-item">
-              <div class="po-meta-key">Tools</div>
-              <div class="po-meta-val" style="font-size:14px;line-height:1.8;">${p.tools}</div>
-            </div>
-            <div class="po-meta-item">
-              <div class="po-meta-key">Context</div>
-              <div class="po-meta-val">${p.location}</div>
-            </div>
-            <div class="po-meta-item" style="border-bottom:none;">
-              <div class="po-meta-key">Key Deliverables</div>
-              <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
-                ${p.highlights.map(h => `
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <span style="width:4px;height:4px;border-radius:50%;background:${p.accentColor};flex-shrink:0;display:block;margin-top:1px;"></span>
-                    <span style="font-size:14px;color:var(--muted);">${h}</span>
-                  </div>`).join('')}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Divider -->
-        <div style="height:1px;background:var(--border);margin-bottom:48px;"></div>
-
-        <!-- Real project images -->
-        <div style="margin-bottom:2px;">
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:48px;">Project Visuals</div>
-
-          ${p.bigImage ? `
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(244,240,232,.35);margin-bottom:20px;">
-            8 A1 Sheets · Scroll to zoom · Drag to pan
-          </div>
-          <div id="pz-container" style="width:100%;height:92vh;overflow:hidden;cursor:grab;background:#050e1a;border-radius:3px;position:relative;touch-action:none;">
-            <div id="pz-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.3);z-index:2;">
-              Loading full resolution…
-            </div>
-            <img id="pz-img" src="${p.bigImage}" alt="Thesis sheets"
-              style="position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;user-select:none;pointer-events:none;opacity:0;transition:opacity .4s;"
-              draggable="false">
-            <div id="pz-zoom-badge" style="position:absolute;bottom:20px;right:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;color:rgba(244,240,232,.35);pointer-events:none;background:rgba(5,14,26,.7);padding:6px 12px;border-radius:40px;backdrop-filter:blur(4px);"></div>
-            <div id="pz-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,240,232,.4);pointer-events:none;white-space:nowrap;background:rgba(5,14,26,.7);padding:6px 16px;border-radius:40px;backdrop-filter:blur(4px);transition:opacity 1.5s;">
-              â† Scroll to zoom · Drag to pan →
-            </div>
-          </div>` : ''}
-
-          ${p.sections ? p.sections.map((sec, i) => `
-            <div style="margin-bottom:120px;">
-
-              <!-- section label -->
-              <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
-                <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:${p.accentColor};">${sec.label}</span>
-                <div style="flex:1;height:1px;background:var(--border);"></div>
-              </div>
-
-              <!-- media -->
-              <div style="position:relative;border-radius:3px;overflow:hidden;background:#0d0d0d;margin-bottom:28px;">
-                ${sec.type === 'video'
-                  ? (sec.muted !== false
-                      ? `<video src="${sec.src}" autoplay loop muted playsinline style="width:100%;display:block;max-height:80vh;object-fit:contain;"></video>`
-                      : `<video src="${sec.src}" autoplay muted controls playsinline style="width:100%;display:block;max-height:80vh;object-fit:contain;"></video>`)
-                  : `<div style="width:100%;min-height:400px;background:url('${sec.src}') center/cover no-repeat #111;aspect-ratio:16/10;"></div>`
-                }
-              </div>
-
-              <!-- text block -->
-              <div style="display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:start;">
-                <div>
-                  <div style="font-family:'Syne',sans-serif;font-size:clamp(20px,2.2vw,32px);font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--white);">${sec.heading}</div>
-                </div>
-                <div style="font-size:clamp(14px,1.3vw,17px);line-height:1.8;color:rgba(244,240,232,.7);">${sec.body}</div>
-              </div>
-
-            </div>
-          `).join('') : galleryHTML}
-        </div>
-
-      </div>
-
-      <!-- Next project -->
-      <div class="po-next" id="po-next-btn" data-idx="${(idx+1)%PROJECTS.length}">
-        <div>
-          <div class="po-next-label">Next Project</div>
-          <div class="po-next-title">${next.title} — ${next.subtitle}</div>
-        </div>
-        <div class="po-next-arrow">→</div>
-      </div>`;
-  }
-
-  /* ── OVERLAY OPEN / CLOSE ── */
-  const overlay = document.getElementById('project-overlay');
-  const overlayInner = document.getElementById('po-inner');
-  const closeBtn = document.getElementById('po-close-btn');
-  let overlayOpen = false;
-
-  function openProject(idx) {
-    overlayInner.innerHTML = buildOverlay(idx);
-    overlay.scrollTop = 0;
-    overlayOpen = true;
-    document.body.style.overflow = 'hidden';
-
-    if (PROJECTS[idx].bigImage) initPanZoom();
-
-    gsap.to(overlay, {
-      y: '0%', duration: .9, ease: 'expo.inOut',
-      onStart: () => {
-        overlay.classList.add('is-open');
-        gsap.to(closeBtn, { opacity: 1, duration: .4, delay: .5 });
-        closeBtn.classList.add('visible');
-      }
-    });
-    gsap.to('.po-tag-row',  { y: 0, opacity: 1, duration: .8, ease: 'expo.out', delay: .6 });
-    gsap.to('.po-title',    { y: 0, opacity: 1, duration: .9, ease: 'expo.out', delay: .65 });
-    gsap.to('.po-subtitle', { y: 0, opacity: 1, duration: .7, ease: 'expo.out', delay: .75 });
-  }
-
-  /* ── PAN-ZOOM VIEWER for large thesis sheets ── */
-  function initPanZoom() {
-    const container = document.getElementById('pz-container');
-    const img = document.getElementById('pz-img');
-    const loading = document.getElementById('pz-loading');
-    const badge = document.getElementById('pz-zoom-badge');
-    const hint = document.getElementById('pz-hint');
-    if (!container || !img) return;
-
-    let scale = 1, tx = 0, ty = 0;
-    let isDragging = false, startX, startY, startTx, startTy;
-    let hintTimer;
-
-    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-
-    function applyTransform(animate) {
-      img.style.transition = animate ? 'transform .35s cubic-bezier(.25,.46,.45,.94)' : 'none';
-      img.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
-      badge.textContent = Math.round(scale * 100) + '%';
-    }
-
-    function clampTx() {
-      const iw = img.naturalWidth * scale;
-      const ih = img.naturalHeight * scale;
-      const cw = container.clientWidth;
-      const ch = container.clientHeight;
-      if (iw <= cw) { tx = (cw - iw) / 2; }
-      else { tx = clamp(tx, cw - iw, 0); }
-      if (ih <= ch) { ty = (ch - ih) / 2; }
-      else { ty = clamp(ty, ch - ih, 0); }
-    }
-
-    function setup() {
-      loading.style.display = 'none';
-      img.style.opacity = '1';
-
-      const cw = container.clientWidth;
-      const ch = container.clientHeight;
-      const iw = img.naturalWidth;
-      const ih = img.naturalHeight;
-
-      /* start zoomed in: image fills 2Ã— the viewport width */
-      scale = (cw * 2) / iw;
-      tx = -(iw * scale - cw) / 2;
-      ty = -(ih * scale - ch) / 2;
-      clampTx();
-      applyTransform(false);
-
-      /* fade hint out after 4s */
-      hintTimer = setTimeout(() => { hint.style.opacity = '0'; }, 4000);
-    }
-
-    function trySetup() {
-      if (container.clientWidth > 0 && img.naturalWidth > 0) { setup(); }
-      else { setTimeout(trySetup, 80); }
-    }
-    /* always poll — handles both cached and uncached image */
-    trySetup();
-
-    /* ── WHEEL ZOOM ── */
-    container.addEventListener('wheel', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      const rect = container.getBoundingClientRect();
-      const cx = e.clientX - rect.left;
-      const cy = e.clientY - rect.top;
-      const factor = e.deltaY < 0 ? 1.09 : 0.915;
-      const minScale = container.clientWidth / img.naturalWidth * 0.5;
-      const maxScale = container.clientWidth * 5 / img.naturalWidth;
-      const newScale = clamp(scale * factor, minScale, maxScale);
-      tx = cx - (cx - tx) * (newScale / scale);
-      ty = cy - (cy - ty) * (newScale / scale);
-      scale = newScale;
-      clampTx();
-      applyTransform(false);
-      /* reset hint on interaction */
-      hint.style.opacity = '0';
-    }, { passive: false });
-
-    /* ── DRAG PAN ── */
-    container.addEventListener('mousedown', e => {
-      isDragging = true;
-      startX = e.clientX; startY = e.clientY;
-      startTx = tx; startTy = ty;
-      container.style.cursor = 'grabbing';
-    });
-    window.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      tx = startTx + (e.clientX - startX);
-      ty = startTy + (e.clientY - startY);
-      clampTx();
-      applyTransform(false);
-    });
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-      container.style.cursor = 'grab';
-    });
-
-    /* ── DOUBLE-CLICK: toggle overview â†” detail ── */
-    let isOverview = false;
-    container.addEventListener('dblclick', e => {
-      const cw = container.clientWidth;
-      const ch = container.clientHeight;
-      if (isOverview) {
-        /* zoom back to 2Ã— detail */
-        scale = (cw * 2) / img.naturalWidth;
-        tx = -(img.naturalWidth * scale - cw) / 2;
-        ty = -(img.naturalHeight * scale - ch) / 2;
-      } else {
-        /* fit entire image */
-        const fitScale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
-        scale = fitScale;
-        tx = (cw - img.naturalWidth * scale) / 2;
-        ty = (ch - img.naturalHeight * scale) / 2;
-      }
-      isOverview = !isOverview;
-      clampTx();
-      applyTransform(true);
-    });
-  }
-
-  /* event delegation — handles next-project clicks inside the overlay */
-  overlay.addEventListener('click', e => {
-    const btn = e.target.closest('#po-next-btn');
-    if (btn) loadProject(+btn.dataset.idx);
+  islandGroups.forEach((isl,i)=>{
+    isl.position.y=ISLAND_DATA[i][1]+Math.sin(t*.28+i*1.3)*.55;
+    isl.rotation.y+=.0003;
   });
 
-  /* cursor hover for dynamically generated overlay elements */
-  overlay.addEventListener('mouseenter', e => {
-    const el = e.target.closest('#po-next-btn, .po-close');
-    if (el) document.body.classList.add('cursor-hover');
-  }, true);
-  overlay.addEventListener('mouseleave', e => {
-    const el = e.target.closest('#po-next-btn, .po-close');
-    if (el) document.body.classList.remove('cursor-hover');
-  }, true);
-
-  function loadProject(idx) {
-    overlay.scrollTop = 0;
-    overlayInner.innerHTML = buildOverlay(idx);
-    gsap.fromTo('.po-tag-row',  {y:40,opacity:0},{y:0,opacity:1,duration:.7,ease:'expo.out'});
-    gsap.fromTo('.po-title',    {y:60,opacity:0},{y:0,opacity:1,duration:.8,ease:'expo.out',delay:.05});
-    gsap.fromTo('.po-subtitle', {y:40,opacity:0},{y:0,opacity:1,duration:.6,ease:'expo.out',delay:.1});
-  }
-
-  function closeProject() {
-    if (!overlayOpen) return;
-    gsap.to(closeBtn, { opacity: 0, duration: .2 });
-    gsap.to(overlay, {
-      y: '100%', duration: .7, ease: 'expo.inOut',
-      onComplete: () => {
-        overlay.classList.remove('is-open');
-        closeBtn.classList.remove('visible');
-        document.body.style.overflow = '';
-        overlayOpen = false;
-      }
-    });
-  }
-
-  closeBtn.addEventListener('click', closeProject);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProject(); });
-
-  /* wire project cards */
-  document.querySelectorAll('.project-card').forEach((item, idx) => {
-    item.style.cursor = 'none';
-    item.addEventListener('click', () => openProject(idx));
+  cloudGroups.forEach((cl,i)=>{
+    cl.position.x=CLOUD_DATA[i][0]+Math.sin(t*.10+i*.9)*1.2;
+    cl.position.y=CLOUD_DATA[i][1]+Math.sin(t*.14+i*1.7)*.5;
   });
 
-  /* ── SMOOTH SCROLL (native + offset) ── */
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+  planets.forEach((p,i)=>{ p.rotation.y+=.001+i*.0005; });
+
+  aboutGroup.rotation.y+=.004;
+  contactGroup.rotation.z+=.0015;
+
+  /* Subtle parallax — nudge the lookAt target slightly, never move the camera */
+  pan.x += (mouse.x - pan.x) * 0.02;
+  pan.y += (mouse.y - pan.y) * 0.02;
+  _paralaxPt.copy(lookPt)
+    .addScaledVector(_right, pan.x * 1.2)
+    .addScaledVector(camUp,  pan.y * 0.7);
+  camera.lookAt(_paralaxPt);
+
+  renderer.render(scene,camera);
+  labelRenderer.render(scene,camera);
+}
+animate();
+
+/* ====================================== SCROLL ========================= */
+gsap.registerPlugin(ScrollTrigger);
+
+const overlays  = [...document.querySelectorAll('.zone-overlay')];
+const znumEl    = document.getElementById('znum');
+const hintEl    = document.getElementById('hint');
+let   lastZone  = 0;
+
+const FOG_COLORS=[0x6a2088,0x204488,0x881860,0xaa4410,0x554400,0x005544,0x551155,0x003355,0x553300,0x005544,0x330055,0x444444,0x665500];
+
+ScrollTrigger.create({
+  trigger:'#ss', start:'top top', end:'bottom bottom', scrub:4,
+  onUpdate(self){
+    const p=self.progress;
+    const camPt=PATH.getPointAt(p);
+    const aheadPt=PATH.getPointAt(Math.min(p+.012,1));
+    camera.position.copy(camPt);
+
+    const fwd=aheadPt.clone().sub(camPt).normalize();
+    const bank=fwd.x*.22;
+    camUp.set(Math.sin(-bank),Math.cos(bank),0);
+    camera.up.copy(camUp);
+    lookPt.copy(aheadPt);
+    camera.lookAt(lookPt);
+    // Keep _right in sync with path direction for parallax
+    _right.crossVectors(fwd, camUp).normalize();
+
+    /* Fog shift */
+    const ri=Math.floor(p*(FOG_COLORS.length-1));
+    const rf=p*(FOG_COLORS.length-1)-ri;
+    _fogA.set(FOG_COLORS[Math.min(ri,FOG_COLORS.length-1)]);
+    _fogB.set(FOG_COLORS[Math.min(ri+1,FOG_COLORS.length-1)]);
+    scene.fog.color.lerpColors(_fogA,_fogB,rf);
+
+    /* Stage node opacity */
+    STAGES.forEach((s,i)=>{
+      const d=camPt.distanceTo(s.pos);
+      nodeMats[i].opacity=d<35?THREE.MathUtils.mapLinear(d,0,35,1,.55):.55;
     });
-  });
 
-  /* ── NAV HIDE/SHOW ON SCROLL ── */
-  const navEl = document.querySelector('nav');
-  let lastY = 0;
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (y > lastY && y > 80) gsap.to(navEl, { y: '-100%', duration: .4, ease: 'power2.inOut' });
-    else gsap.to(navEl, { y: '0%', duration: .4, ease: 'power2.out' });
-    lastY = y;
-  }, { passive: true });
+    /* Portal label distance fading — visible only within 48 units */
+    let nearestPortal = -1, minPortalDist = Infinity;
+    portalGroups.forEach((pg, i) => {
+      const dist = camPt.distanceTo(PORTAL_POSITIONS[i]);
+      const op = THREE.MathUtils.clamp(THREE.MathUtils.mapLinear(dist, 48, 18, 0, 1), 0, 1);
+      labelDivs[i].style.opacity = op.toFixed(3);
+      if(dist < minPortalDist){ minPortalDist=dist; nearestPortal=i; }
+    });
 
+    /* Zone detection — project zones (5-10) follow nearest portal, others use scroll pos */
+    const rawZone = zoneOf(p);
+    let zone = rawZone;
+    if(rawZone >= 4 && rawZone <= 11 && nearestPortal >= 0 && minPortalDist < 72) {
+      zone = 5 + nearestPortal; // overlay matches whichever portal is closest
+    }
+
+    if(zone!==lastZone){
+      lastZone=zone;
+      dots.forEach((d,i)=>d.classList.toggle('on',i===zone));
+      znumEl.textContent=String(zone+1).padStart(2,'0');
+      overlays.forEach((o,i)=>o.classList.toggle('on',i===zone));
+    }
+
+    hintEl.style.opacity=p>.02?'0':'1';
+  }
+});
+
+/* ====================================== RESIZE ========================= */
+window.addEventListener('resize',()=>{
+  camera.aspect=W()/H();camera.updateProjectionMatrix();
+  renderer.setSize(W(),H());labelRenderer.setSize(W(),H());
+});
+
+/* ====================================== LOAD MODELS ==================== */
+const MODEL_BASE='https://drparagchavhan23-collab.github.io/models/';
+function fitModel(obj,targetSize){
+  const bbox=new THREE.Box3().setFromObject(obj);
+  const size=bbox.getSize(new THREE.Vector3());
+  const maxDim=Math.max(size.x,size.y,size.z);
+  if(maxDim>0){obj.scale.setScalar(targetSize/maxDim);obj.traverse(c=>{if(c.isMesh)c.geometry.center();});}
+  return obj;
+}
+(async()=>{
+  const mtlLoader=new MTLLoader().setPath(MODEL_BASE);
+  try{
+    const sm=await mtlLoader.loadAsync('stone.mtl');sm.preload();
+    const sb=await new OBJLoader().setPath(MODEL_BASE).setMaterials(sm).loadAsync('stone.obj');
+    fitModel(sb,7);
+    [[-38,8,-90,1.4,.3],[45,18,-620,1.0,1.1],[-30,-14,-720,1.6,2.0],[42,-6,-810,1.2,.7],[-20,25,-900,0.9,1.8]].forEach(([x,y,z,s,ry])=>{
+      const c=sb.clone(true);c.position.set(x,y,z);c.scale.setScalar(s);c.rotation.y=ry;scene.add(c);
+    });
+  }catch(e){console.warn('stone:',e.message);}
+  try{
+    const mm=await mtlLoader.loadAsync('medieval.mtl');mm.preload();
+    const mb=await new OBJLoader().setPath(MODEL_BASE).setMaterials(mm).loadAsync('medieval.obj');
+    fitModel(mb,14);
+    mb.position.set(-48,4,-500);mb.rotation.y=Math.PI*.15;scene.add(mb);
+    const b2=mb.clone(true);b2.position.set(52,-6,-680);b2.rotation.y=-Math.PI*.25;b2.scale.setScalar(.8);scene.add(b2);
+    const b3=mb.clone(true);b3.position.set(-40,10,-860);b3.rotation.y=Math.PI*.35;b3.scale.setScalar(.9);scene.add(b3);
+  }catch(e){console.warn('medieval:',e.message);}
 })();
+
 </script>
-
-
-<script>
-/* ── BUBBLE RING TEXT ── */
-(function () {
-  const LABELS = [
-    'LOGO ANIMATION · BRAND IDENTITY · ',
-    'ARCHITECTURAL THESIS · GATEWAY TO THE SACRED · ',
-    'DIGITAL ART · RETRO FUTURISM · ',
-    'DANCE BRANDING · NRITYAMRIT · ',
-    'ARCHITECTURE · MOSAFIRO · ',
-    'UI/UX DESIGN · WINKIT · ',
-    'EXHIBITION DESIGN · DHAKOR MUSEUM · ',
-  ];
-  const FLOATS = ['float-a','float-b','float-c','float-d','float-e','float-f','float-g'];
-  const GLOWS  = ['glow-cyan','glow-magenta','glow-yellow','glow-cyan','glow-magenta','glow-yellow','glow-cyan'];
-  const NS = 'http://www.w3.org/2000/svg';
-
-  document.querySelectorAll('.project-card').forEach((card, i) => {
-    const sz  = parseInt(card.style.width) || 155;
-    const PAD = 30;
-    const wSz = sz + PAD * 2;
-    const cx  = wSz / 2, cy = wSz / 2;
-    const r   = sz / 2 + 15;
-
-    const wrap = document.createElement('div');
-    wrap.className = `bubble-wrap ${FLOATS[i]} ${GLOWS[i]}`;
-    wrap.style.cssText = `width:${wSz}px;height:${wSz}px;`;
-    card.parentNode.insertBefore(wrap, card);
-    wrap.appendChild(card);
-
-    const svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('class', 'ring-svg');
-    svg.setAttribute('viewBox', `0 0 ${wSz} ${wSz}`);
-    svg.setAttribute('width', wSz);
-    svg.setAttribute('height', wSz);
-
-    const defs = document.createElementNS(NS, 'defs');
-    const path = document.createElementNS(NS, 'path');
-    path.setAttribute('id', `rp${i}`);
-    path.setAttribute('d',
-      `M ${(cx-r).toFixed(1)},${cy} ` +
-      `a ${r},${r},0,1,1,${(r*2).toFixed(1)},0 ` +
-      `a ${r},${r},0,1,1,-${(r*2).toFixed(1)},0`
-    );
-    defs.appendChild(path);
-    svg.appendChild(defs);
-
-    const text = document.createElementNS(NS, 'text');
-    text.setAttribute('class', 'ring-text');
-    const tp = document.createElementNS(NS, 'textPath');
-    tp.setAttribute('href', `#rp${i}`);
-    tp.setAttribute('startOffset', '0%');
-    tp.textContent = LABELS[i] || '';
-    text.appendChild(tp);
-    svg.appendChild(text);
-
-    wrap.appendChild(svg);
-  });
-})();
-</script>
-
-
-
-
-<script>
-/* ── HERO BLOOM SCROLL SEQUENCE v3 ── */
-(function () {
-  if (!window.gsap || !window.ScrollTrigger) return;
-  gsap.registerPlugin(ScrollTrigger);
-
-  const serious  = document.querySelector('.hero-photo-main img.serious');
-  const tongue   = document.querySelector('.hero-photo-main img.tongue');
-  const petals   = document.querySelectorAll('.bloom-petal');
-  const heroName = document.getElementById('heroName');
-
-  /* ── Letter split for per-letter punk swap ── */
-  heroName.querySelectorAll('.word').forEach(word => {
-    word.innerHTML = [...word.textContent]
-      .map(ch => `<span class="punk-ltr">${ch}</span>`)
-      .join('');
-  });
-  const punkLetters = [...heroName.querySelectorAll('.punk-ltr')];
-
-  /* ── Set body bg as inline so GSAP can tween it ── */
-  document.body.style.backgroundColor = '#050505';
-
-  /* ── Petal bloom angles — all fan LEFT (away from text) ── */
-  const PETALS = [
-    { angle: -162, dist: 1.55 }, // upper-left
-    { angle: -120, dist: 1.70 }, // left-upper diagonal
-    { angle:  -82, dist: 1.50 }, // straight up
-    { angle:   98, dist: 1.55 }, // straight down
-    { angle:  138, dist: 1.65 }, // lower-left diagonal
-    { angle:  168, dist: 1.50 }, // left-lower
-  ];
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#hero',
-      start: 'top top',
-      end: '+=240%',
-      scrub: 1.4,
-      pin: true,
-    }
-  });
-
-  /* ── Step 1 (0–18%): tongue swap — subtle, reads as wink ── */
-  tl.to(serious, { opacity: 0, duration: 0.15 }, 0.03)
-    .to(tongue,  { opacity: 1, duration: 0.15 }, 0.03);
-
-  /* ── Step 2 (18–60%): petals bloom left, away from text ── */
-  petals.forEach((petal, i) => {
-    const { angle, dist } = PETALS[i];
-    const rad = angle * Math.PI / 180;
-    const tx  = Math.cos(rad) * dist * 100;
-    const ty  = Math.sin(rad) * dist * 100;
-    tl.fromTo(petal,
-      { opacity: 0, scale: 0, x: '0%', y: '0%', rotation: angle * 0.4 },
-      { opacity: 1, scale: 1,
-        x: tx + '%', y: ty + '%',
-        rotation: angle * 0.1,
-        duration: 0.30,
-        ease: 'back.out(1.5)' },
-      0.18 + i * 0.07
-    );
-  });
-
-  /* ── Step 3 (58–82%): sunlight warmth — like golden hour flooding in ──
-     No overlays. Pure property animation so face stays clean. ── */
-
-  // Warm the background — still dark but feels like dusk gold
-  tl.to(document.body,
-    { backgroundColor: '#100800', duration: 0.28, ease: 'none' }, 0.56);
-
-  // Eyebrow text: magenta → warm amber
-  tl.to('.hero-eyebrow span',
-    { color: '#f5a500', duration: 0.22, ease: 'none' }, 0.56);
-
-  // Name + tagline: cold white → warm cream
-  tl.to('.hero-name .punk-ltr, .hero-tagline .inner',
-    { color: '#fff7e0', duration: 0.22, ease: 'none' }, 0.60);
-
-  // Meta labels warm up
-  tl.to('.hero-meta-label',
-    { color: 'rgba(245,168,0,0.55)', duration: 0.22, ease: 'none' }, 0.62);
-
-  // Vertical counter
-  tl.to('.hero-counter',
-    { color: 'rgba(245,168,0,0.45)', duration: 0.2, ease: 'none' }, 0.64);
-
-  /* ── Step 4 (78–100%): Hit Me Punk — letter by letter, left to right ── */
-  punkLetters.forEach((lt, i) => {
-    tl.to(lt, {
-      duration: 0.022,
-      onStart() {
-        lt.style.fontFamily = "'HitMePunk', sans-serif";
-        lt.style.letterSpacing = '0.05em';
-      },
-      onReverseComplete() {
-        lt.style.fontFamily = '';
-        lt.style.letterSpacing = '';
-      },
-    }, 0.78 + i * 0.010);
-  });
-
-})();
-</script>
-
 </body>
 </html>
