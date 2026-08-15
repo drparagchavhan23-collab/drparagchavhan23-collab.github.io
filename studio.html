@@ -509,58 +509,7 @@ const CLOUD_DATA=[
 ];
 const cloudGroups=CLOUD_DATA.map(([x,y,z,size,seed])=>{const cl=makeCloud(size,seed);cl.position.set(x,y,z);scene.add(cl);return cl;});
 
-/* ====================================== ISLANDS ======================== */
-function terrainY(x,z,size){
-  const r=Math.sqrt(x*x+z*z);
-  return(Math.sin(x*.85+z*.6)*.30+Math.sin(x*1.9-z*1.3)*.16+Math.sin(z*.7-x*.45)*.22-(r/size)*.45)*size*.38;
-}
-function makeIsland(size,hasTree){
-  const grp=new THREE.Group(),RS=14;
-  const topGeo=new THREE.CylinderGeometry(size,size*.82,size*.55,RS,4);
-  const tPos=topGeo.attributes.position;
-  for(let i=0;i<tPos.count;i++){
-    const x=tPos.getX(i),y=tPos.getY(i),z=tPos.getZ(i);
-    if(y>size*.05){tPos.setY(i,y+terrainY(x,z,size));}
-    else{const e=.82+Math.random()*.22;tPos.setX(i,x*e+(Math.random()-.5)*size*.08);tPos.setZ(i,z*e+(Math.random()-.5)*size*.08);tPos.setY(i,y+(Math.random()-.5)*size*.12);}
-  }
-  topGeo.computeVertexNormals();
-  grp.add(new THREE.Mesh(topGeo,new THREE.MeshBasicMaterial({color:0x9aaa88})));
-  const gGeo=new THREE.CylinderGeometry(size*.8,size*.8,size*.07,RS,2);
-  const gPos=gGeo.attributes.position;
-  for(let i=0;i<gPos.count;i++){const x=gPos.getX(i),y=gPos.getY(i),z=gPos.getZ(i);if(y>0)gPos.setY(i,size*.28+terrainY(x,z,size)+size*.03);}
-  gGeo.computeVertexNormals();
-  grp.add(new THREE.Mesh(gGeo,new THREE.MeshBasicMaterial({color:0x5cb84a})));
-  const sc=4+Math.floor(Math.random()*3);
-  for(let s=0;s<sc;s++){
-    const ic=s===0,a=ic?0:(s/(sc-1))*Math.PI*2+Math.random()*.6,ro=ic?0:(.15+Math.random()*.4)*size;
-    const sh=size*(.55+Math.random()*.75),sr=size*(.06+Math.random()*.1);
-    const sp=new THREE.Mesh(new THREE.CylinderGeometry(sr*.05,sr,sh,10,2),new THREE.MeshBasicMaterial({color:ic?0x707860:0x889070}));
-    sp.position.set(Math.cos(a)*ro,-(size*.1+sh*.5),Math.sin(a)*ro);
-    sp.rotation.z=(Math.random()-.5)*.18;sp.rotation.x=(Math.random()-.5)*.18;grp.add(sp);
-  }
-  if(hasTree){
-    const tx=(Math.random()-.5)*size*.35,tz=(Math.random()-.5)*size*.35;
-    const baseY=size*.28+terrainY(tx,tz,size),trH=size*(.75+Math.random()*.45);
-    const tr=new THREE.Mesh(new THREE.CylinderGeometry(size*.035,size*.075,trH,10),new THREE.MeshBasicMaterial({color:0x7a5535}));
-    tr.position.set(tx,baseY+trH*.5,tz);tr.rotation.z=(Math.random()-.5)*.16;grp.add(tr);
-    const cY=baseY+trH,cR=size*.55;
-    for(let p=0;p<12;p++){
-      const pa=(p/12)*Math.PI*2+Math.random()*.7,pr=Math.random()*cR*(p<3?.3:1),ps=cR*(.3+Math.random()*.4);
-      const pf=new THREE.Mesh(new THREE.SphereGeometry(ps,9,7),new THREE.MeshBasicMaterial({color:0x2d6830+Math.floor(Math.random()*0x15)*0x010100}));
-      pf.position.set(tx+Math.cos(pa)*pr,cY+Math.random()*cR*.65,tz+Math.sin(pa)*pr);grp.add(pf);
-    }
-  }
-  return grp;
-}
-const ISLAND_DATA=[
-  [28,14,-45,5.5,true,.4],[-32,-12,-95,4.2,false,1.1],[38,8,-155,6,true,2.2],[-22,22,-210,3.8,true,.9],
-  [18,-20,-270,5,false,1.7],[-40,10,-330,4.5,true,2.8],[30,18,-385,3.5,false,.3],[-15,-16,-130,3.2,true,1.5],
-  [35,-8,-520,4.8,true,.6],[-28,14,-600,5.2,false,1.9],[40,-12,-680,4,true,2.4],[-35,8,-760,5,false,.8],
-  [25,20,-840,3.8,true,1.4],[-30,-10,-920,4.5,false,2.1],[20,12,-1000,4,true,.5],
-];
-const islandGroups=ISLAND_DATA.map(([x,y,z,size,hasTree,rotY])=>{
-  const isl=makeIsland(size,hasTree);isl.position.set(x,y,z);isl.rotation.y=rotY;scene.add(isl);return isl;
-});
+/* islands removed */
 
 /* ====================================== PLANETS ======================== */
 function makePlanet(radius,col,ringCol){
@@ -594,7 +543,26 @@ ZONE_LABELS.forEach((l,i)=>{
 const dots=[...document.querySelectorAll('.dot')];
 
 /* ====================================== JUMP TO ZONE =================== */
+function playWarp(){
+  try {
+    if(!window._wactx) window._wactx = new (window.AudioContext||window.webkitAudioContext)();
+    const ctx = window._wactx;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(120, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.18);
+    o.frequency.exponentialRampToValueAtTime(80,   ctx.currentTime + 0.42);
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.22,   ctx.currentTime + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.44);
+    o.start(); o.stop(ctx.currentTime + 0.45);
+  } catch(e){}
+}
+
 window.jumpToZone = function(i) {
+  playWarp();
   const frac = i / (ZONE_COUNT - 1);
   const scrollH = document.getElementById('ss').offsetHeight;
   window.scrollTo({ top: scrollH * frac, behavior:'smooth' });
@@ -628,11 +596,6 @@ function animate() {
     if(g.children[1])g.children[1].rotation.y+=.004;
     if(g.children[2])g.children[2].rotation.y-=.003;
     if(g.children[3])g.children[3].rotation.z+=.002;
-  });
-
-  islandGroups.forEach((isl,i)=>{
-    isl.position.y=ISLAND_DATA[i][1]+Math.sin(t*.28+i*1.3)*.55;
-    isl.rotation.y+=.0003;
   });
 
   cloudGroups.forEach((cl,i)=>{
