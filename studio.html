@@ -618,7 +618,7 @@ window.jumpToZone = function(i) {
 /* ====================================== MOUSE PAN ====================== */
 const mouse = { x:0, y:0 };          // normalised -1..1
 const pan   = { x:0, y:0 };          // smoothed current offset
-const PAN_STRENGTH = { x:1.4, y:0.7 }; // max world-units of offset
+const PAN_STRENGTH = { x:0.35, y:0.18 }; // subtle pan only
 window.addEventListener('mousemove', e => {
   mouse.x =  (e.clientX / window.innerWidth  - 0.5) * 2;
   mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
