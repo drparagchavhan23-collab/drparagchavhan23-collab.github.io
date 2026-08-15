@@ -461,66 +461,50 @@ scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.
 
 /* ====================================== CLOUDS ========================== */
 /*
-  Anime cumulus clouds with shape, size, and color variation.
-  Each cloud picks a color family and bump-count variant randomly seeded by index.
+  Volumetric soft clouds — 20 layered translucent spheres per cloud.
+  Bright white core fading to near-transparent edges. No hard outlines.
+  Seeded RNG keeps each cloud shape unique but deterministic.
 */
-const CLOUD_SCHEMES = [
-  // [body, deep, highlight]
-  [0x7ec8e3, 0x4ea8c8, 0xf0f8ff],  // classic sky blue + white
-  [0xb070e0, 0x8040c0, 0xf0e0ff],  // purple / lavender
-  [0xe07080, 0xc04060, 0xffe0e8],  // rose pink
-  [0x60c8a0, 0x38a878, 0xe0fff0],  // mint green
-  [0xe0b040, 0xc08820, 0xfff8e0],  // amber gold
-  [0x6090e8, 0x3860c0, 0xe0eaff],  // deep periwinkle
-  [0xe08850, 0xc06028, 0xfff0e0],  // warm orange
-];
-
-// Bump layout variants (wider, taller, longer shapes)
-const BUMP_VARIANTS = [
-  // standard cumulus
-  (s)=>[[0,1.0,0,1.0],[s*.68,.78,s*.05,.72],[-s*.62,.80,s*.05,.70],[s*.30,1.22,s*.08,.54],[-s*.26,1.18,s*.06,.50],[s*.55,.65,-s*.08,.48],[-s*.50,.68,-s*.06,.46]],
-  // wide stretched
-  (s)=>[[0,.92,0,.88],[s*.88,.72,s*.05,.64],[-s*.82,.74,s*.05,.62],[s*.45,1.10,s*.1,.52],[-s*.40,1.08,s*.06,.48],[s*.70,.60,-s*.08,.42],[-s*.65,.62,-s*.06,.40],[s*1.0,.55,0,.36],[-s*.95,.56,0,.34]],
-  // tall puffy
-  (s)=>[[0,1.08,0,1.0],[-s*.08,1.5,0,.62],[s*.60,.82,s*.05,.72],[-s*.55,.84,s*.05,.68],[s*.25,1.35,s*.06,.50],[-s*.20,1.32,s*.06,.46]],
-  // compact small bumps
-  (s)=>[[0,1.0,0,.90],[s*.52,.80,s*.04,.70],[-s*.48,.82,s*.04,.68],[s*.24,1.16,s*.06,.52],[-s*.20,1.14,s*.06,.48],[s*.42,.68,-s*.06,.46],[-s*.38,.70,-s*.06,.44],[s*.68,.62,s*.04,.36],[-s*.62,.64,s*.04,.34]],
-];
-
 function makeCloud(size, seed) {
   const grp = new THREE.Group();
-  const sch = CLOUD_SCHEMES[seed % CLOUD_SCHEMES.length];
-  const variant = BUMP_VARIANTS[Math.floor(seed/CLOUD_SCHEMES.length) % BUMP_VARIANTS.length];
-  const bumps = variant(size);
+  const rng = (n) => { const x = Math.sin(seed*127.1+n*311.7)*43758.5453; return x-Math.floor(x); };
+  const count = 20;
+  for (let i = 0; i < count; i++) {
+    const angle  = rng(i*4)   * Math.PI * 2;
+    const rise   = rng(i*4+1);          // 0=bottom 1=top
+    const reach  = rng(i*4+2) * 0.9;   // 0=center 1=edge
+    const jitter = rng(i*4+3);
 
-  bumps.forEach(([rx,ryF,rz,rf])=>{
-    const r=size*rf, cy=r*ryF;
-    const body=new THREE.Mesh(
-      new THREE.SphereGeometry(r,8,6),
-      new THREE.MeshBasicMaterial({color:rf>=0.85?sch[0]:sch[1],transparent:true,opacity:.93})
-    );
-    body.scale.y=0.76; body.position.set(rx,cy,rz); grp.add(body);
-    // cream highlight
-    const h=new THREE.Mesh(
-      new THREE.SphereGeometry(r*.50,7,5),
-      new THREE.MeshBasicMaterial({color:sch[2],transparent:true,opacity:.80})
-    );
-    h.scale.y=0.62; h.position.set(rx-r*.28,cy+r*.40,rz+r*.20); grp.add(h);
-  });
-  // flat base
-  grp.add(new THREE.Mesh(
-    new THREE.CylinderGeometry(size*.82,size*.82,size*.15,20),
-    new THREE.MeshBasicMaterial({color:sch[1],transparent:true,opacity:.45})
-  ));
+    const rx = Math.cos(angle) * reach * size;
+    const ry = (rise*0.7 - 0.15) * size * 0.55;
+    const rz = Math.sin(angle) * reach * size * 0.38;
+    const sr = size * (0.25 + (1-reach)*0.42 + rise*0.15) * (0.65 + jitter*0.7);
+
+    // opacity: dense at core, airy at edges
+    const coreness = (1-reach)*0.65 + rise*0.25;
+    const op = Math.min(0.88, 0.06 + coreness * 0.82);
+
+    // color: pure white core, very faint lavender-blue at edges (picks up sky bg)
+    const w  = Math.round(240 + coreness*15);
+    const col = (w<<16)|(w<<8)|Math.min(255, w+Math.round((1-coreness)*18));
+
+    grp.add(Object.assign(
+      new THREE.Mesh(
+        new THREE.SphereGeometry(sr, 7, 5),
+        new THREE.MeshBasicMaterial({ color:col, transparent:true, opacity:op, depthWrite:false })
+      ),
+      { position: new THREE.Vector3(rx, ry, rz) }
+    ));
+  }
   return grp;
 }
 
-/* Clouds intentionally absent from Z -520 to -900 (portal zone) */
+/* Clouds absent from Z -520 to -900 (portal zone) */
 const CLOUD_DATA=[
   [16,-6,-25,14,0],[-28,-3,-65,18,1],[34,20,-115,11,2],[-20,-2,-175,16,3],[25,-10,-235,10,4],[-38,17,-285,20,5],
-  [12,-7,-345,13,6],[-14,22,-405,15,0],[-32,-16,-460,17,1],[20,30,-50,12,3],[-10,-22,-130,14,4],
-  [50,12,-495,10,5],
-  [-45,8,-910,15,6],[38,-6,-940,13,0],[-30,14,-970,18,1],[42,10,-1000,11,2],[-20,-5,-1040,14,3],
+  [12,-7,-345,13,6],[-14,22,-405,15,7],[-32,-16,-460,17,8],[20,30,-50,12,9],[-10,-22,-130,14,10],
+  [50,12,-495,10,11],
+  [-45,8,-910,15,12],[38,-6,-940,13,13],[-30,14,-970,18,14],[42,10,-1000,11,15],[-20,-5,-1040,14,16],
 ];
 const cloudGroups=CLOUD_DATA.map(([x,y,z,size,seed])=>{const cl=makeCloud(size,seed);cl.position.set(x,y,z);scene.add(cl);return cl;});
 
