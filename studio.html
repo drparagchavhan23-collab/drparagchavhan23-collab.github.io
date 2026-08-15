@@ -6,6 +6,7 @@
 <title>Parag Chavhan -- Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
+@property --ph{syntax:'<length>';inherits:false;initial-value:0px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 html,body{width:100%;overflow-x:hidden}
@@ -15,6 +16,57 @@ body{
 }
 
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block}
+
+/* ── Portal Intro Screen ── */
+#portal-intro{
+  position:fixed;inset:0;z-index:5000;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle at 50% 50%,
+    transparent var(--ph,0px),
+    rgba(140,100,255,0.5) calc(var(--ph,0px) + 6px),
+    #8c8c8c calc(var(--ph,0px) + 20px)
+  );
+  transition:--ph 0.12s ease-out, opacity 0.5s ease;
+}
+#portal-intro.portal-open{
+  --ph:200vmax;
+  transition:--ph 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease 0.55s;
+  opacity:0;pointer-events:none;
+}
+#pi-ring{
+  position:absolute;width:180px;height:180px;
+  transform:rotate(-90deg);
+  filter:drop-shadow(0 0 6px rgba(160,120,255,0.6));
+}
+.pi-track{fill:none;stroke:rgba(255,255,255,0.12);stroke-width:1.5}
+.pi-arc{
+  fill:none;stroke:rgba(255,255,255,0.85);stroke-width:1.5;
+  stroke-dasharray:326.73;stroke-dashoffset:326.73;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 0.05s linear;
+}
+#pi-label{
+  position:absolute;display:flex;flex-direction:column;
+  align-items:center;gap:8px;pointer-events:none;
+}
+#pi-text{
+  font-family:'DM Mono',monospace;font-size:8px;
+  letter-spacing:.28em;color:rgba(255,255,255,0.45);
+  animation:pi-pulse 2s ease-in-out infinite;
+}
+#pi-sub{
+  font-family:'DM Mono',monospace;font-size:6px;
+  letter-spacing:.2em;color:rgba(255,255,255,0.2);
+}
+@keyframes pi-pulse{0%,100%{opacity:.45}50%{opacity:.9}}
+#pi-center-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(160,120,255,0.7);
+  box-shadow:0 0 12px 4px rgba(140,80,255,0.4);
+  animation:pi-pulse 2s ease-in-out infinite;
+  margin-bottom:14px;
+}
 
 /* Nav */
 #nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;z-index:30;mix-blend-mode:normal}
@@ -110,6 +162,19 @@ body{
 </style>
 </head>
 <body>
+<!-- Portal intro screen -->
+<div id="portal-intro">
+  <svg id="pi-ring" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="52" class="pi-track"/>
+    <circle cx="60" cy="60" r="52" class="pi-arc" id="pi-arc"/>
+  </svg>
+  <div id="pi-label">
+    <div id="pi-center-dot"></div>
+    <span id="pi-text">CLICK &amp; HOLD</span>
+    <span id="pi-sub">TO ENTER</span>
+  </div>
+</div>
+
 <canvas id="c"></canvas>
 <button id="audio-btn" title="Toggle sound">🔇</button>
 <audio id="bg-audio" src="ambient.mp3" loop preload="none"></audio>
@@ -798,6 +863,91 @@ function fitModel(obj,targetSize){
 })();
 
 
+/* ── Portal Intro Hold-to-Enter ─────────────────────────────────────────── */
+(()=>{
+  const intro  = document.getElementById('portal-intro');
+  const arc    = document.getElementById('pi-arc');
+  const label  = document.getElementById('pi-text');
+  const CIRC   = 326.73;  // 2π × 52
+  const HOLD_MS = 1800;   // ms to hold before portal opens
+
+  let holdStart = null;
+  let raf       = null;
+  let opened    = false;
+
+  function setProgress(p){
+    arc.style.strokeDashoffset = CIRC * (1 - p);
+    // Portal hole grows while holding (0 → 60px)
+    intro.style.setProperty('--ph', (p * 60) + 'px');
+  }
+
+  function openPortal(){
+    if(opened) return;
+    opened = true;
+    cancelAnimationFrame(raf);
+
+    // Start audio
+    if(window.__startAudio) window.__startAudio();
+
+    // Animate portal iris open via CSS class (--ph → 200vmax)
+    intro.classList.add('portal-open');
+
+    // Remove from DOM after transition
+    intro.addEventListener('transitionend', ()=>{
+      intro.remove();
+    }, {once:true});
+
+    // Fallback remove in case transitionend doesn't fire
+    setTimeout(()=>{ if(intro.parentNode) intro.remove(); }, 1200);
+  }
+
+  function tick(){
+    if(!holdStart){ raf=null; return; }
+    const elapsed = performance.now() - holdStart;
+    const p = Math.min(elapsed / HOLD_MS, 1);
+    setProgress(p);
+    if(p < 1){
+      label.textContent = 'HOLD…';
+      raf = requestAnimationFrame(tick);
+    } else {
+      openPortal();
+    }
+  }
+
+  function startHold(e){
+    if(opened) return;
+    e.preventDefault();
+    holdStart = performance.now();
+    label.textContent = 'HOLD…';
+    raf = requestAnimationFrame(tick);
+  }
+
+  function cancelHold(){
+    if(opened) return;
+    cancelAnimationFrame(raf);
+    holdStart = null;
+    raf = null;
+    label.textContent = 'CLICK & HOLD';
+    // Reset ring + hole smoothly
+    let p = parseFloat(arc.style.strokeDashoffset || CIRC);
+    let current = 1 - (p / CIRC);
+    function resetTick(){
+      current = Math.max(0, current - 0.04);
+      setProgress(current);
+      if(current > 0) requestAnimationFrame(resetTick);
+    }
+    requestAnimationFrame(resetTick);
+  }
+
+  intro.addEventListener('mousedown',  startHold);
+  intro.addEventListener('touchstart', startHold, {passive:false});
+  window.addEventListener('mouseup',   cancelHold);
+  window.addEventListener('touchend',  cancelHold);
+  window.addEventListener('touchcancel', cancelHold);
+  // If mouse leaves window while held, cancel
+  window.addEventListener('mouseleave', cancelHold);
+})();
+
 /* ── Audio ──────────────────────────────────────────────────────────────── */
 (()=>{
   const audio = document.getElementById('bg-audio');
@@ -836,17 +986,14 @@ function fitModel(obj,targetSize){
       : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
   }
 
-  // Try autoplay on load; browsers may block it — fallback to first interaction
   audio.volume = 0.4;
-  audio.play().then(()=>{ setMuted(false); }).catch(()=>{ setMuted(true); });
+  setMuted(true); // starts muted until portal opens
 
-  // Unmute on first user gesture if autoplay was blocked
-  function tryStart(){
-    if(!audio.paused) return;
-    audio.play().then(()=>{ setMuted(false); }).catch(()=>{});
-  }
-  window.addEventListener('pointerdown', tryStart, {once:true});
-  window.addEventListener('scroll',      tryStart, {once:true});
+  // Called by portal intro when hold completes
+  window.__startAudio = function(){
+    getCtx();
+    audio.play().then(()=>{ setMuted(false); }).catch(()=>{ setMuted(true); });
+  };
 
   btn.addEventListener('click', ()=>{
     if(audio.paused){ audio.play(); setMuted(false); }
