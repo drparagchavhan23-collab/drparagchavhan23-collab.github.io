@@ -680,30 +680,30 @@ scene.add(nebulaSphere);
 /* ====================================== CAMERA PATH ====================== */
 /* Zones:  0-4 -> story stages   5-10 -> projects   11 -> about   12 -> contact */
 const PATH = new THREE.CatmullRomCurve3([
-  // -- Story intro -----------------------------------------------------------
+  // -- Story intro: dead straight along -Z -----------------------------------
   new THREE.Vector3(  0,   0,  38),
-  new THREE.Vector3( -8,   4,  12),
-  new THREE.Vector3(  6,  -4,  -5),   // S0
-  new THREE.Vector3( 22,   5, -55),
-  new THREE.Vector3( -2,  -8,-105),   // S1
-  new THREE.Vector3(-20,   6,-155),
-  new THREE.Vector3(  4,   2,-205),   // S2
-  new THREE.Vector3( 18,  12,-255),
-  new THREE.Vector3( -6,  -5,-305),   // S3
-  new THREE.Vector3(-16,   8,-360),
+  new THREE.Vector3(  0,   0,  12),
+  new THREE.Vector3(  0,   0,  -5),   // S0
+  new THREE.Vector3(  0,   0, -55),
+  new THREE.Vector3(  0,   0,-105),   // S1
+  new THREE.Vector3(  0,   0,-155),
+  new THREE.Vector3(  0,   0,-205),   // S2
+  new THREE.Vector3(  0,   0,-255),
+  new THREE.Vector3(  0,   0,-305),   // S3
+  new THREE.Vector3(  0,   0,-360),
   new THREE.Vector3(  0,   0,-415),   // S4
-  // -- Projects gallery (X=0, portals stay dead-centre of view) ------------
-  new THREE.Vector3(  0,   1,-465),
-  new THREE.Vector3(  0,   2,-548),   // P1
-  new THREE.Vector3(  0,   4,-615),   // P2
-  new THREE.Vector3(  0,  -1,-678),   // P3
-  new THREE.Vector3(  0,   4,-742),   // P4
-  new THREE.Vector3(  0,   6,-808),   // P5
-  new THREE.Vector3(  0,  -1,-872),   // P6
+  // -- Projects gallery ------------------------------------------------------
+  new THREE.Vector3(  0,   0,-465),
+  new THREE.Vector3(  0,   0,-548),   // P1
+  new THREE.Vector3(  0,   0,-615),   // P2
+  new THREE.Vector3(  0,   0,-678),   // P3
+  new THREE.Vector3(  0,   0,-742),   // P4
+  new THREE.Vector3(  0,   0,-808),   // P5
+  new THREE.Vector3(  0,   0,-872),   // P6
   // -- About + Contact -------------------------------------------------------
-  new THREE.Vector3(  8,  16,-930),
-  new THREE.Vector3(-14,   8,-1000),  // About
-  new THREE.Vector3( 10,   4,-1080),
+  new THREE.Vector3(  0,   0,-930),
+  new THREE.Vector3(  0,   0,-1000),  // About
+  new THREE.Vector3(  0,   0,-1080),
   new THREE.Vector3(  0,   0,-1160),  // Contact
 ], false, 'catmullrom', 0.5);
 
@@ -714,11 +714,11 @@ const zoneOf = p => Math.min(Math.floor(p * ZONE_COUNT), ZONE_COUNT - 1);
 
 /* ====================================== STAGE NODES ===================== */
 const STAGES = [
-  { color:0xE8291C, pos:new THREE.Vector3(-12, -5, -10)  },
-  { color:0x1B4FBF, pos:new THREE.Vector3(-14,  6,-110)  },
-  { color:0xFFE500, pos:new THREE.Vector3(-14, 10,-210)  },
-  { color:0xE8291C, pos:new THREE.Vector3(-12, -6,-310)  },
-  { color:0x1B4FBF, pos:new THREE.Vector3(-10,  0,-420)  },
+  { color:0xE8291C, pos:new THREE.Vector3( 14, -4, -10)  },
+  { color:0x1B4FBF, pos:new THREE.Vector3(-14,  5,-110)  },
+  { color:0xFFE500, pos:new THREE.Vector3( 14,  8,-210)  },
+  { color:0xE8291C, pos:new THREE.Vector3(-14, -4,-310)  },
+  { color:0x1B4FBF, pos:new THREE.Vector3( 14,  0,-420)  },
 ];
 
 const lineMat = (col, op) => new THREE.LineBasicMaterial({ color:col, transparent:op<1, opacity:op });
@@ -771,14 +771,14 @@ const PROJECT_TEXTURES = [1,2,3,4,5,6].map(n => {
   return t;
 });
 
-/* Portals offset to left (X=-8) so they fill the left half while text sits right */
+/* Portals centred on the straight path, slightly left so text sits right */
 const PORTAL_POSITIONS = [
-  new THREE.Vector3( -8,   2,-548),
-  new THREE.Vector3( -8,   4,-615),
-  new THREE.Vector3( -8,  -2,-678),
-  new THREE.Vector3( -8,   4,-742),
-  new THREE.Vector3( -8,   6,-808),
-  new THREE.Vector3( -8,  -2,-872),
+  new THREE.Vector3( -6,   0,-548),
+  new THREE.Vector3( -6,   0,-615),
+  new THREE.Vector3( -6,   0,-678),
+  new THREE.Vector3( -6,   0,-742),
+  new THREE.Vector3( -6,   0,-808),
+  new THREE.Vector3( -6,   0,-872),
 ];
 
 const portalGroups = [];
