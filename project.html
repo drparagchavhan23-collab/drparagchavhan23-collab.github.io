@@ -247,7 +247,7 @@ sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
 sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
 scene.add(new THREE.Points(sg, new THREE.PointsMaterial({vertexColors:true,size:.12,transparent:true,opacity:.85,sizeAttenuation:true})));
 
-/* ── PNG sprite clouds ─────────────────────────────────────────────────────── */
+/* ── Billboard sprite clouds ───────────────────────────────────────────────── */
 const _cloudTextures=[
   new THREE.TextureLoader().load('cloud1.png'),
   new THREE.TextureLoader().load('cloud2.png'),
@@ -258,20 +258,18 @@ function makeCloud(size,seed){
   const rng=(n)=>{const x=Math.sin(seed*127.1+n*311.7)*43758.5453;return x-Math.floor(x);};
   const layers=3+Math.floor(rng(0)*3);
   for(let i=0;i<layers;i++){
-    const tex=_cloudTextures[Math.floor(rng(i*3)*_cloudTextures.length)];
-    const w=size*(1.2+rng(i*3+1)*0.8);
-    const h=w*(0.45+rng(i*3+2)*0.25);
-    const plane=new THREE.Mesh(
-      new THREE.PlaneGeometry(w,h),
-      new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:0.55+rng(i)*0.35,depthWrite:false,side:THREE.DoubleSide})
+    const tex=_cloudTextures[Math.floor(rng(i*3+1)*_cloudTextures.length)];
+    const s=size*(1.1+rng(i*3+2)*0.9);
+    const sp=new THREE.Sprite(
+      new THREE.SpriteMaterial({map:tex,transparent:true,opacity:0.55+rng(i)*0.38,depthWrite:false})
     );
-    plane.position.set(
-      (rng(i*3)*2-1)*size*0.35,
-      (rng(i*3+1)*2-1)*size*0.12,
-      (rng(i*3+2)*2-1)*size*0.2
+    sp.scale.set(s,s*(0.48+rng(i*3)*0.2),1);
+    sp.position.set(
+      (rng(i*4)*2-1)*size*0.38,
+      (rng(i*4+1)*2-1)*size*0.14,
+      (rng(i*4+2)*2-1)*size*0.22
     );
-    plane.rotation.z=(rng(i)*2-1)*0.08;
-    grp.add(plane);
+    grp.add(sp);
   }
   return grp;
 }
