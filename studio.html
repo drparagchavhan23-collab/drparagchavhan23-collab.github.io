@@ -265,7 +265,7 @@ const camera = new THREE.PerspectiveCamera(68, W()/H(), 0.1, 600);
 
 const renderer = new THREE.WebGLRenderer({ canvas:document.getElementById('c'), antialias:true, alpha:true });
 renderer.setClearColor(0x000000, 0);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(W(), H());
 
 /* CSS2D renderer for floating labels */
@@ -347,14 +347,14 @@ const PROJECT_NUMS   = ['01','02','03','04','05','06'];
 const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
 const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
 
-/* Portals positioned to the SIDE of the path at each project zone */
+/* Portals close to the path, clear of cloud positions (clouds avoid this Z range via CLOUD_DATA) */
 const PORTAL_POSITIONS = [
-  new THREE.Vector3(-32,  -2,-548),
-  new THREE.Vector3( 36,  12,-615),
-  new THREE.Vector3(-34,  -6,-678),
-  new THREE.Vector3( 34,   8,-742),
-  new THREE.Vector3(-32,  14,-808),
-  new THREE.Vector3( 30,  -4,-872),
+  new THREE.Vector3(-20,   2,-548),
+  new THREE.Vector3( 22,   8,-615),
+  new THREE.Vector3(-20,  -4,-678),
+  new THREE.Vector3( 22,   4,-742),
+  new THREE.Vector3(-20,  10,-808),
+  new THREE.Vector3( 18,  -2,-872),
 ];
 
 const portalGroups = [];
@@ -444,7 +444,7 @@ scene.add(contactGroup);
 
 /* ====================================== STARS =========================== */
 const STAR_RGBS=[[1,.9,.3],[1,.4,.8],[.3,1,1],[.7,.4,1],[1,.6,.2],[1,1,1]];
-const SN=5000;
+const SN=2800;
 const spos=new Float32Array(SN*3),scol=new Float32Array(SN*3);
 for(let i=0;i<SN;i++){
   const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=80+Math.random()*400;
@@ -496,13 +496,13 @@ function makeCloud(size, seed) {
   bumps.forEach(([rx,ryF,rz,rf])=>{
     const r=size*rf, cy=r*ryF;
     const body=new THREE.Mesh(
-      new THREE.SphereGeometry(r,16,12),
+      new THREE.SphereGeometry(r,8,6),
       new THREE.MeshBasicMaterial({color:rf>=0.85?sch[0]:sch[1],transparent:true,opacity:.93})
     );
     body.scale.y=0.76; body.position.set(rx,cy,rz); grp.add(body);
     // cream highlight
     const h=new THREE.Mesh(
-      new THREE.SphereGeometry(r*.50,12,10),
+      new THREE.SphereGeometry(r*.50,7,5),
       new THREE.MeshBasicMaterial({color:sch[2],transparent:true,opacity:.80})
     );
     h.scale.y=0.62; h.position.set(rx-r*.28,cy+r*.40,rz+r*.20); grp.add(h);
@@ -515,11 +515,12 @@ function makeCloud(size, seed) {
   return grp;
 }
 
+/* Clouds intentionally absent from Z -520 to -900 (portal zone) */
 const CLOUD_DATA=[
   [16,-6,-25,14,0],[-28,-3,-65,18,1],[34,20,-115,11,2],[-20,-2,-175,16,3],[25,-10,-235,10,4],[-38,17,-285,20,5],
-  [12,-7,-345,13,6],[-14,22,-405,15,0],[44,6,-155,9,2],[-32,-16,-315,17,1],[20,30,-50,12,3],[-10,-22,-130,14,4],
-  [50,12,-480,10,5],[-45,-10,-555,16,6],[38,8,-620,12,0],[-30,18,-690,18,1],[42,-12,-755,11,2],[-35,6,-820,15,3],
-  [20,25,-880,10,4],[-15,-8,-940,16,5],[30,10,-1000,13,6],[-20,-5,-1040,14,0],
+  [12,-7,-345,13,6],[-14,22,-405,15,0],[-32,-16,-460,17,1],[20,30,-50,12,3],[-10,-22,-130,14,4],
+  [50,12,-495,10,5],
+  [-45,8,-910,15,6],[38,-6,-940,13,0],[-30,14,-970,18,1],[42,10,-1000,11,2],[-20,-5,-1040,14,3],
 ];
 const cloudGroups=CLOUD_DATA.map(([x,y,z,size,seed])=>{const cl=makeCloud(size,seed);cl.position.set(x,y,z);scene.add(cl);return cl;});
 
@@ -529,8 +530,8 @@ function terrainY(x,z,size){
   return(Math.sin(x*.85+z*.6)*.30+Math.sin(x*1.9-z*1.3)*.16+Math.sin(z*.7-x*.45)*.22-(r/size)*.45)*size*.38;
 }
 function makeIsland(size,hasTree){
-  const grp=new THREE.Group(),RS=24;
-  const topGeo=new THREE.CylinderGeometry(size,size*.82,size*.55,RS,6);
+  const grp=new THREE.Group(),RS=14;
+  const topGeo=new THREE.CylinderGeometry(size,size*.82,size*.55,RS,4);
   const tPos=topGeo.attributes.position;
   for(let i=0;i<tPos.count;i++){
     const x=tPos.getX(i),y=tPos.getY(i),z=tPos.getZ(i);
@@ -579,8 +580,8 @@ const islandGroups=ISLAND_DATA.map(([x,y,z,size,hasTree,rotY])=>{
 /* ====================================== PLANETS ======================== */
 function makePlanet(radius,col,ringCol){
   const g=new THREE.Group();
-  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,28,20),new THREE.MeshBasicMaterial({color:col})));
-  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28,16,12),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,16,12),new THREE.MeshBasicMaterial({color:col})));
+  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28,10,8),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
   g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.75,14,10),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.04,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
   if(ringCol){const r=new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.18,4,48),new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:.75,side:THREE.DoubleSide}));r.rotation.x=Math.PI*.32;g.add(r);}
   return g;
@@ -614,9 +615,23 @@ window.jumpToZone = function(i) {
   window.scrollTo({ top: scrollH * frac, behavior:'smooth' });
 };
 
+/* ====================================== MOUSE PAN ====================== */
+const mouse = { x:0, y:0 };          // normalised -1..1
+const pan   = { x:0, y:0 };          // smoothed current offset
+const PAN_STRENGTH = { x:2.8, y:1.4 }; // max world-units of offset
+window.addEventListener('mousemove', e => {
+  mouse.x =  (e.clientX / window.innerWidth  - 0.5) * 2;
+  mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+});
+
 /* ====================================== ANIMATE ======================== */
 const clock = new THREE.Clock();
-const camUp = new THREE.Vector3(0,1,0);
+const camUp  = new THREE.Vector3(0,1,0);
+// Pre-allocated to avoid GC pressure every frame
+const _fwd   = new THREE.Vector3();
+const _right  = new THREE.Vector3();
+const _fogA  = new THREE.Color();
+const _fogB  = new THREE.Color();
 
 function animate() {
   requestAnimationFrame(animate);
@@ -643,6 +658,14 @@ function animate() {
 
   aboutGroup.rotation.y+=.004;
   contactGroup.rotation.z+=.0015;
+
+  /* Smooth mouse pan */
+  pan.x += (mouse.x - pan.x) * 0.04;
+  pan.y += (mouse.y - pan.y) * 0.04;
+  _fwd.set(0,0,-1).applyQuaternion(camera.quaternion);
+  _right.crossVectors(_fwd, camera.up).normalize();
+  camera.position.addScaledVector(_right,    pan.x * PAN_STRENGTH.x);
+  camera.position.addScaledVector(camera.up, pan.y * PAN_STRENGTH.y);
 
   renderer.render(scene,camera);
   labelRenderer.render(scene,camera);
@@ -678,9 +701,9 @@ ScrollTrigger.create({
     /* Fog shift */
     const ri=Math.floor(p*(FOG_COLORS.length-1));
     const rf=p*(FOG_COLORS.length-1)-ri;
-    const fc=new THREE.Color();
-    fc.lerpColors(new THREE.Color(FOG_COLORS[Math.min(ri,FOG_COLORS.length-1)]),new THREE.Color(FOG_COLORS[Math.min(ri+1,FOG_COLORS.length-1)]),rf);
-    scene.fog.color.copy(fc);
+    _fogA.set(FOG_COLORS[Math.min(ri,FOG_COLORS.length-1)]);
+    _fogB.set(FOG_COLORS[Math.min(ri+1,FOG_COLORS.length-1)]);
+    scene.fog.color.lerpColors(_fogA,_fogB,rf);
 
     /* Stage node opacity */
     STAGES.forEach((s,i)=>{
