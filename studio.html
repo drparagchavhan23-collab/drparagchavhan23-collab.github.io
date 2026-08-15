@@ -625,11 +625,12 @@ window.addEventListener('mousemove', e => {
 });
 
 /* ====================================== ANIMATE ======================== */
-const clock = new THREE.Clock();
+const clock  = new THREE.Clock();
 const camUp  = new THREE.Vector3(0,1,0);
+const lookPt = new THREE.Vector3();   // declared here so animate() can use it
 // Pre-allocated to avoid GC pressure every frame
 const _fwd   = new THREE.Vector3();
-const _right  = new THREE.Vector3();
+const _right = new THREE.Vector3();
 const _fogA  = new THREE.Color();
 const _fogB  = new THREE.Color();
 
@@ -680,7 +681,6 @@ gsap.registerPlugin(ScrollTrigger);
 const overlays  = [...document.querySelectorAll('.zone-overlay')];
 const znumEl    = document.getElementById('znum');
 const hintEl    = document.getElementById('hint');
-const lookPt    = new THREE.Vector3();
 let   lastZone  = 0;
 
 const FOG_COLORS=[0x6a2088,0x204488,0x881860,0xaa4410,0x554400,0x005544,0x551155,0x003355,0x553300,0x005544,0x330055,0x444444,0x665500];
