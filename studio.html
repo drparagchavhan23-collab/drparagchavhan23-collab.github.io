@@ -432,32 +432,46 @@ const nebulaMat = new THREE.ShaderMaterial({
       vec3 blue   = vec3(0.11, 0.31, 0.75);
       vec3 blk    = vec3(0.05, 0.04, 0.04);
 
-      /* Sunburst — rays radiating around the vertical axis */
-      float angle = atan(d.x, d.z) / (2.0 * 3.14159) + 0.5 + t;
-      float rayI  = mod(floor(angle * 24.0), 4.0);
-      float rayF  = fract(angle * 24.0);
+      /* ── 3-D PERSPECTIVE SPEEDLINES ──
+         Rays around the Z-axis (atan of XY) naturally converge
+         to a vanishing point when looking forward — unlike XZ rays
+         which just slice vertically. perspR=0 is straight ahead.     */
+      float perspR = length(d.xy);
+      float angle  = atan(d.x, d.y) / (2.0 * 3.14159) + 0.5 + t * 0.18;
+      float nRays  = 26.0;
+      float rayI   = mod(floor(angle * nRays), 3.0);
+      float rayF   = fract(angle * nRays);
+
+      /* Separator narrows toward vanishing point — the 3-D taper */
+      float sep = mix(0.04, 0.15, perspR);
 
       vec3 rayCol;
-      if(rayF < 0.06)      rayCol = blk;
+      if(rayF < sep)       rayCol = blk;
       else if(rayI < 1.0)  rayCol = yellow;
       else if(rayI < 2.0)  rayCol = red;
-      else if(rayI < 3.0)  rayCol = yellow;
       else                  rayCol = blue;
 
-      /* Yellow centre burst toward +Z */
-      float centre = smoothstep(0.3, 0.95, d.z);
-      vec3 col = mix(rayCol, yellow, centre * 0.75);
+      /* Bleach to yellow at the vanishing point (depth cue) */
+      float vanish = smoothstep(0.65, 0.0, perspR);
+      vec3 col = mix(rayCol, yellow, vanish * 0.72);
 
-      /* Ben-Day halftone dots */
-      float hS = 14.0;
-      vec2 hUV = vec2(atan(d.x, d.z) * hS, asin(clamp(d.y,-1.0,1.0)) * hS);
-      vec2 hC  = fract(hUV) - 0.5;
-      float inDot = step(length(hC), 0.28);
-      col = mix(col, blk, inDot * 0.30);
+      /* ── PERSPECTIVE FLOOR GRID below horizon ── */
+      if(d.y < -0.06){
+        float tF  = -8.0 / d.y;
+        vec2  fP  = vec2(d.x, d.z) * tF * 0.13;
+        float gx  = step(0.88, fract(fP.x));
+        float gz  = step(0.88, fract(fP.y));
+        float grd = clamp(gx + gz, 0.0, 1.0);
+        float fade = smoothstep(-0.06, -0.7, d.y);
+        col = mix(col, blk, grd * fade * 0.78);
+      }
 
-      /* Slightly darken top/bottom so it feels like a poster */
-      float edge = smoothstep(0.5, 1.0, abs(d.y));
-      col = mix(col, blk, edge * 0.18);
+      /* ── BEN-DAY HALFTONE (dots shrink toward vanishing point) ── */
+      float hS  = mix(9.0, 22.0, perspR);
+      vec2  hUV = vec2(atan(d.x, d.z) * hS, asin(clamp(d.y,-1.0,1.0)) * hS);
+      vec2  hC  = fract(hUV) - 0.5;
+      float dotR = mix(0.12, 0.30, perspR);
+      col = mix(col, blk, step(length(hC), dotR) * 0.26);
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -528,10 +542,22 @@ const GEOS = [
 const nodeGroups=[], nodeMats=[];
 STAGES.forEach((s,i)=>{
   const g=new THREE.Group(); g.position.copy(s.pos);
-  const mat=lineMat(s.color,0.8); nodeMats.push(mat);
-  g.add(new THREE.LineSegments(new THREE.WireframeGeometry(GEOS[i]()),mat));
-  [4,6.5,9].forEach((r,ri)=>{const rl=ring(r,r*.6,s.color,.12-ri*.02);rl.rotation.x=Math.PI/2+ri*.45;rl.rotation.z=ri*.7;g.add(rl);});
-  for(let j=0;j<8;j++){const m=wireObj(new THREE.OctahedronGeometry(.25,0),s.color,.35);m.position.set((Math.random()-.5)*14,(Math.random()-.5)*14,(Math.random()-.5)*10);g.add(m);}
+  const geo=GEOS[i]();
+  /* Black BackSide outline */
+  g.add(new THREE.Mesh(geo.clone(),
+    new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:1.0})));
+  /* Flat coloured solid mesh */
+  const mat=new THREE.MeshBasicMaterial({color:s.color,transparent:true,opacity:1.0});
+  nodeMats.push(mat);
+  g.add(new THREE.Mesh(geo,mat));
+  /* Radiating action lines */
+  g.add(makeActionLines(3.5, 0x000000, 14));
+  /* Small cross-hatch lines (starburst fragments) at random offsets */
+  for(let j=0;j<6;j++){
+    const ml=makeActionLines(0.6,0x000000,6);
+    ml.position.set((Math.random()-.5)*12,(Math.random()-.5)*12,(Math.random()-.5)*8);
+    g.add(ml);
+  }
   scene.add(g); nodeGroups.push(g);
 });
 
@@ -575,24 +601,38 @@ PORTAL_POSITIONS.forEach((pos, i) => {
     new THREE.MeshBasicMaterial({ map: PROJECT_TEXTURES[i], side: THREE.DoubleSide })
   ));
 
-  // Thin outer border
+  // Thick black outer border
   g.add(new THREE.Line(
     new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(-hw,-hh,0.01),new THREE.Vector3(hw,-hh,0.01),
       new THREE.Vector3(hw,hh,0.01),new THREE.Vector3(-hw,hh,0.01),
       new THREE.Vector3(-hw,-hh,0.01)
     ]),
-    lineMat(col, 0.5)
+    new THREE.LineBasicMaterial({color:0x000000})
   ));
-
-  // Corner brackets only — clean and minimal
-  const ca = 1.6;
+  // Bold colour accent border (offset slightly behind)
+  g.add(new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-hw+0.25,-hh+0.25,-0.05),new THREE.Vector3(hw-0.25,-hh+0.25,-0.05),
+      new THREE.Vector3(hw-0.25,hh-0.25,-0.05),new THREE.Vector3(-hw+0.25,hh-0.25,-0.05),
+      new THREE.Vector3(-hw+0.25,-hh+0.25,-0.05)
+    ]),
+    lineMat(col, 1.0)
+  ));
+  // Bold corner brackets in the project colour
+  const ca = 2.2;
   [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].forEach(([cx,cy])=>{
     const sx=cx>0?-1:1, sy=cy>0?-1:1;
     g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(cx+sx*ca,cy,0.01),
-      new THREE.Vector3(cx,cy,0.01),
-      new THREE.Vector3(cx,cy+sy*ca,0.01)
+      new THREE.Vector3(cx+sx*ca,cy,0.02),
+      new THREE.Vector3(cx,cy,0.02),
+      new THREE.Vector3(cx,cy+sy*ca,0.02)
+    ]), new THREE.LineBasicMaterial({color:0x000000})));
+    // Colour fill on the bracket
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(cx+sx*(ca-0.3),cy+sy*0.15,0.03),
+      new THREE.Vector3(cx+sx*0.15,cy+sy*0.15,0.03),
+      new THREE.Vector3(cx+sx*0.15,cy+sy*(ca-0.3),0.03)
     ]), lineMat(col, 1.0)));
   });
 
@@ -674,12 +714,42 @@ const cloudGroups = [];
 /* islands removed */
 
 /* ====================================== PLANETS ======================== */
+function makeActionLines(r, col, n=12){
+  const g=new THREE.Group();
+  for(let i=0;i<n;i++){
+    const a=(i/n)*Math.PI*2;
+    const len=r*(0.55+Math.random()*0.7);
+    const pts=[
+      new THREE.Vector3(Math.cos(a)*r*1.12, Math.sin(a)*r*1.12, 0),
+      new THREE.Vector3(Math.cos(a)*(r+len)*1.18, Math.sin(a)*(r+len)*1.18, 0)
+    ];
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({color:col})));
+  }
+  return g;
+}
 function makePlanet(radius,col,ringCol){
   const g=new THREE.Group();
-  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,16,12),new THREE.MeshBasicMaterial({color:col})));
-  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.28,10,8),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
-  g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(radius*1.75,14,10),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.04,depthWrite:false,blending:THREE.AdditiveBlending})),{}));
-  if(ringCol){const r=new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.18,4,48),new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:.75,side:THREE.DoubleSide}));r.rotation.x=Math.PI*.32;g.add(r);}
+  /* Black toon outline (BackSide, 11% larger) */
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius*1.11,16,12),
+    new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide})));
+  /* Flat-colour sphere */
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius,16,12),
+    new THREE.MeshBasicMaterial({color:col})));
+  /* White highlight arc (small cap top-left) */
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(radius*0.38,10,8),
+    new THREE.MeshBasicMaterial({color:0xffffff})));
+  /* Ring with outline */
+  if(ringCol){
+    const rg=new THREE.Group();
+    rg.add(new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.22,4,36),
+      new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide})));
+    rg.add(new THREE.Mesh(new THREE.TorusGeometry(radius*1.9,radius*.16,4,36),
+      new THREE.MeshBasicMaterial({color:ringCol,side:THREE.DoubleSide})));
+    rg.rotation.x=Math.PI*.32; g.add(rg);
+  }
+  /* Action speed lines */
+  g.add(makeActionLines(radius, 0x000000));
   return g;
 }
 const p1=makePlanet(11,0xFFE500,0xE8291C); p1.position.set(-65,50,-70);   scene.add(p1);
@@ -1125,17 +1195,17 @@ function fitModel(obj,targetSize){
     return actx;
   }
 
-  /* ── Lo-fi Hip Hop Beat ── */
+  /* ── Comic Book Action Beat — 120 BPM brass stabs + punchy drums ── */
   function startBeat(){
     if(beatRunning) return;
     beatRunning = true;
     const c = getCtx();
-    const BPM = 87, S = 60/BPM/4; // 16th-note step
+    const BPM = 120, S = 60/BPM/4; // 16th-note step
 
     function noise(dur){
-      const n = Math.floor(c.sampleRate*dur);
-      const b = c.createBuffer(1,n,c.sampleRate);
-      const d = b.getChannelData(0);
+      const n=Math.floor(c.sampleRate*dur);
+      const b=c.createBuffer(1,n,c.sampleRate);
+      const d=b.getChannelData(0);
       for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
       return b;
     }
@@ -1144,71 +1214,106 @@ function fitModel(obj,targetSize){
       const o=c.createOscillator(), g=c.createGain();
       o.connect(g); g.connect(masterGain);
       o.type='sine';
-      o.frequency.setValueAtTime(185,t);
-      o.frequency.exponentialRampToValueAtTime(38,t+0.42);
-      g.gain.setValueAtTime(1.1,t);
-      g.gain.exponentialRampToValueAtTime(0.001,t+0.48);
-      o.start(t); o.stop(t+0.5);
+      o.frequency.setValueAtTime(160,t);
+      o.frequency.exponentialRampToValueAtTime(42,t+0.30);
+      g.gain.setValueAtTime(1.3,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.35);
+      o.start(t); o.stop(t+0.38);
     }
 
     function snare(t){
-      const src=c.createBufferSource(); src.buffer=noise(0.14);
-      const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2600; bp.Q.value=0.6;
+      const src=c.createBufferSource(); src.buffer=noise(0.10);
+      const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2800; bp.Q.value=0.5;
       const g=c.createGain();
-      g.gain.setValueAtTime(0.55,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.13);
+      g.gain.setValueAtTime(0.7,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.10);
       src.connect(bp); bp.connect(g); g.connect(masterGain);
-      src.start(t); src.stop(t+0.14);
-      // body tone
+      src.start(t); src.stop(t+0.11);
+      // crack tone
       const o=c.createOscillator(), og=c.createGain();
       o.connect(og); og.connect(masterGain);
-      o.frequency.value=195;
-      og.gain.setValueAtTime(0.28,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.07);
-      o.start(t); o.stop(t+0.08);
+      o.frequency.value=220;
+      og.gain.setValueAtTime(0.35,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.05);
+      o.start(t); o.stop(t+0.06);
     }
 
-    function hat(t, open=false){
-      const dur=open?0.22:0.04;
+    function hat(t, accent=false){
+      const dur=accent?0.08:0.035;
       const src=c.createBufferSource(); src.buffer=noise(dur+0.01);
-      const hp=c.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8500;
+      const hp=c.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=9000;
       const g=c.createGain();
-      g.gain.setValueAtTime(open?0.16:0.10,t);
+      g.gain.setValueAtTime(accent?0.14:0.07,t);
       g.gain.exponentialRampToValueAtTime(0.001,t+dur);
       src.connect(hp); hp.connect(g); g.connect(masterGain);
       src.start(t); src.stop(t+dur+0.01);
     }
 
-    function bass(t, freq, dur){
+    /* Staccato brass stab — sawtooth through lowpass, sharp envelope */
+    function brass(t, freq, dur){
       const o=c.createOscillator(), lp=c.createBiquadFilter(), g=c.createGain();
       o.connect(lp); lp.connect(g); g.connect(masterGain);
-      lp.type='lowpass'; lp.frequency.value=280;
-      o.type='sine'; o.frequency.setValueAtTime(freq,t);
-      g.gain.setValueAtTime(0.65,t);
-      g.gain.setValueAtTime(0.65,t+dur-0.04);
-      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-      o.start(t); o.stop(t+dur+0.01);
+      o.type='sawtooth'; o.frequency.value=freq;
+      lp.type='lowpass';
+      lp.frequency.setValueAtTime(1100,t);
+      lp.frequency.exponentialRampToValueAtTime(420,t+dur*0.7);
+      lp.Q.value=4;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.28,t+0.012);
+      g.gain.setValueAtTime(0.28,t+dur-0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur+0.03);
+      o.start(t); o.stop(t+dur+0.05);
     }
 
-    // 16-step patterns — syncopated hip hop feel
-    const kicks  = [0,3,6,8,11,14];
+    /* Major chord stab — root + major 3rd + 5th */
+    function stab(t, root, dur){
+      brass(t, root,                      dur);
+      brass(t, root*Math.pow(2,4/12),     dur);
+      brass(t, root*Math.pow(2,7/12),     dur);
+      brass(t, root*0.5,                  dur); // bass octave
+    }
+
+    /* Punchy bass hit */
+    function bassHit(t, freq, dur){
+      const o=c.createOscillator(), lp=c.createBiquadFilter(), g=c.createGain();
+      o.connect(lp); lp.connect(g); g.connect(masterGain);
+      lp.type='lowpass'; lp.frequency.value=320; o.type='square'; o.frequency.value=freq;
+      g.gain.setValueAtTime(0.5,t);
+      g.gain.setValueAtTime(0.5,t+dur-0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      o.start(t); o.stop(t+dur+0.04);
+    }
+
+    // 16-step heroic action pattern (120 BPM)
+    //   C4=262 E4=330 G4=392 — C major
+    //   F3=175 A3=220 C4=262 — F major
+    const kicks  = [0,6,8,14];
     const snares = [4,12];
-    const hats   = [1,3,5,7,9,11,13,15];
-    const opens  = [6,14];
+    const hats   = [0,2,4,6,8,10,12,14];
+    const accents= [0,8];
+    const stabs  = [
+      {s:0, f:131, d:S*1.8},   // C3 chord on beat 1
+      {s:5, f:147, d:S*1.2},   // D3 short stab
+      {s:8, f:175, d:S*1.8},   // F3 chord on beat 3
+      {s:13,f:147, d:S*1.2},   // D3 short stab
+    ];
     const bassLine = [
-      {s:0,f:55,d:3*S},{s:4,f:55,d:1.5*S},{s:6,f:41,d:1*S},
-      {s:8,f:44,d:3*S},{s:12,f:49,d:1.5*S},{s:14,f:41,d:2*S}
+      {s:0, f:65, d:S*4},
+      {s:4, f:73, d:S*2},
+      {s:8, f:87, d:S*4},
+      {s:12,f:73, d:S*2},
     ];
 
-    const BAR = S*16;
-    let nextBar = c.currentTime + 0.05;
+    const BAR=S*16;
+    let nextBar=c.currentTime+0.05;
 
     function sched(t){
       kicks.forEach(s  => kick(t+s*S));
       snares.forEach(s => snare(t+s*S));
-      hats.forEach(s   => hat(t+s*S, opens.includes(s)));
-      bassLine.forEach(n => bass(t+n.s*S, n.f, n.d));
+      hats.forEach(s   => hat(t+s*S, accents.includes(s)));
+      stabs.forEach(n  => stab(t+n.s*S, n.f, n.d));
+      bassLine.forEach(n => bassHit(t+n.s*S, n.f, n.d));
     }
-    sched(nextBar); nextBar += BAR;
-    beatInterval = setInterval(()=>{ sched(nextBar); nextBar+=BAR; }, (BAR-0.05)*1000);
+    sched(nextBar); nextBar+=BAR;
+    beatInterval=setInterval(()=>{ sched(nextBar); nextBar+=BAR; }, (BAR-0.05)*1000);
   }
 
   function stopBeat(){
