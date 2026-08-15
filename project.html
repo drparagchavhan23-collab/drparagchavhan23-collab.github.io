@@ -452,8 +452,8 @@ function animate(){
   pan.x+=(mouse.x-pan.x)*.04; pan.y+=(mouse.y-pan.y)*.04;
   _fwd.set(0,0,-1).applyQuaternion(camera.quaternion);
   _right.crossVectors(_fwd,camera.up).normalize();
-  camera.position.addScaledVector(_right,    pan.x*1.2);
-  camera.position.addScaledVector(camera.up, pan.y*0.7);
+  camera.position.addScaledVector(_right,    pan.x*0.35);
+  camera.position.addScaledVector(camera.up, pan.y*0.18);
   camera.lookAt(_lookPt);
   renderer.render(scene,camera);
 }
