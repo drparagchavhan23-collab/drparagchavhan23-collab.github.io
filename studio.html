@@ -61,7 +61,7 @@ body{
 .zone-overlay.left{justify-content:flex-start}
 .zone-overlay.right{justify-content:flex-end}
 .zone-overlay.center{justify-content:center;text-align:center}
-.zone-overlay.on{opacity:1;transform:translateX(0)}
+.zone-overlay.on{opacity:1;transform:translateX(0);pointer-events:all}
 .zo-inner{max-width:360px}
 .zo-tag{font-size:8px;letter-spacing:.28em;color:var(--a,#fff);display:block;margin-bottom:14px}
 .zo-head{font-family:'Syne',sans-serif;font-size:clamp(20px,2.8vw,40px);font-weight:800;line-height:.95;letter-spacing:-.025em;color:#f4f0e8;margin-bottom:14px}
@@ -637,8 +637,22 @@ ScrollTrigger.create({
       nodeMats[i].opacity=d<35?THREE.MathUtils.mapLinear(d,0,35,1,.55):.55;
     });
 
-    /* Zone detection */
-    const zone=zoneOf(p);
+    /* Portal label distance fading — visible only within 48 units */
+    let nearestPortal = -1, minPortalDist = Infinity;
+    portalGroups.forEach((pg, i) => {
+      const dist = camPt.distanceTo(PORTAL_POSITIONS[i]);
+      const op = THREE.MathUtils.clamp(THREE.MathUtils.mapLinear(dist, 48, 18, 0, 1), 0, 1);
+      labelDivs[i].style.opacity = op.toFixed(3);
+      if(dist < minPortalDist){ minPortalDist=dist; nearestPortal=i; }
+    });
+
+    /* Zone detection — project zones (5-10) follow nearest portal, others use scroll pos */
+    const rawZone = zoneOf(p);
+    let zone = rawZone;
+    if(rawZone >= 4 && rawZone <= 11 && nearestPortal >= 0 && minPortalDist < 72) {
+      zone = 5 + nearestPortal; // overlay matches whichever portal is closest
+    }
+
     if(zone!==lastZone){
       lastZone=zone;
       dots.forEach((d,i)=>d.classList.toggle('on',i===zone));
@@ -647,13 +661,6 @@ ScrollTrigger.create({
     }
 
     hintEl.style.opacity=p>.02?'0':'1';
-
-    /* Portal label distance fading — only visible when within 55 units */
-    portalGroups.forEach((pg, i) => {
-      const dist = camPt.distanceTo(PORTAL_POSITIONS[i]);
-      const op = THREE.MathUtils.clamp(THREE.MathUtils.mapLinear(dist, 55, 22, 0, 1), 0, 1);
-      labelDivs[i].style.opacity = op.toFixed(3);
-    });
   }
 });
 
