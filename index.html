@@ -488,13 +488,12 @@ function makeCloud(size, seed) {
     const w  = Math.round(240 + coreness*15);
     const col = (w<<16)|(w<<8)|Math.min(255, w+Math.round((1-coreness)*18));
 
-    grp.add(Object.assign(
-      new THREE.Mesh(
-        new THREE.SphereGeometry(sr, 7, 5),
-        new THREE.MeshBasicMaterial({ color:col, transparent:true, opacity:op, depthWrite:false })
-      ),
-      { position: new THREE.Vector3(rx, ry, rz) }
-    ));
+    const m = new THREE.Mesh(
+      new THREE.SphereGeometry(sr, 7, 5),
+      new THREE.MeshBasicMaterial({ color:col, transparent:true, opacity:op, depthWrite:false })
+    );
+    m.position.set(rx, ry, rz);
+    grp.add(m);
   }
   return grp;
 }
