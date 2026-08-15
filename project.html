@@ -423,8 +423,14 @@ window.addEventListener('mousemove',e=>{
 });
 const _fwd=new THREE.Vector3(),_right=new THREE.Vector3(),_lookPt=new THREE.Vector3();
 
+// Set camera to path start immediately so scene renders before first scroll
+const camUp=new THREE.Vector3(0,0,-1);
+camera.position.copy(PATH.getPointAt(0));
+_lookPt.copy(PATH.getPointAt(0.012));
+camera.up.copy(camUp);
+camera.lookAt(_lookPt);
+
 const clock=new THREE.Clock();
-const camUp=new THREE.Vector3(0,1,0);
 function animate(){
   requestAnimationFrame(animate);
   const t=clock.getElapsedTime();
@@ -466,9 +472,10 @@ ScrollTrigger.create({
     const camPt=PATH.getPointAt(p);
     const aheadPt=PATH.getPointAt(Math.min(p+.012,1));
     camera.position.copy(camPt);
+    // Downward travel — keep Z-back as up, bank slightly on X turns only
     const fwd=aheadPt.clone().sub(camPt).normalize();
-    const bank=fwd.x*.20;
-    camUp.set(Math.sin(-bank),Math.cos(bank),0);
+    const bank=fwd.x*.12;
+    camUp.set(Math.sin(-bank), 0, -Math.cos(bank));
     camera.up.copy(camUp);
     _lookPt.copy(aheadPt);
     camera.lookAt(_lookPt);
