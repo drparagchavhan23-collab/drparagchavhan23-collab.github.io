@@ -24,15 +24,15 @@ body{
   cursor:pointer;user-select:none;-webkit-user-select:none;
   background:radial-gradient(circle at 50% 50%,
     transparent var(--ph,0px),
-    rgba(140,100,255,0.5) calc(var(--ph,0px) + 6px),
-    #8c8c8c calc(var(--ph,0px) + 20px)
+    rgba(140,100,255,0.6) calc(var(--ph,0px) + 8px),
+    #000000 calc(var(--ph,0px) + 24px)
   );
-  transition:--ph 0.12s ease-out, opacity 0.5s ease;
+  transition:--ph 0.1s ease-out;
 }
 #portal-intro.portal-open{
-  --ph:200vmax;
-  transition:--ph 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease 0.55s;
-  opacity:0;pointer-events:none;
+  --ph:220vmax;
+  transition:--ph 1.1s cubic-bezier(0.16,1,0.3,1);
+  pointer-events:none;
 }
 #pi-ring{
   position:absolute;width:180px;height:180px;
@@ -897,16 +897,16 @@ function fitModel(obj,targetSize){
     // Start audio
     if(window.__startAudio) window.__startAudio();
 
-    // Animate portal iris open via CSS class (--ph → 200vmax)
+    // Iris opens fully — CSS transitions --ph to 220vmax over 1.1s
     intro.classList.add('portal-open');
 
-    // Remove from DOM after transition
-    intro.addEventListener('transitionend', ()=>{
-      intro.remove();
+    // Remove only after the hole has swept fully off-screen
+    intro.addEventListener('transitionend', (e)=>{
+      if(e.propertyName === '--ph') intro.remove();
     }, {once:true});
 
-    // Fallback remove in case transitionend doesn't fire
-    setTimeout(()=>{ if(intro.parentNode) intro.remove(); }, 1200);
+    // Fallback in case transitionend doesn't fire (e.g. reduced-motion)
+    setTimeout(()=>{ if(intro.parentNode) intro.remove(); }, 1300);
   }
 
   function tick(){
