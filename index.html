@@ -63,8 +63,9 @@ body{
 .zo-head{font-family:'Syne',sans-serif;font-size:clamp(20px,2.8vw,40px);font-weight:800;line-height:.95;letter-spacing:-.025em;color:#f4f0e8;margin-bottom:14px}
 .zo-body{font-size:11px;line-height:1.9;color:rgba(244,240,232,.42);font-style:italic}
 .zone-overlay:not(.on) .zo-cta{pointer-events:none!important}
-/* Project card text pushed to bottom-centre so portal card sits above it */
-.zo-project-inner{position:absolute;bottom:10vh;left:50%;transform:translateX(-50%);text-align:center;width:min(420px,88vw)}
+/* Project card text — right half of screen, vertically centred */
+.zo-project-inner{position:absolute;top:50%;right:6%;transform:translateY(-50%);text-align:left;width:min(400px,40vw)}
+@media(max-width:700px){.zo-project-inner{right:4%;width:min(300px,80vw);top:auto;bottom:8vh;transform:none}}
 .zo-cta{
   display:inline-flex;align-items:center;gap:8px;
   margin-top:22px;font-size:9px;letter-spacing:.22em;
@@ -130,7 +131,7 @@ body{
 
 <!-- -- Zone overlays (all content floats in here) -------------------------- -->
 
-<!-- 0 - 4: Story stages (left aligned) -->
+<!-- 0 - 4: Story stages (all right — visual 3D objects left, text right) -->
 <div class="zone-overlay right on" id="z0" style="--a:#00eeff">
   <div class="zo-inner">
     <span class="zo-tag">Stage 01 · The Spark</span>
@@ -138,7 +139,7 @@ body{
     <p class="zo-body">2021. Architecture school. A pencil, a dream, and a T-square he never quite mastered.</p>
   </div>
 </div>
-<div class="zone-overlay left" id="z1" style="--a:#ff44cc">
+<div class="zone-overlay right" id="z1" style="--a:#ff44cc">
   <div class="zo-inner">
     <span class="zo-tag">Stage 02 · The Chaos</span>
     <h2 class="zo-head">Order inside the disorder.</h2>
@@ -152,7 +153,7 @@ body{
     <p class="zo-body">Housing, urbanism, spatial installations. Each a hypothesis about how people want to live.</p>
   </div>
 </div>
-<div class="zone-overlay left" id="z3" style="--a:#ff8844">
+<div class="zone-overlay right" id="z3" style="--a:#ff8844">
   <div class="zo-inner">
     <span class="zo-tag">Stage 04 · The Human</span>
     <h2 class="zo-head">Chaotic. Orderly. Impossibly creative.</h2>
@@ -169,7 +170,7 @@ body{
 </div>
 
 <!-- 5 - 10: Projects -->
-<div class="zone-overlay center" id="z5" style="--a:#00eeff">
+<div class="zone-overlay right" id="z5" style="--a:#00eeff">
   <div class="zo-inner zo-project-inner">
     <span class="zo-num">01 / 06</span>
     <span class="zo-tag">Urban Housing</span>
@@ -178,7 +179,7 @@ body{
     <a class="zo-cta" href="project.html?id=1">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay center" id="z6" style="--a:#ff44cc">
+<div class="zone-overlay right" id="z6" style="--a:#ff44cc">
   <div class="zo-inner zo-project-inner">
     <span class="zo-num">02 / 06</span>
     <span class="zo-tag">Cultural Centre</span>
@@ -187,7 +188,7 @@ body{
     <a class="zo-cta" href="project.html?id=2">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay center" id="z7" style="--a:#ffd700">
+<div class="zone-overlay right" id="z7" style="--a:#ffd700">
   <div class="zo-inner zo-project-inner">
     <span class="zo-num">03 / 06</span>
     <span class="zo-tag">Spatial Installation</span>
@@ -196,7 +197,7 @@ body{
     <a class="zo-cta" href="project.html?id=3">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay center" id="z8" style="--a:#ff8844">
+<div class="zone-overlay right" id="z8" style="--a:#ff8844">
   <div class="zo-inner zo-project-inner">
     <span class="zo-num">04 / 06</span>
     <span class="zo-tag">Residential</span>
@@ -205,7 +206,7 @@ body{
     <a class="zo-cta" href="project.html?id=4">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay center" id="z9" style="--a:#88ff44">
+<div class="zone-overlay right" id="z9" style="--a:#88ff44">
   <div class="zo-inner zo-project-inner">
     <span class="zo-num">05 / 06</span>
     <span class="zo-tag">Museum</span>
@@ -214,7 +215,7 @@ body{
     <a class="zo-cta" href="project.html?id=5">View Case Study -></a>
   </div>
 </div>
-<div class="zone-overlay center" id="z10" style="--a:#cc44ff">
+<div class="zone-overlay right" id="z10" style="--a:#cc44ff">
   <div class="zo-inner zo-project-inner">
     <span class="zo-num">06 / 06</span>
     <span class="zo-tag">Transit + Urban</span>
@@ -374,11 +375,11 @@ const zoneOf = p => Math.min(Math.floor(p * ZONE_COUNT), ZONE_COUNT - 1);
 
 /* ====================================== STAGE NODES ===================== */
 const STAGES = [
-  { color:0x00eeff, pos:new THREE.Vector3( -5, -9, -10)  },
-  { color:0xff44cc, pos:new THREE.Vector3( 14,  6,-110)  },
+  { color:0x00eeff, pos:new THREE.Vector3(-12, -5, -10)  },
+  { color:0xff44cc, pos:new THREE.Vector3(-14,  6,-110)  },
   { color:0xffd700, pos:new THREE.Vector3(-14, 10,-210)  },
-  { color:0xff8844, pos:new THREE.Vector3( 12, -9,-310)  },
-  { color:0x88ff44, pos:new THREE.Vector3(  0,  0,-420)  },
+  { color:0xff8844, pos:new THREE.Vector3(-12, -6,-310)  },
+  { color:0x88ff44, pos:new THREE.Vector3(-10,  0,-420)  },
 ];
 
 const lineMat = (col, op) => new THREE.LineBasicMaterial({ color:col, transparent:op<1, opacity:op });
@@ -411,14 +412,14 @@ const PROJECT_NUMS   = ['01','02','03','04','05','06'];
 const PROJECT_NAMES  = ['Alpha','Beta','Gamma','Delta','Epsilon','Zeta'];
 const PROJECT_CATS   = ['Urban Housing','Cultural Centre','Installation','Residential','Museum','Transit'];
 
-/* Portals close to the path, clear of cloud positions (clouds avoid this Z range via CLOUD_DATA) */
+/* Portals offset to left (X=-8) so they fill the left half while text sits right */
 const PORTAL_POSITIONS = [
-  new THREE.Vector3(  0,   2,-548),
-  new THREE.Vector3(  0,   4,-615),
-  new THREE.Vector3(  0,  -2,-678),
-  new THREE.Vector3(  0,   4,-742),
-  new THREE.Vector3(  0,   6,-808),
-  new THREE.Vector3(  0,  -2,-872),
+  new THREE.Vector3( -8,   2,-548),
+  new THREE.Vector3( -8,   4,-615),
+  new THREE.Vector3( -8,  -2,-678),
+  new THREE.Vector3( -8,   4,-742),
+  new THREE.Vector3( -8,   6,-808),
+  new THREE.Vector3( -8,  -2,-872),
 ];
 
 const portalGroups = [];
@@ -428,7 +429,7 @@ PORTAL_POSITIONS.forEach((pos, i) => {
   const g = new THREE.Group();
   g.position.copy(pos);
 
-  const W2 = 10, H2 = 6.5;
+  const W2 = 15, H2 = 10;
   const hw=W2/2, hh=H2/2;
 
   // Subtle dark glass backing — very low opacity
