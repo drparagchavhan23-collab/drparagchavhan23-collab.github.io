@@ -415,7 +415,7 @@ window.addEventListener('mousemove',e=>{
   mouse.x= (e.clientX/window.innerWidth -.5)*2;
   mouse.y=-(e.clientY/window.innerHeight-.5)*2;
 });
-const _fwd=new THREE.Vector3(),_right=new THREE.Vector3();
+const _fwd=new THREE.Vector3(),_right=new THREE.Vector3(),_lookPt=new THREE.Vector3();
 
 const clock=new THREE.Clock();
 const camUp=new THREE.Vector3(0,1,0);
@@ -439,8 +439,9 @@ function animate(){
   pan.x+=(mouse.x-pan.x)*.04; pan.y+=(mouse.y-pan.y)*.04;
   _fwd.set(0,0,-1).applyQuaternion(camera.quaternion);
   _right.crossVectors(_fwd,camera.up).normalize();
-  camera.position.addScaledVector(_right,    pan.x*2.2);
-  camera.position.addScaledVector(camera.up, pan.y*1.2);
+  camera.position.addScaledVector(_right,    pan.x*1.2);
+  camera.position.addScaledVector(camera.up, pan.y*0.7);
+  camera.lookAt(_lookPt);
   renderer.render(scene,camera);
 }
 animate();
@@ -462,7 +463,8 @@ ScrollTrigger.create({
     const bank=fwd.x*.20;
     camUp.set(Math.sin(-bank),Math.cos(bank),0);
     camera.up.copy(camUp);
-    camera.lookAt(aheadPt);
+    _lookPt.copy(aheadPt);
+    camera.lookAt(_lookPt);
 
     // Fog color shift through project accent
     const fc=new THREE.Color(P.fog).lerp(acCol, p*.15);
