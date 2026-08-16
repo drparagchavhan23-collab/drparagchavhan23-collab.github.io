@@ -13,12 +13,6 @@ html,body{width:100%;overflow-x:hidden}
 body{
   font-family:'Bangers',cursive;color:#000;
   background:#FFE500;
-  cursor:none;
-}
-/* ── Puppet cursor canvas ── */
-#pup-canvas{
-  position:fixed;inset:0;z-index:9998;pointer-events:none;
-  width:100%;height:100%;
 }
 
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block}
@@ -236,7 +230,6 @@ body{
 </div>
 
 <canvas id="c"></canvas>
-<canvas id="pup-canvas"></canvas>
 <div id="halftone"></div>
 <button id="audio-btn" title="Toggle sound">🔇</button>
 <audio id="bg-audio" src="ambient.mp3" loop preload="none"></audio>
@@ -1560,10 +1553,8 @@ function fitModel(obj,targetSize){
   });
 })();
 
-/* ══════════════════════════════════════════
-   PUPPET CURSOR
-══════════════════════════════════════════ */
-(function(){
+/* removed */
+if(false)(function(){
   const cv  = document.getElementById('pup-canvas');
   const ctx = cv.getContext('2d');
   function resize(){ cv.width=innerWidth; cv.height=innerHeight; }
