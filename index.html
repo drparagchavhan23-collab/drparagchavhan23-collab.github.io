@@ -3,20 +3,85 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Parag Chavhan — Portfolio</title>
+
+    <title>Parag Chavhan — Architecture, Design &amp; 3D</title>
+    <meta
+      name="description"
+      content="Architecture and design portfolio of Parag Chavhan — built inside a photoscan of the room the work was made in. Pilgrimage ropeway terminal thesis, brand identity, product design and 3D."
+    />
+    <link rel="canonical" href="https://paragchavhan.com/" />
+    <meta name="author" content="Parag Chavhan" />
+    <meta name="theme-color" content="#0d0d0d" />
+
+    <!--
+      Without these, sending the link anywhere — WhatsApp, LinkedIn, a DM —
+      rendered a bare grey URL with no title, image or description, which is
+      how most people actually arrive at a portfolio.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Parag Chavhan" />
+    <meta property="og:title" content="Parag Chavhan — Architecture, Design &amp; 3D" />
+    <meta
+      property="og:description"
+      content="A portfolio you walk into: my actual room, photoscanned, with every project anchored to the object it came out of."
+    />
+    <meta property="og:url" content="https://paragchavhan.com/" />
+    <meta property="og:image" content="https://paragchavhan.com/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Parag Chavhan — Architecture, Design and 3D" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Parag Chavhan — Architecture, Design &amp; 3D" />
+    <meta
+      name="twitter:description"
+      content="A portfolio you walk into: my actual room, photoscanned, with every project anchored to the object it came out of."
+    />
+    <meta name="twitter:image" content="https://paragchavhan.com/og-card.png" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!--
-      Archivo Black is the fallback for the hero's ransom-note title face —
-      see @font-face 'Hit Me Punk' and .hero-letter in styles.css, which
-      load the real "Hit me, punk!" font from a local file. Bangers/Kalam
-      are the comic-book faces for ComicFlythrough's zone panels.
+      Bangers is the display face across the menu, the panels and the case
+      studies; Kalam sets the handwritten panel notes. Archivo Black is the
+      fallback for 'Hit Me Punk', the local face in styles.css used for the
+      loading screen and the share card.
     -->
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bangers&family=Kalam:wght@400;700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-CoDOhVJD.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CVxB0E6A.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bangers&family=Kalam:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Crawlers and link previewers do not run WebGL. This is the only copy on
+      the page that exists before React mounts, so it carries the name and the
+      shape of the work; the app replaces it on boot.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Parag Chavhan",
+        "url": "https://paragchavhan.com/",
+        "email": "drparagchavhan23@gmail.com",
+        "jobTitle": "Architect and designer",
+        "alumniOf": "School of Planning and Architecture, Vijayawada",
+        "knowsAbout": [
+          "Architecture",
+          "Architectural visualization",
+          "Brand identity",
+          "Product design",
+          "3D modelling"
+        ]
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-C77Xbs2H.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BQ4PyPaf.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
