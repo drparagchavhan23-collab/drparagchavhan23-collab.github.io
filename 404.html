@@ -39,14 +39,17 @@
     <meta name="twitter:image" content="https://paragchavhan.com/og-card.png" />
 
     <!--
-      A pixel-art portrait rather than a mark. It is cropped tight to the head
-      because a favicon is 16-32px and anything wider than a face turns to
-      mush at that size, and it is resolved down to the art's own ~62px block
-      grid before being scaled, so the pixels stay square instead of averaging
-      into a smudge.
+      The tab icon animates between two pixel-art frames — see
+      src/logic/animatedFavicon.ts, which takes this link over on boot. This
+      one is the animation's own first frame rather than a different image, so
+      the tab does not visibly flip to something else once the script runs, and
+      it is what stands on its own wherever the script cannot: Safari, a failed
+      script, or a reader that never runs JavaScript at all.
+
+      The pixel portrait stays on as the iOS home-screen icon, where there is
+      no animation to be had anyway.
     -->
-    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
-    <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+    <link rel="icon" href="/favicon-ily.png" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -92,8 +95,8 @@
         ]
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-BKJG4bG8.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-WC743iqE.css">
+    <script type="module" crossorigin src="/assets/index-Cxt9nBhE.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-LnA5C3Li.css">
   </head>
   <body>
     <div id="root"></div>
