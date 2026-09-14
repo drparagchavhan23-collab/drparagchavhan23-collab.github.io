@@ -6,7 +6,7 @@ const spaces = [
   { name: 'Stair core', lines: ['The vertical connection', 'between every level.'], point: [613, 321], side: 'right', row: .47 },
   { name: 'Kitchen + dining', lines: ['Everyday cooking,', 'eating and gathering.'], point: [449, 369], side: 'left', row: .59 },
   { name: 'Fashion studio', lines: ["The fashion designer's", 'workspace for making', 'and production.'], point: [477, 490], side: 'left', row: .79 },
-  { name: 'Garden annex', lines: ['An exterior room', 'at the garden edge.'], point: [940, 400], side: 'right', row: .71 },
+  { name: 'Entrance', lines: ['Main arrival', 'into the home.'], point: [940, 400], side: 'right', row: .71 },
 ];
 const ns = 'http://www.w3.org/2000/svg';
 const svg = document.getElementById('spaceAnnotations');
