@@ -1,0 +1,22 @@
+/* Keep the exact canvas renderer in its own document, with room for the labels. */
+#scene { transform-origin: 50% 50%; }
+#perspective { width: min(88vw, 1200px, calc((100vw - 340px) / .9), calc((100svh - 170px) * 2 / 1.3)); }
+#spaceAnnotations { transform: none; overflow: hidden; }
+.annotation .name { font-size: 16px; }
+.annotation .description { font-size: 12px; }
+.annotation .leader { stroke-width: 1.2; }
+.project-nav button { font-size: 13px; padding: 10px 0; }
+#mobileLegend { display: none; }
+.project-index { min-height: 100svh; }
+.project-index header, .project-entry > .small, #openProject { display: none; }
+.project-entry { margin: 34vh auto 0; text-align: center; }
+.project-entry h1 { font-size: 32px; }
+.annotation { transition: none; }
+@media (max-width: 700px) {
+  #perspective { width: 94vw; }
+  #scene { transform: translateY(calc(var(--annotations, 0) * -15vh)) scale(var(--sceneScale, 1)); }
+  #mobileLegend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; position: absolute; left: 24px; right: 24px; top: 57%; bottom: 58px; overflow-y: auto; padding-left: 20px; margin: 0; font-size: 11px; line-height: 1.45; opacity: var(--annotations, 0); pointer-events: none; }
+  #projectDialog[data-phase="Annotated spaces"] #mobileLegend { pointer-events: auto; }
+  #mobileLegend strong, #mobileLegend span { display: block; }
+  #mobileLegend span { color: #526477; }
+}

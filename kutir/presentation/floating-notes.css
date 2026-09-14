@@ -1,0 +1,40 @@
+/* The artwork stays at its front-view size and position throughout the reveal. */
+#projectInfo {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  max-width: none;
+  transform: none;
+  opacity: 1;
+  pointer-events: none;
+}
+.floating-note {
+  position: absolute;
+  width: clamp(130px, 16vw, 210px);
+  opacity: var(--reveal, 0);
+  transform: translate(calc((1 - var(--reveal, 0)) * var(--enter-x, 0px)), calc((1 - var(--reveal, 0)) * var(--enter-y, 20px)));
+}
+.note-title { left: 3vw; top: 18%; --enter-x: -22px; --enter-y: -12px; }
+.note-rooms { right: 2vw; top: 19%; --enter-x: 24px; --enter-y: -10px; }
+.note-circulation { left: 3vw; bottom: 19%; --enter-x: -18px; --enter-y: 18px; }
+.note-ground { right: 2vw; bottom: 15%; --enter-x: 22px; --enter-y: 20px; }
+#projectInfo .small { font-size: 11px; margin: 0 0 14px; }
+#projectInfo h3 { font-size: clamp(26px, 2.8vw, 42px); line-height: 1.08; margin: 0; letter-spacing: -.045em; }
+#projectInfo h4 { font-size: 13px; font-weight: 600; line-height: 1.4; margin: 0 0 10px; }
+#projectInfo .floating-note > p:not(.small) { font-size: clamp(11px, 1.05vw, 14px); line-height: 1.7; color: #647281; margin: 0; }
+#projectInfo button { pointer-events: auto; border: 0; padding: 8px 0; margin-top: 12px; font-size: 11px; gap: 20px; color: #41566d; }
+#projectInfo button:hover { text-decoration: underline; }
+@media (max-width: 700px) {
+  .floating-note { width: 39%; max-width: 235px; }
+  .note-title { left: 6%; top: 14%; }
+  .note-rooms { right: 6%; top: 15%; }
+  .note-circulation { left: 6%; bottom: 14%; }
+  .note-ground { right: 6%; bottom: 12%; }
+  #projectInfo h3 { font-size: 25px; }
+  #projectInfo h3 br { display: initial; }
+  #projectInfo h4 { font-size: 11px; margin-bottom: 5px; }
+  #projectInfo .small { font-size: 10px; margin-bottom: 9px; }
+  #projectInfo .floating-note > p:not(.small) { font-size: 11px; line-height: 1.5; }
+  #projectInfo button { margin-top: 6px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .floating-note { transform: none; } }

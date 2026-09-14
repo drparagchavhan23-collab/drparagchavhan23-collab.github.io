@@ -1,0 +1,9 @@
+#spaceAnnotations { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; opacity:var(--annotations,0); transform:scale(var(--detailScale,1)); transform-origin:center; }
+.annotation { opacity:var(--reveal,0); transition:opacity 90ms linear; }
+.annotation .leader { fill:none; stroke:#58718a; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:180; stroke-dashoffset:var(--dash,180); }
+.annotation circle { fill:#edf0f3; stroke:#46627d; stroke-width:1.8; }
+.annotation .name { fill:#27313e; font:600 18px 'Segoe UI',Arial,sans-serif; letter-spacing:-.01em; }
+.annotation .description { fill:#526477; font:13px 'Segoe UI',Arial,sans-serif; }
+.annotation .pin { display:none; fill:#27313e; font:600 8px 'Segoe UI',Arial,sans-serif; text-anchor:middle; }
+@media (max-width:700px) { .annotation .name, .annotation .description { display:none; } .annotation .pin { display:block; } .annotation .leader { stroke-width:2; } .annotation circle { r:7px; stroke-width:2; } }
+@media (prefers-reduced-motion:reduce) { .annotation { transition:none; } }
