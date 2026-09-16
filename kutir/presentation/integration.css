@@ -92,3 +92,33 @@ button:focus-visible, a:focus-visible, #scroller:focus-visible { outline-color: 
   #mobileLegend strong { font: 16px 'Bangers', 'Hit Me Punk', sans-serif; letter-spacing: .03em; color: var(--ink); margin-bottom: 3px; }
   #mobileLegend li::marker { color: var(--accent-ink); font-family: Consolas, monospace; }
 }
+/* The brief, under the title: who the house is for, before any drawing. */
+#titleBlock .title-brief { margin-top: 18px; font-family: 'Archivo', 'Segoe UI', sans-serif; font-size: clamp(14px, 1.4vw, 18px); letter-spacing: 0; color: var(--ink); }
+#titleBlock .title-brief + span { margin-top: 20px; }
+/* The brief note carries a paragraph now, so it gets more width and a
+   smaller heading, and the note under it moves down to clear it. */
+.note-title { width: clamp(160px, 20vw, 270px); top: 14%; }
+#projectInfo .note-title h3 { font-size: clamp(22px, 2.3vw, 34px); }
+#projectInfo .note-title > p:not(.small) { margin-top: 12px; }
+.note-circulation { bottom: 11%; }
+@media (max-width: 700px) {
+  /* On a phone the title block has already said who the house is for. */
+  #projectInfo .note-title > p:not(.small) { display: none; }
+  .note-title { width: 39%; top: 14%; }
+  .note-circulation { bottom: 14%; }
+}
+/* Keep scrolling: stays until the last annotation has drawn in, so nobody
+   stops halfway believing the page has ended. */
+#keepScrolling {
+  position: absolute; left: 50%; bottom: 52px; z-index: 9;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  font: 11px Consolas, 'Courier New', monospace; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink); background: rgba(255, 255, 255, .86); border: 1px solid #00000018; border-radius: 999px;
+  opacity: var(--keep, 1); pointer-events: none; transition: opacity .35s ease;
+}
+#keepScrolling i { font-style: normal; color: var(--accent-ink); animation: keep-bob 1.6s ease-in-out infinite; }
+@keyframes keep-bob { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+@media (max-width: 700px) { #keepScrolling { bottom: 46px; } }
+@media (prefers-reduced-motion: reduce) { #keepScrolling i { animation: none; } }
