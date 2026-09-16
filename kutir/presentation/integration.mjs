@@ -64,3 +64,27 @@ export function layoutAnnotations() {
     lines.forEach((line, j) => { line.setAttribute('x', x); line.setAttribute('y', y + 23 + j * 17); });
   }
 }
+
+// Where the drawing actually sits inside its 2:1 canvas, measured from the
+// baked cover: the canvas carries a lot of empty paper around the house.
+const DRAWING = { width: .69, height: .91 };
+
+/**
+ * How far the annotated view can zoom the drawing: until it meets the label
+ * columns either side, or the top and bottom of the screen. The old fixed 1.3×
+ * left the house small in the middle of a wide screen, with its detail
+ * unreadable. Phones keep that, since their labels move to a list below.
+ */
+export function annotatedScale() {
+  const perspective = document.getElementById('perspective');
+  const w = window.innerWidth, h = window.innerHeight;
+  if (w <= 700) return 1.3;
+  const gutter = Math.min(190, w * .19);
+  const availableWidth = w - 2 * (24 + gutter + 56);
+  const availableHeight = h - 2 * 52;
+  const fit = Math.min(
+    availableWidth / (perspective.offsetWidth * DRAWING.width),
+    availableHeight / (perspective.offsetHeight * DRAWING.height),
+  );
+  return Math.max(1.3, Math.min(2.4, fit));
+}
