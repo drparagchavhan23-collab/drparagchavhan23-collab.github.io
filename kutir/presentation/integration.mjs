@@ -36,6 +36,8 @@ svg.after(legend);
 document.querySelectorAll('a[href="../tuner/"]').forEach(link => link.remove());
 const back = document.getElementById('closeProject');
 back.textContent = '← Back to room'; back.setAttribute('aria-label', 'Back to room');
+// The portfolio supplies the shared header and router links around this scene.
+document.documentElement.classList.toggle('embedded', new URLSearchParams(location.search).get('embedded') === '1');
 
 export function layoutAnnotations() {
   const rect = document.getElementById('front').getBoundingClientRect();
