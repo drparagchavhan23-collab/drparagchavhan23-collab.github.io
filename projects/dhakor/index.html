@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Gwalior — Industrial Museum — Visual Identity · Parag Chavhan</title>
+    <meta
+      name="description"
+      content="Industrial Museum — Visual Identity. From the architecture and design portfolio of Parag Chavhan."
+    />
+    <link rel="canonical" href="https://paragchavhan.com/projects/dhakor" />
+    <meta name="author" content="Parag Chavhan" />
+    <meta name="theme-color" content="#0d0d0d" />
+
+    <!--
+      Without these, sending the link anywhere — WhatsApp, LinkedIn, a DM —
+      rendered a bare grey URL with no title, image or description, which is
+      how most people actually arrive at a portfolio.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Parag Chavhan" />
+    <meta property="og:title" content="Gwalior — Industrial Museum — Visual Identity · Parag Chavhan" />
+    <meta
+      property="og:description"
+      content="Industrial Museum — Visual Identity. From the architecture and design portfolio of Parag Chavhan."
+    />
+    <meta property="og:url" content="https://paragchavhan.com/projects/dhakor" />
+    <meta property="og:image" content="https://paragchavhan.com/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Parag Chavhan — Architecture, Design and 3D" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gwalior — Industrial Museum — Visual Identity · Parag Chavhan" />
+    <meta
+      name="twitter:description"
+      content="Industrial Museum — Visual Identity. From the architecture and design portfolio of Parag Chavhan."
+    />
+    <meta name="twitter:image" content="https://paragchavhan.com/og-card.png" />
+
+    <!--
+      The tab icon animates between two pixel-art frames — see
+      src/logic/animatedFavicon.ts, which takes this link over on boot. This
+      one is the animation's own first frame rather than a different image, so
+      the tab does not visibly flip to something else once the script runs, and
+      it is what stands on its own wherever the script cannot: Safari, a failed
+      script, or a reader that never runs JavaScript at all.
+
+      The pixel portrait stays on as the iOS home-screen icon, where there is
+      no animation to be had anyway.
+    -->
+    <link rel="icon" href="/favicon-ily.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      Three faces, one job each. Bangers is the display voice across the menu,
+      the panels and the case studies. Archivo sets every piece of running
+      text — it shares a skeleton with Archivo Black, which is the fallback
+      for 'Hit Me Punk' (the local face used by the loading screen and the
+      share card), so the page holds together when the display font is still
+      in flight. Utility labels use the local monospace stack.
+
+      Body text was previously Segoe UI — i.e. whatever the OS happened to
+      supply, which is what a page looks like when nobody picked a font — and
+      Kalam, a handwriting face, was setting long paragraphs inside the
+      panels. Both are gone.
+
+      Poppins is the exception, and a deliberate one: it is only used to set
+      the MOVANA sheet's own labels back onto its drawing, because that sheet
+      was lettered in it and the live text has to read as part of the print.
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Archivo+Black&family=Bangers&family=Poppins:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Crawlers and link previewers do not run WebGL. This is the only copy on
+      the page that exists before React mounts, so it carries the name and the
+      shape of the work; the app replaces it on boot.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Parag Chavhan",
+        "url": "https://paragchavhan.com/",
+        "email": "paragschavhan@gmail.com",
+        "jobTitle": "Architect and designer",
+        "alumniOf": "School of Planning and Architecture, Vijayawada",
+        "knowsAbout": [
+          "Architecture",
+          "Architectural visualization",
+          "Brand identity",
+          "Product design",
+          "3D modelling"
+        ]
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BgSNqx2Q.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D-fY_SnY.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
