@@ -3,7 +3,7 @@ import {validateProject} from '../tuner/model.mjs';
 import {BAKED,planeLeaves,hasImage,planeRenderer} from './planes.mjs';
 import {sequence,clamp} from './timeline.mjs';
 import {layoutAnnotations,annotatedScale} from './integration.mjs';
-const $=id=>document.getElementById(id),reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:700px)');
+const $=id=>document.getElementById(id),reduced=matchMedia('(prefers-reduced-motion: reduce)'),canHover=matchMedia('(hover: hover) and (pointer: fine)'),mobile=matchMedia('(max-width:700px)');
 const front=$('front'),renderer=new Renderer(front),urls=[];
 // rendererReady: the live canvas renderer has its 87 layer images. Only the
 // mouse-tilt front view needs it, so with baked planes it is not loaded until
@@ -17,7 +17,7 @@ function applyScroll(){scrollFrame=0;if(!ready)return;progress=normalizedProgres
  document.querySelectorAll('.floating-note').forEach((note,i)=>{const t=clamp((progress-.80-i*.015)/.07),reveal=t*t*(3-2*t)*s.overview;note.style.setProperty('--reveal',reveal);note.setAttribute('aria-hidden',reveal<.05);});
  document.querySelectorAll('.annotation').forEach((annotation,i)=>{const t=clamp((s.annotations-i*.075)/.38),reveal=t*t*(3-2*t);annotation.style.setProperty('--reveal',reveal);annotation.style.setProperty('--dash',Math.round((1-reveal)*180));annotation.setAttribute('aria-hidden',reveal<.05);});
  $('perspective').style.perspective=(2500+997500*Math.pow(Math.abs(s.angle)/90,8))+'px';
- $('titleBlock').setAttribute('aria-hidden',s.title<.05);$('projectInfo').setAttribute('aria-hidden',s.overview<.05);$('projectInfo').inert=s.overview<.05;$('spaceAnnotations').setAttribute('aria-hidden',s.annotations<.05);$('phase').textContent=s.phase;$('scrollHint').textContent=s.interactive?'Move your mouse · scroll for info ↓':s.annotations>.8?'Scroll up to revisit ↑':s.info>.8?'Scroll for annotations ↓':'Scroll to explore ↓';
+ $('titleBlock').setAttribute('aria-hidden',s.title<.05);$('projectInfo').setAttribute('aria-hidden',s.overview<.05);$('projectInfo').inert=s.overview<.05;$('spaceAnnotations').setAttribute('aria-hidden',s.annotations<.05);$('phase').textContent=s.phase;$('scrollHint').textContent=s.interactive?(canHover.matches?'Move your mouse · scroll for info ↓':'Scroll for info ↓'):s.annotations>.8?'Scroll up to revisit ↑':s.info>.8?'Scroll for annotations ↓':'Scroll to explore ↓';
  layoutAnnotations();
  if((!s.interactive||reduced.matches)&&(motion.x||motion.y)){motion={x:0,y:0};target={x:0,y:0};draw();}}
 function scrollChanged(){if(!scrollFrame)scrollFrame=requestAnimationFrame(applyScroll);}
