@@ -3,11 +3,14 @@
 <dialog id="projectDialog" aria-labelledby="projectTitle"><div id="scroller" tabindex="0" aria-label="Scroll to turn from the side of the layers to the front, then reveal project information"><header class="project-nav"><button id="closeProject" aria-label="Close project">× <span>Close</span></button><span id="navTitle">Kutir</span><a href="../tuner/" target="_blank" rel="noopener">Edit layers</a></header>
 <section id="runway"><div class="sticky"><div id="scene"><div id="perspective"><div id="world"></div><canvas id="front" width="1400" height="700" aria-label="Front view of the layered residence"></canvas></div></div>
 <div id="titleBlock"><p>Residential design · Sikkim</p><h2 id="projectTitle">Kutir</h2><span class="title-brief">A home and a studio for a fashion designer who lives alone</span><span>Scroll to turn the drawing</span></div>
-<section id="projectInfo" aria-label="Project notes around the drawing" aria-hidden="true" inert>
-<article class="floating-note note-title"><p class="small">About the project</p><h3>A place to live,<br>a place to work.</h3><p>A small hillside house in Sikkim for a fashion designer who lives alone. The brief asked for a home to live in and a studio to work in comfortably, under one roof.</p></article>
-<article class="floating-note note-rooms"><h4>Living above, working below</h4><p>The fashion studio sits at the base; the kitchen, personal room and bedroom rise above it, away from the work.</p></article>
-<article class="floating-note note-circulation"><h4>One stair, every level</h4><p>A single continuous stair ties the studio to the home, so work is a few steps away and still apart.</p></article>
-<article class="floating-note note-ground"><h4>Built into the slope</h4><p>The house steps with the hillside, with rooms below ground and a garden at the entrance.</p><button id="backToFront">Just the drawing <span aria-hidden="true">↑</span></button></article>
+<section id="projectInfo" aria-label="About the project" aria-hidden="true" inert><div class="info-panel">
+<article class="floating-note note-title"><p class="small">About the project</p><h3>A place to live, <br>a place to work.</h3><p class="info-brief">A small hillside house in Sikkim for a fashion designer who lives alone. The brief asked for a home to live in and a studio to work in comfortably, under one roof.</p></article>
+<ol class="info-points">
+<li class="floating-note"><span class="info-num">01</span><div><h4>Living above, working below</h4><p>The fashion studio sits at the base; the kitchen, personal room and bedroom rise above it, away from the work.</p></div></li>
+<li class="floating-note"><span class="info-num">02</span><div><h4>One stair, every level</h4><p>A single continuous stair ties the studio to the home, so work is a few steps away and still apart.</p></div></li>
+<li class="floating-note"><span class="info-num">03</span><div><h4>Built into the slope</h4><p>The house steps with the hillside, with rooms below ground and a garden at the entrance.</p></div></li>
+</ol>
+<button id="backToFront">Just the drawing <span aria-hidden="true">↑</span></button></div>
 </section>
 <svg id="spaceAnnotations" viewBox="0 0 1400 700" aria-label="Annotated spaces in the residence" aria-hidden="true" role="img">
   <g class="annotation"><path class="leader" d="M 485 110 L 438 70 L 330 70"/><circle cx="485" cy="110" r="4"/><text class="pin" x="485" y="114">1</text><text class="name" x="330" y="42">Sloping roof</text><text class="description" x="330" y="61">Heavy rain and snow shedding</text><text class="description" x="330" y="77">for Sikkim's mountain climate.</text></g>

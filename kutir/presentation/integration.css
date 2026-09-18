@@ -57,8 +57,6 @@ dialog, dialog::backdrop { background: #ffffff; }
 #titleBlock p { color: var(--accent-ink); letter-spacing: .12em; }
 #titleBlock > span { margin-top: 24px; }
 #projectInfo .small, #projectInfo button { color: var(--accent-ink); }
-#projectInfo .floating-note > p:not(.small) { color: var(--ink-soft); }
-#projectInfo h4 { font-size: 20px; }
 .journey { bottom: 18px; }
 .track { background: #00000018; }
 .track span { background: var(--accent); }
@@ -84,7 +82,7 @@ button:focus-visible, a:focus-visible, #scroller:focus-visible { outline-color: 
 .annotation { transition: none; }
 @media (max-width: 700px) {
   #perspective { width: 94vw; }
-  #scene { transform: translateY(calc(var(--annotations, 0) * -15vh)) scale(var(--sceneScale, 1)); }
+  #scene { transform: translateY(calc(var(--annotations, 0) * -15vh - var(--overview, 0) * 24vh)) scale(var(--sceneScale, 1)); }
   #mobileLegend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; position: absolute; left: 24px; right: 24px; top: 52%; bottom: 44px; overflow-y: auto; padding-left: 20px; margin: 0; font-size: 11px; line-height: 1.45; opacity: var(--annotations, 0); pointer-events: none; }
   #projectDialog[data-phase="Annotated spaces"] #mobileLegend { pointer-events: auto; }
   #mobileLegend strong, #mobileLegend span { display: block; }
@@ -95,18 +93,6 @@ button:focus-visible, a:focus-visible, #scroller:focus-visible { outline-color: 
 /* The brief, under the title: who the house is for, before any drawing. */
 #titleBlock .title-brief { margin-top: 18px; font-family: 'Archivo', 'Segoe UI', sans-serif; font-size: clamp(14px, 1.4vw, 18px); letter-spacing: 0; color: var(--ink); }
 #titleBlock .title-brief + span { margin-top: 20px; }
-/* The brief note carries a paragraph now, so it gets more width and a
-   smaller heading, and the note under it moves down to clear it. */
-.note-title { width: clamp(160px, 20vw, 270px); top: 14%; }
-#projectInfo .note-title h3 { font-size: clamp(22px, 2.3vw, 34px); }
-#projectInfo .note-title > p:not(.small) { margin-top: 12px; }
-.note-circulation { bottom: 11%; }
-@media (max-width: 700px) {
-  /* On a phone the title block has already said who the house is for. */
-  #projectInfo .note-title > p:not(.small) { display: none; }
-  .note-title { width: 39%; top: 14%; }
-  .note-circulation { bottom: 14%; }
-}
 /* Keep scrolling: stays until the last annotation has drawn in, so nobody
    stops halfway believing the page has ended. */
 #keepScrolling {
