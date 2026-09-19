@@ -13,19 +13,41 @@ const idle=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 function normalizedProgress(){return clamp($('scroller').scrollTop/Math.max(1,$('runway').offsetHeight-$('scroller').clientHeight));}
 function draw(){if(rendererReady)renderer.render(project,motion,null,false);}
 function ensureRenderer(){if(!rendererLoading)rendererLoading=(async()=>{if(!project)project=validateProject(await readProject());await renderer.load(project);if(renderer.missing.length)throw Error(`${renderer.missing.length} saved images could not be loaded.`);rendererReady=true;wakeMouse();})().catch(e=>console.error(e));return rendererLoading;}
-function applyScroll(){scrollFrame=0;if(!ready)return;progress=normalizedProgress();const s=sequence(progress,reduced.matches),root=$('projectDialog');root.dataset.phase=s.phase;root.dataset.angle=s.angle.toFixed(2);root.dataset.progress=progress.toFixed(3);const styles={'--angle':s.angle+'deg','--spread':s.spread,'--title':s.title,'--blur':s.blur+'px','--front':s.front,'--planes':1-s.front,'--edges':clamp(1-Math.abs(s.angle+90)/24),'--info':s.info,'--annotations':s.annotations,'--detailScale':s.detailScale,'--progress':progress,'--overview':s.overview,'--sceneScale':1+(annotatedScale()-1)*s.annotations+(mobile.matches?0:.12*s.overview),'--shift':(mobile.matches?0:s.overview*16)+'vw','--lift':'0%','--keep':s.annotations>=.98?0:1};for(const [k,v] of Object.entries(styles))root.style.setProperty(k,v);
- document.querySelectorAll('.floating-note').forEach((note,i)=>{const t=clamp((progress-.60-i*.02)/.07),reveal=t*t*(3-2*t)*s.overview;note.style.setProperty('--reveal',reveal);note.setAttribute('aria-hidden',reveal<.05);});
- document.querySelectorAll('.annotation').forEach((annotation,i)=>{const t=clamp((s.annotations-i*.075)/.38),reveal=t*t*(3-2*t);annotation.style.setProperty('--reveal',reveal);annotation.style.setProperty('--dash',Math.round((1-reveal)*180));annotation.setAttribute('aria-hidden',reveal<.05);});
- $('perspective').style.perspective=(2500+997500*Math.pow(Math.abs(s.angle)/90,8))+'px';
- $('titleBlock').setAttribute('aria-hidden',s.title<.05);$('projectInfo').setAttribute('aria-hidden',s.overview<.05);$('projectInfo').inert=s.overview<.05;$('spaceAnnotations').setAttribute('aria-hidden',s.annotations<.05);$('phase').textContent=s.phase;$('scrollHint').textContent=s.interactive?(canHover.matches?'Move your mouse · scroll for info ↓':'Scroll for info ↓'):s.annotations>.8?'Scroll up to revisit ↑':s.info>.8?'Scroll for annotations ↓':'Scroll to explore ↓';
- layoutAnnotations();
+// Each value is written only onto the element that reads it, and only when it
+// changes. Set on the dialog, a variable restyles all 88 drawing layers under
+// it on every frame of the scroll; set on #world it restyles them only while
+// the drawing is actually turning.
+const written=new Map();
+function put(el,name,value){if(!el)return;let seen=written.get(el);if(!seen)written.set(el,seen={});if(seen[name]===value)return;seen[name]=value;if(name.startsWith('--'))el.style.setProperty(name,value);else el.style[name]=value;}
+function putData(el,name,value){if(el.dataset[name]!==value)el.dataset[name]=value;}
+let annotationsShown=false;
+function applyScroll(){scrollFrame=0;if(!ready)return;progress=normalizedProgress();const s=sequence(progress,reduced.matches),root=$('projectDialog');putData(root,'phase',s.phase);putData(root,'angle',s.angle.toFixed(2));putData(root,'progress',progress.toFixed(3));
+ const r=(v,d=4)=>String(+v.toFixed(d));
+ const world=$('world');put(world,'--angle',r(s.angle,2)+'deg');put(world,'--spread',r(s.spread));put(world,'--planes',r(1-s.front));put(world,'--edges',r(clamp(1-Math.abs(s.angle+90)/24)));
+ // The scene's zoom and blur go straight onto its own style: as variables on
+ // #scene they would reach every layer inside it.
+ const sceneScale=1+(annotatedScale()-1)*s.annotations+(mobile.matches?0:.12*s.overview);
+ put($('scene'),'transform',mobile.matches?`translateY(${r(-15*s.annotations-24*s.overview,3)}vh) scale(${r(sceneScale)})`:`translate(${r(s.overview*16,3)}vw, 0%) scale(${r(sceneScale)})`);
+ put($('scene'),'filter',s.blur>0.001?`blur(${r(s.blur,3)}px)`:'none');
+ put($('titleBlock'),'--title',r(s.title));put($('front'),'--front',r(s.front));put($('projectInfo'),'--info',r(s.info));put($('backToFront'),'--overview',r(s.overview));
+ put($('spaceAnnotations'),'--annotations',r(s.annotations));put($('spaceAnnotations'),'--detailScale',r(s.detailScale));put($('mobileLegend'),'--annotations',r(s.annotations));
+ put(document.querySelector('.track'),'--progress',r(progress));put($('keepScrolling'),'--keep',s.annotations>=.98?'0':'1');
+ document.querySelectorAll('.floating-note').forEach((note,i)=>{const t=clamp((progress-.60-i*.02)/.07),reveal=t*t*(3-2*t)*s.overview;put(note,'--reveal',r(reveal));if(note.getAttribute('aria-hidden')!==String(reveal<.05))note.setAttribute('aria-hidden',reveal<.05);});
+ document.querySelectorAll('.annotation').forEach((annotation,i)=>{const t=clamp((s.annotations-i*.075)/.38),reveal=t*t*(3-2*t);put(annotation,'--reveal',r(reveal));put(annotation,'--dash',String(Math.round((1-reveal)*180)));if(annotation.getAttribute('aria-hidden')!==String(reveal<.05))annotation.setAttribute('aria-hidden',reveal<.05);});
+ put($('perspective'),'perspective',Math.round(2500+997500*Math.pow(Math.abs(s.angle)/90,8))+'px');
+ const flag=(el,v)=>{if(el.getAttribute('aria-hidden')!==String(v))el.setAttribute('aria-hidden',v);};
+ flag($('titleBlock'),s.title<.05);flag($('projectInfo'),s.overview<.05);if($('projectInfo').inert!==(s.overview<.05))$('projectInfo').inert=s.overview<.05;flag($('spaceAnnotations'),s.annotations<.05);
+ const hint=s.interactive?(canHover.matches?'Move your mouse · scroll for info ↓':'Scroll for info ↓'):s.annotations>.8?'Scroll up to revisit ↑':s.info>.8?'Scroll for annotations ↓':'Scroll to explore ↓';
+ if($('phase').textContent!==s.phase)$('phase').textContent=s.phase;if($('scrollHint').textContent!==hint)$('scrollHint').textContent=hint;
+ // Measuring where the labels go forces a layout, so it only happens while they show.
+ if(s.annotations>0){layoutAnnotations();annotationsShown=true;}else annotationsShown=false;
  if((!s.interactive||reduced.matches)&&(motion.x||motion.y)){motion={x:0,y:0};target={x:0,y:0};draw();}}
 function scrollChanged(){if(!scrollFrame)scrollFrame=requestAnimationFrame(applyScroll);}
 function animateMouse(){motionFrame=0;if(!$('projectDialog').open||!sequence(progress,reduced.matches).interactive)return;motion.x+=(target.x-motion.x)*.13;motion.y+=(target.y-motion.y)*.13;draw();if(Math.abs(motion.x-target.x)+Math.abs(motion.y-target.y)>.02)motionFrame=requestAnimationFrame(animateMouse);}
 function wakeMouse(){if(!motionFrame)motionFrame=requestAnimationFrame(animateMouse);}
 function open(){if(!ready)return;$('projectDialog').showModal();document.body.style.overflow='hidden';$('scroller').scrollTop=0;motion=target={x:0,y:0};draw();applyScroll();$('scroller').focus({preventScroll:true});}
 function close(){if(window.parent!==window){window.parent.postMessage({type:'kutir:close'},location.origin);return;}location.assign('/');}
-$('openProject').onclick=open;$('closeProject').onclick=close;$('projectDialog').addEventListener('cancel',e=>{e.preventDefault();close();});$('scroller').addEventListener('scroll',scrollChanged,{passive:true});window.addEventListener('resize',scrollChanged);reduced.addEventListener('change',scrollChanged);
+$('openProject').onclick=open;$('closeProject').onclick=close;$('projectDialog').addEventListener('cancel',e=>{e.preventDefault();close();});$('scroller').addEventListener('scroll',scrollChanged,{passive:true});window.addEventListener('resize',()=>{written.clear();scrollChanged();});reduced.addEventListener('change',scrollChanged);
 $('backToFront').onclick=()=>$('scroller').scrollTo({top:($('runway').offsetHeight-$('scroller').clientHeight)*.56,behavior:reduced.matches?'instant':'smooth'});
 $('scene').addEventListener('pointermove',e=>{if(reduced.matches||e.pointerType==='touch'||!sequence(progress).interactive)return;ensureRenderer();const r=$('perspective').getBoundingClientRect();target={x:clamp((e.clientX-r.left)/r.width*2-1,-1,1)*intensity,y:clamp((e.clientY-r.top)/r.height*2-1,-1,1)*intensity*.6};wakeMouse();});$('scene').addEventListener('pointerleave',()=>{target={x:0,y:0};wakeMouse();});
 function addPlane(world,name,i,count){const plane=document.createElement('div');plane.className='plane';plane.dataset.layer=name;plane.style.setProperty('--z',((count-1)/2-i)*Math.min(5,Math.max(2,innerWidth*.48/count)));const edge=document.createElement('i');edge.className='edge';plane.append(edge);world.append(plane);return plane;}

@@ -23,7 +23,10 @@
 #projectInfo .small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 12px; }
 #projectInfo h3 { font-size: clamp(30px, 3vw, 50px); line-height: .98; margin: 0; }
 #projectInfo .info-brief { font-size: clamp(13px, 1vw, 16px); line-height: 1.55; color: var(--ink-soft); margin: 12px 0 0; max-width: 34em; }
-.info-points { list-style: none; margin: 20px 0 0; padding: 0; border-top: 2px solid var(--ink); }
+.info-points { list-style: none; margin: 20px 0 0; padding: 0; }
+/* The heavy rule belongs to the first point, so it fades in and out with the
+   notes instead of staying on screen when they are gone. */
+.info-points li:first-child { border-top: 2px solid var(--ink); }
 .info-points li { display: grid; grid-template-columns: 44px 1fr; gap: 0 10px; padding: 11px 0 10px; border-bottom: 1px solid #00000020; }
 .info-num { font: 13px Consolas, 'Courier New', monospace; color: var(--accent-ink); padding-top: 5px; }
 #projectInfo h4 { font-size: clamp(17px, 1.4vw, 22px); line-height: 1.1; margin: 0 0 3px; }
